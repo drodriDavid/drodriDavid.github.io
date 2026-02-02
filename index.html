@@ -2,1027 +2,1201 @@
 <html lang="es">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Dr. David Jurado Rodríguez — Perfil</title>
-  <meta name="description"
-    content="Perfil académico e investigador del Dr. David Jurado Rodríguez (UJA). Visión por Computador, Modelado 3D y RA/RV." />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jornada Andaluza Espacios de Datos | Del Suelo al Cultivo</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&family=Roboto:wght@300;400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
   <style>
-    .tag {
-      display: inline-block;
-      font-size: .7rem;
-      padding: .15rem .45rem;
-      border-radius: 999px;
-      margin-bottom: .35rem;
-      color: #fff;
-    }
-
-    .eu {
-      background: #1e429f;
-    }
-
-    /* Europeo */
-    .nat {
-      background: #2f855a;
-    }
-
-    /* Nacional */
-    .auto {
-      background: #805ad5;
-    }
-
-    /* Autonómico */
+    /* --- VARIABLES --- */
     :root {
-      --pri: #104a6e;
-      --pri2: #1a72a8;
-      --txt: #2d3748;
-      --mut: #4a5568;
-      --bg: #fff;
-      --bg2: #f7fafc;
-      --acc: #38b2ac;
-      --bor: #e2e8f0;
-      --q1: #38a169;
-      --q2: #805ad5
+      --primary: #0a2540;
+      /* Azul Profundo */
+      --secondary: #5d9b3e;
+      /* Verde Agro */
+      --accent: #008cba;
+      /* Azul Intermedio */
+      --cta: #ff6b00;
+      /* Naranja Call-to-action */
+      --bg-light: #f8f9fa;
+      --text: #333;
+      --white: #ffffff;
+
+      /* Colores Casos de Uso */
+      --case-agri: #6abf4b;
+      --case-clima: #4db6ac;
+      --case-hidro: #0288d1;
     }
 
     * {
-      box-sizing: border-box;
       margin: 0;
-      padding: 0
+      padding: 0;
+      box-sizing: border-box;
     }
 
     body {
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
-      color: var(--txt);
-      background: var(--bg);
-      line-height: 1.5;
-      -webkit-font-smoothing: antialiased;
-      text-rendering: optimizeLegibility
+      font-family: 'Roboto', sans-serif;
+      color: var(--text);
+      background: var(--bg-light);
+      line-height: 1.6;
     }
 
-    a {
-      color: inherit
-    }
-
-    h1 {
-      font-size: 2rem;
-      margin-bottom: .25rem
-    }
-
-    h2 {
-      font-size: 1.35rem;
-      margin: 0 0 .75rem;
-      position: relative;
-      padding-bottom: .35rem
-    }
-
-    h2:after {
-      content: "";
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      width: 48px;
-      height: 2px;
-      background: var(--pri);
-      border-radius: 2px
-    }
-
-    h3 {
-      font-size: 1rem;
-      color: var(--pri);
-      margin: .1rem 0 .35rem
-    }
-
-    p {
-      margin: .25rem 0;
-      color: var(--mut)
+    h1,
+    h2,
+    h3,
+    h4 {
+      font-family: 'Montserrat', sans-serif;
+      color: var(--primary);
     }
 
     .container {
-      max-width: 1024px;
-      margin: auto;
-      padding: 0 14px
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
     }
 
-    .stack-1 {
+    /* BOTONES */
+    .btn {
+      display: inline-block;
+      padding: 12px 30px;
+      border-radius: 50px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: 0.3s;
+      border: none;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-hero {
+      background: var(--cta);
+      color: white;
+      box-shadow: 0 0 15px rgba(255, 107, 0, 0.4);
+      padding: 15px 40px;
+      font-size: 1rem;
+      border: 2px solid var(--cta);
+      margin-top: 30px;
+    }
+
+    .btn-hero:hover {
+      background: transparent;
+      color: white;
+      box-shadow: 0 0 25px rgba(255, 107, 0, 0.6);
+    }
+
+    .btn-link {
+      color: var(--secondary);
+      font-weight: 700;
+      text-decoration: none;
+      border-bottom: 2px solid var(--secondary);
+    }
+
+    /* --- 1. HERO (PARAGUAS / NO SOLO SOIL) --- */
+    .hero {
+      position: relative;
+      height: 60vh;
+      min-height: 550px;
+      background: linear-gradient(to right, rgba(10, 37, 64, 0.9) 0%, rgba(10, 37, 64, 0.7) 100%),
+        url('https://images.unsplash.com/photo-1625246333195-78d9c38ad449?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80');
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: center;
+      color: white;
+      text-align: left;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 20px;
+      text-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      color: white;
+      max-width: 980px;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      font-weight: 300;
+      opacity: 0.92;
+      margin-bottom: 0;
+      max-width: 820px;
+      margin-left: 0;
+    }
+
+    .hero-badges {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 25px;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+    }
+
+    .h-badge {
+      background: rgba(255, 255, 255, 0.15);
+      padding: 5px 15px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* --- 2. HOJA DE RUTA COMPACTA --- */
+    .roadmap-section {
+      background: white;
+      padding: 25px 0;
+      border-bottom: 1px solid #eee;
+      position: relative;
+      z-index: 10;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .roadmap-flex {
+      display: flex;
+      justify-content: flex-start;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .step-compact {
+      flex: 1;
+      min-width: 200px;
+      background: #fff;
+      padding: 15px;
+      border-radius: 6px;
+      border: 1px solid #eee;
+      border-left-width: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      transition: transform 0.2s;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+    }
+
+    .step-compact:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    /* COLORES PASOS */
+    .step-1 {
+      border-left-color: var(--primary);
+    }
+
+    .step-1 .sc-num {
+      color: var(--primary);
+    }
+
+    .step-2 {
+      border-left-color: var(--accent);
+    }
+
+    .step-2 .sc-num {
+      color: var(--accent);
+    }
+
+    .step-3 {
+      border-left-color: var(--cta);
+    }
+
+    .step-3 .sc-num {
+      color: var(--cta);
+    }
+
+    .step-4 {
+      border-left-color: var(--secondary);
+    }
+
+    .step-4 .sc-num {
+      color: var(--secondary);
+    }
+
+    .sc-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2px;
+    }
+
+    .sc-num {
+      font-size: 1.5rem;
+      font-weight: 900;
+      line-height: 1;
+      opacity: 0.3;
+    }
+
+    .sc-text strong {
+      display: block;
+      color: #222;
+      font-size: 0.95rem;
+    }
+
+    .sc-text span {
+      font-size: 0.8rem;
+      color: #666;
+      line-height: 1.3;
+      display: block;
+    }
+
+    .pdf-link {
+      color: var(--cta);
+      font-weight: 700;
+      font-size: 0.75rem;
+      text-decoration: underline;
+      margin-top: 3px;
+      display: inline-block;
+    }
+
+    .pdf-link:hover {
+      color: #e65100;
+    }
+
+    /* --- NUEVA SECCIÓN: CONTEXTO (JORNADA PARAGUAS) --- */
+    .context-section {
+      padding: 70px 0;
+      background: white;
+      border-bottom: 1px solid #eee;
+    }
+
+    .context-grid {
       display: grid;
-      gap: .5rem
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 50px;
+      align-items: start;
     }
 
-    .stack-2 {
+    .context-left h2 {
+      font-size: 2rem;
+      margin-bottom: 15px;
+    }
+
+    .context-left p {
+      color: #555;
+      font-size: 1rem;
+      margin-bottom: 18px;
+      text-align: justify;
+    }
+
+    .context-right {
       display: grid;
-      gap: .75rem
+      gap: 14px;
     }
 
-    .grid-2 {
+    .context-card {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 14px 16px;
+      border-radius: 12px;
+      background: #f8fafc;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      transition: 0.3s;
+    }
+
+    .context-card:hover {
+      transform: translateY(-2px);
+      background: white;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.06);
+    }
+
+    .context-card i {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(0, 0, 0, 0.06);
+      color: var(--primary);
+      font-size: 1.05rem;
+      flex-shrink: 0;
+    }
+
+    .context-card strong {
+      display: block;
+      color: var(--primary);
+      margin-bottom: 2px;
+    }
+
+    .context-card span {
+      display: block;
+      color: #666;
+      font-size: 0.9rem;
+      line-height: 1.35;
+    }
+
+    .context-card.highlight {
+      background: linear-gradient(90deg, rgba(93, 155, 62, 0.16), rgba(10, 37, 64, 0.08));
+      border-color: rgba(93, 155, 62, 0.25);
+    }
+
+    /* --- SECCIÓN: DEFINICIÓN + CASOS DE USO (SOIL COMO ATERRIZAJE) --- */
+    .definition-section {
+      padding: 60px 0;
+      background: #fdfdfd;
+    }
+
+    .def-intro {
+      text-align: center;
+      max-width: 900px;
+      margin: 0 auto 50px;
+    }
+
+    .def-intro h2 {
+      font-size: 2rem;
+      margin-bottom: 15px;
+    }
+
+    .def-intro p {
+      font-size: 1.05rem;
+      color: #555;
+      margin-bottom: 10px;
+    }
+
+    .cases-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+    }
+
+    .case-card {
+      background: white;
+      border-radius: 12px;
+      padding: 0;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+      border: 1px solid #eee;
+      transition: transform 0.3s;
+    }
+
+    .case-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .case-header {
+      padding: 20px;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .case-header i {
+      font-size: 2rem;
+      opacity: 0.9;
+    }
+
+    .case-header h3 {
+      color: white;
+      margin: 0;
+      font-size: 1.4rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Colores específicos para cabeceras de casos */
+    .header-agri {
+      background: linear-gradient(135deg, var(--case-agri), #388e3c);
+    }
+
+    .header-clima {
+      background: linear-gradient(135deg, var(--case-clima), #00897b);
+    }
+
+    .header-hidro {
+      background: linear-gradient(135deg, var(--case-hidro), #0277bd);
+    }
+
+    .case-body {
+      padding: 25px;
+    }
+
+    .case-body p {
+      font-size: 0.95rem;
+      color: #666;
+      margin-bottom: 15px;
+    }
+
+    .case-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .c-tag {
+      background: #f0f0f0;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #555;
+    }
+
+    /* --- 3. SECCIÓN ECOSISTEMA (SOLO CÓRDOBA + MÁLAGA POR AHORA) --- */
+    .ecosystem-section {
+      padding: 60px 0;
+      background: white;
+      border-top: 1px solid #eee;
+    }
+
+    .eco-container {
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .spaces-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: var(--primary);
+    }
+
+    .spaces-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      margin-top: 30px;
+    }
+
+    .space-card {
+      flex: 1;
+      min-width: 260px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      background: white;
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid #eee;
+      transition: 0.3s;
+      text-align: left;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+    }
+
+    .space-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--secondary);
+    }
+
+    .sp-icon {
+      width: 45px;
+      height: 45px;
+      background: #f0f4f8;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .sp-info strong {
+      display: block;
+      font-size: 1rem;
+      color: var(--primary);
+      margin-bottom: 3px;
+    }
+
+    .sp-info span {
+      font-size: 0.8rem;
+      color: #666;
+      line-height: 1.3;
+      display: block;
+    }
+
+    /* --- 4. CUADRANTE UNIFICADO --- */
+    .unified-section {
+      padding: 80px 0;
+      background: var(--bg-light);
+    }
+
+    .unified-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: .9rem
-    }
-
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: .9rem
-    }
-
-    header {
-      position: fixed;
-      inset: 0 0 auto;
-      z-index: 10;
-      background: rgba(255, 255, 255, .92);
-      backdrop-filter: saturate(1.2) blur(8px);
-      border-bottom: 1px solid var(--bor)
-    }
-
-    nav {
-      display: flex;
+      gap: 60px;
       align-items: center;
-      justify-content: space-between;
-      padding: 10px 12px
     }
 
-    .logo {
+    .uni-left h2 {
+      font-size: 2.2rem;
+      margin-bottom: 20px;
+      line-height: 1.2;
+    }
+
+    .uni-left p {
+      color: #555;
+      margin-bottom: 20px;
+      font-size: 1rem;
+      text-align: justify;
+    }
+
+    .uni-right {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .ben-card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      transition: 0.3s;
+      border-top: 3px solid transparent;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    }
+
+    .ben-card:hover {
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+      border-top-color: var(--secondary);
+    }
+
+    .ben-icon {
+      color: var(--secondary);
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+    }
+
+    .ben-title {
       font-weight: 700;
-      color: var(--pri)
-    }
-
-    .nav {
-      display: flex;
-      gap: .9rem;
-      list-style: none
-    }
-
-    .nav a {
+      color: var(--primary);
+      margin-bottom: 5px;
       display: block;
-      text-decoration: none;
-      padding: 6px 0
+      font-size: 0.95rem;
     }
 
-    .menu {
-      display: none;
-      font-size: 22px;
-      background: none;
-      border: 0
+    .ben-desc {
+      font-size: 0.8rem;
+      color: #666;
+      line-height: 1.4;
     }
 
-    .hero {
-      display: grid;
-      grid-template-columns: 1.2fr .8fr;
-      align-items: center;
-      gap: .9rem;
-      padding: 88px 16px 20px;
-      background: linear-gradient(135deg, var(--bg2), var(--bg))
+    /* --- 5. AGENDA --- */
+    .agenda-section {
+      padding: 60px 0;
+      background: white;
     }
 
-    .hero img {
-      width: 200px;
-      height: 200px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 3px solid var(--bg2);
-      box-shadow: 0 6px 16px rgba(0, 0, 0, .06)
-    }
-
-    main section {
-      padding: 24px 0
-    }
-
-    .title {
+    .agenda-title {
       text-align: center;
-      margin-bottom: 10px
+      margin-bottom: 40px;
+      font-size: 1.8rem;
     }
 
-    .title h2 {
-      display: inline-block
+    .agenda-columns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
     }
 
-    .title h2:after {
-      left: 50%;
-      transform: translateX(-50%)
+    .session-box {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+      overflow: hidden;
+      height: 100%;
+      border: 1px solid #eee;
     }
 
-    .card {
-      background: #fff;
-      border: 1px solid var(--bor);
-      border-left: 3px solid var(--pri);
+    .session-header {
+      padding: 15px 25px;
+      border-bottom: 1px solid #eee;
+      background: #fafafa;
+    }
+
+    .session-header h3 {
+      font-size: 1.1rem;
+      margin: 0;
+    }
+
+    .tag-am {
+      color: var(--secondary);
+      font-weight: 800;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 1px;
+    }
+
+    .tag-pm {
+      color: var(--cta);
+      font-weight: 800;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 1px;
+    }
+
+    .timeline-list {
+      list-style: none;
+    }
+
+    .t-item {
+      display: flex;
+      border-bottom: 1px solid #f0f0f0;
+      transition: background 0.2s;
+    }
+
+    .t-item:last-child {
+      border-bottom: none;
+    }
+
+    .t-item:hover {
+      background: #fafafa;
+    }
+
+    .t-time {
+      width: 75px;
+      padding: 15px;
+      font-weight: 700;
+      color: var(--primary);
+      border-right: 1px solid #f0f0f0;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+    }
+
+    .t-content {
+      padding: 15px;
+      flex: 1;
+    }
+
+    .t-title {
+      font-weight: 700;
+      color: #333;
+      font-size: 0.9rem;
+      margin-bottom: 3px;
+      display: block;
+    }
+
+    .t-desc {
+      font-size: 0.8rem;
+      color: #666;
+      line-height: 1.4;
+    }
+
+    /* --- 6. FORMULARIO --- */
+    #registro {
+      background: var(--primary);
+      color: white;
+      padding: 80px 0;
+      position: relative;
+    }
+
+    .form-wrapper {
+      background: white;
+      border-radius: 12px;
+      padding: 40px;
+      max-width: 800px;
+      margin: 30px auto 0;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+    }
+
+    .form-group label {
+      color: #555;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .form-input,
+    .form-select,
+    .form-textarea {
+      padding: 12px 15px;
+      border: 1px solid #ddd;
       border-radius: 8px;
-      padding: 10px 12px
+      font-size: 0.95rem;
+      background: #fdfdfd;
+      width: 100%;
+      font-family: 'Roboto', sans-serif;
+      color: #333;
     }
 
-    .card:hover {
-      box-shadow: 0 6px 16px rgba(0, 0, 0, .06)
+    .form-select {
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23333%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem top 50%;
+      background-size: 0.65em auto;
     }
 
-    .pill {
-      display: inline-block;
-      font-size: .72rem;
-      padding: .15rem .4rem;
-      border-radius: 4px;
-      color: #fff;
-      margin-right: .35rem
+    .form-textarea {
+      height: 100px;
+      resize: none;
     }
 
-    .q1 {
-      background: var(--q1)
+    .full-width {
+      grid-column: span 2;
     }
 
-    .q2 {
-      background: var(--q2)
+    .btn-submit-form {
+      grid-column: span 2;
+      background: var(--cta);
+      color: white;
+      padding: 15px;
+      border-radius: 50px;
+      border: none;
+      font-weight: 700;
+      font-size: 1rem;
+      text-transform: uppercase;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: 0.3s;
+      width: 100%;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
-    .acc {
-      background: var(--acc)
+    .btn-submit-form:hover {
+      background: #e65100;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
     }
 
-    .row {
-      display: flex;
-      gap: .6rem;
-      align-items: center
-    }
-
-    .contact {
-      max-width: 720px;
-      margin: auto
-    }
-
-    .contact .item {
-      display: flex;
-      gap: .6rem;
-      align-items: center
-    }
-
-    .chip {
-      display: inline-block;
-      background: var(--bg2);
-      border: 1px solid var(--bor);
-      padding: .3rem .55rem;
-      border-radius: 6px;
-      font-size: .9rem
-    }
-
-    .pub-authors {
-      font-size: .92rem;
-      color: #3f495a
-    }
-
-    .pub-meta {
-      font-size: .9rem
-    }
-
-    footer {
-      margin-top: 18px;
-      padding: 14px 0;
-      background: var(--pri);
-      color: #fff;
-      text-align: center
-    }
-
-    /* Compact spacing on small screens */
-    @media (max-width: 980px) {
+    @media (max-width: 768px) {
       .hero {
-        grid-template-columns: 1fr;
-        text-align: center
+        height: auto;
+        padding: 60px 0;
       }
 
-      .hero img {
-        margin: 6px auto 0
-      }
-
-      .menu {
-        display: inline-flex
-      }
-
-      .nav {
-        position: absolute;
-        right: 12px;
-        top: 56px;
+      .hero-content {
         flex-direction: column;
-        background: #fff;
-        border: 1px solid var(--bor);
-        border-radius: 8px;
-        padding: 6px 10px;
-        box-shadow: 0 6px 16px rgba(0, 0, 0, .08)
+        text-align: center;
+        align-items: center;
       }
 
-      .nav[hidden] {
-        display: none
+      .hero-badges {
+        justify-content: center;
+      }
+
+      .hero p {
+        text-align: center;
+      }
+
+      .hero h1 {
+        font-size: 1.8rem;
+      }
+
+      .unified-grid,
+      .agenda-columns,
+      .roadmap-flex,
+      .form-grid,
+      .cases-grid,
+      .context-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .full-width {
+        grid-column: span 1;
+      }
+
+      .btn-submit-form {
+        grid-column: span 1;
+      }
+
+      .spaces-list {
+        flex-direction: column;
       }
     }
-
-    @media (max-width: 720px) {
-      h1 {
-        font-size: 1.6rem
-      }
-
-      h2 {
-        font-size: 1.2rem
-      }
-
-      .grid-2,
-      .grid-3 {
-        grid-template-columns: 1fr
-      }
-    }
-
-    .tfg {
-      background: #3182ce;
-    }
-
-    /* mismo estilo, azul académico */
-    .tfm {
-      background: #c53030;
-    }
-
-    /* mismo estilo, rojo/granate */
   </style>
 </head>
 
 <body>
-  <a href="#sobre-mi" class="skip"
-    style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden">Saltar al contenido</a>
 
-  <header>
-    <nav class="container" aria-label="principal">
-      <div class="logo" aria-label="Marca">DJR</div>
-      <button class="menu" aria-label="Abrir menú" aria-controls="site-nav" aria-expanded="false">☰</button>
-      <ul id="site-nav" class="nav" hidden>
-        <li><a href="#sobre-mi">Sobre mí</a></li>
-        <li><a href="#publicaciones">Publicaciones</a></li>
-        <li><a href="#congresos">Congresos</a></li>
-        <li><a href="#proyectos">Proyectos</a></li>
-        <li><a href="#docencia">Docencia</a></li>
-        <li><a href="#tfg-tfm">TFG / TFM</a></li>
-        <li><a href="#contacto">Contacto</a></li>
-      </ul>
-    </nav>
+  <!-- HERO (paraguas: espacios de datos; Soil como foco agro) -->
+  <header class="hero">
+    <div class="container hero-content">
+
+      <div class="hero-badges">
+        <span class="h-badge">📅 Fecha Pendiente</span>
+        <span class="h-badge">📍 Universidad de Jaén</span>
+        <span class="h-badge">🤝 Jornada multi-espacio</span>
+      </div>
+
+      <h1>Jornada Andaluza sobre Espacios de Datos:<br>
+        <span style="color:var(--secondary)">Del Suelo al Cultivo</span>
+      </h1>
+
+      <p>
+        Un encuentro para conocer y coordinar <strong>espacios de datos</strong> en Andalucía: gobernanza,
+        interoperabilidad,
+        financiación y casos reales. Con foco agroalimentario y demostración de <strong>Soil Data Space</strong> como
+        caso de uso.
+      </p>
+
+      <a href="#registro" class="btn btn-hero">CONFIRMAR ASISTENCIA</a>
+    </div>
   </header>
 
-  <section class="hero container" aria-label="presentación">
-    <div>
-      <h1>Dr. David Jurado Rodríguez</h1>
-      <h3 style="color:var(--pri);font-weight:600">Investigador Doctor — Universidad de Jaén</h3>
-      <p>Especialista en Visión por Computador, Modelado 3D y Realidad Aumentada/Virtual.</p>
+  <!-- ROADMAP -->
+  <div class="roadmap-section">
+    <div class="container">
+      <div class="roadmap-flex">
+
+        <div class="step-compact step-1">
+          <div class="sc-header">
+            <i class="fas fa-brain" style="color:var(--primary)"></i>
+            <span class="sc-num">1</span>
+          </div>
+          <div class="sc-text">
+            <strong>Conocimiento</strong>
+            <span>Jornada informativa</span>
+          </div>
+        </div>
+
+        <div class="step-compact step-2">
+          <div class="sc-header">
+            <i class="fas fa-search" style="color:var(--accent)"></i>
+            <span class="sc-num">2</span>
+          </div>
+          <div class="sc-text">
+            <strong>Diagnóstico</strong>
+            <span>Madurez digital</span>
+          </div>
+        </div>
+
+        <div class="step-compact step-3">
+          <div class="sc-header">
+            <i class="fas fa-hand-holding-usd" style="color:var(--cta)"></i>
+            <span class="sc-num">3</span>
+          </div>
+          <div class="sc-text">
+            <strong>Financiación</strong>
+            <span>Ayudas disponibles</span>
+            <a href="https://dataspace.cesga.es/kit/guia_solicitud_KIT_CESGA.pdf" target="_blank" class="pdf-link">
+              <i class="fas fa-file-pdf"></i> Guía Solicitud Kit
+            </a>
+          </div>
+        </div>
+
+        <div class="step-compact step-4">
+          <div class="sc-header">
+            <i class="fas fa-plug" style="color:var(--secondary)"></i>
+            <span class="sc-num">4</span>
+          </div>
+          <div class="sc-text">
+            <strong>Conexión</strong>
+            <span>Despliegue conector</span>
+          </div>
+        </div>
+
+      </div>
     </div>
-    <div style="display:flex;justify-content:center">
-      <img src="https://placehold.co/300x300/1a72a8/ffffff?text=Dr.+David+Jurado"
-        alt="Foto profesional del Dr. David Jurado Rodríguez" />
+  </div>
+  <!-- OBJETIVO (enmarcado como jornada multi-espacio) -->
+  <section class="unified-section">
+    <div class="container unified-grid">
+      <div class="uni-left">
+        <h2>Objetivo de la Jornada</h2>
+        <p>
+          Crear un punto de encuentro entre <strong>espacios de datos</strong> (agro y urbano), administraciones y
+          empresas
+          para compartir avances, resolver barreras de adopción y acordar pasos concretos de integración.
+        </p>
+        <p>
+          Durante el evento, mostraremos cómo una entidad puede participar manteniendo <strong>soberanía</strong> y
+          seguridad,
+          y cómo aprovechar financiación para desplegar conectores y consumir/compartir datos.
+        </p>
+        <a href="#registro" class="btn-link">Quiero inscribir mi entidad &rarr;</a>
+      </div>
+
+      <div class="uni-right">
+        <div class="ben-card">
+          <i class="fas fa-lock ben-icon"></i>
+          <span class="ben-title">Soberanía</span>
+          <p class="ben-desc">Tú controlas quién accede a tus datos y bajo qué contratos.</p>
+        </div>
+        <div class="ben-card">
+          <i class="fas fa-coins ben-icon"></i>
+          <span class="ben-title">Monetización</span>
+          <p class="ben-desc">Nuevos ingresos poniendo en valor información aislada.</p>
+        </div>
+        <div class="ben-card">
+          <i class="fas fa-plug ben-icon"></i>
+          <span class="ben-title">Conexión</span>
+          <p class="ben-desc">Interoperabilidad mediante conectores y catálogos compartidos.</p>
+        </div>
+        <div class="ben-card">
+          <i class="fas fa-rocket ben-icon"></i>
+          <span class="ben-title">Innovación</span>
+          <p class="ben-desc">Acceso a datos federados para desarrollar servicios e IA aplicada.</p>
+        </div>
+      </div>
     </div>
   </section>
 
-  <main id="contenido">
-    <section id="sobre-mi">
-      <div class="container stack-2">
-        <div class="title">
-          <h2>Sobre mí</h2>
-        </div>
-        <div class="grid-2">
-          <div class="stack-1">
-            <p>Doctor en Tecnologías de la Información y la Comunicación por la Universidad de Córdoba
-              (2019–2022), con mención <strong>Cum Laude</strong>, <strong>Industrial</strong> e
-              <strong>Internacional</strong>. Tesis: «Contributions to camera pose estimation in
-              industrial augmented reality applications», en colaboración con Seabery Soluciones S.L. y el
-              grupo AVA.
-            </p>
-            <p>Estancia internacional (3 meses) en UTAD (Vila Real, Portugal), generando colaboraciones con
-              publicaciones de alto impacto.</p>
-            <p>Especializado en <strong>visión por computador</strong>, <strong>modelado 3D</strong>,
-              <strong>segmentación de nubes de puntos</strong> y <strong>estimación de pose</strong>, con
-              aplicaciones en RA, robótica, navegación autónoma y medicina.
-            </p>
-          </div>
-          <div class="stack-1">
-            <h3>Formación Académica</h3>
-            <div class="card">
-              <h4>Máster en Profesorado de Secundaria</h4>
-              <p>Universidad de Jaén | 2023–2024</p>
-            </div>
-            <div class="card">
-              <h4>Doctorado en Computación Avanzada Energía y Plasmas de la Universidad de Jaén</h4>
-              <p>Universidad de Córdoba | 2019–2022</p>
-              <p><em>Cum Laude · Industrial · Internacional</em></p>
-            </div>
-            <div class="card">
-              <h4>Máster en Ingeniería Informática</h4>
-              <p>Universidad de Jaén | 2018–2019</p>
-            </div>
-            <div class="card">
-              <h4>Grado en Ingeniería Informática</h4>
-              <p>Universidad de Jaén | 2014–2018</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="publicaciones" style="background:var(--bg2)">
-      <div class="container stack-2">
-        <div class="title">
-          <h2>Publicaciones</h2>
-          <p>
-            9 artículos en revistas indexadas ·
-            <span class="pill q1">Q1</span> 6 ·
-            <span class="pill q2">Q2</span> 3 ·
-          </p>
-
-        </div>
-        <div class="stack-1">
-          <article class="card" style="border-left-color:var(--q1)">
-            <h3>Meshlets based data model for real-time interaction and analysis with hyper-spectral
-              vegetation data</h3>
-            <p class="pub-authors">Lidia M. Ortega‑Alvarado; Juan Carlos Fernández‑Pérez; David
-              Jurado‑Rodríguez</p>
-            <p class="pub-meta"><em>Computers and Electronics in Agriculture</em>, 2025 · <a
-                href="https://doi.org/10.1016/j.compag.2025.110102" target="_blank"
-                rel="noopener">doi:10.1016/j.compag.2025.110102</a></p>
-          </article>
-
-          <article class="card" style="border-left-color:var(--q1)">
-            <h3>Automated detection and tracking of photovoltaic modules from 3D remote sensing data</h3>
-            <p class="pub-authors">Andressa Cardoso; David Jurado‑Rodríguez; Alfonso López; M. Isabel Ramos;
-              Juan Manuel Jurado</p>
-            <p class="pub-meta"><em>Applied Energy</em>, 2024 · <a href="https://doi.org/10.1016/j.apenergy.2024.123242"
-                target="_blank" rel="noopener">doi:10.1016/j.apenergy.2024.123242</a></p>
-          </article>
-
-          <article class="card" style="border-left-color:var(--q2)">
-            <h3>3D Modeling of Rural Environments from Multiscale Aerial Imagery</h3>
-            <p class="pub-authors">David Jurado‑Rodríguez; Pablo Latorre‑Hortelano; Luís René‑Domínguez;
-              Lidia M. Ortega</p>
-            <p class="pub-meta"><em>Computers & Graphics</em>, 2024 · <a
-                href="https://doi.org/10.1016/j.cag.2024.103982" target="_blank"
-                rel="noopener">doi:10.1016/j.cag.2024.103982</a></p>
-          </article>
-
-          <article class="card" style="border-left-color:var(--q1)">
-            <h3>3D model‑based tracking combining edges, keypoints and fiducial markers</h3>
-            <p class="pub-authors">David Jurado‑Rodríguez; R. Muñoz‑Salinas; S. Garrido‑Jurado; F. J.
-              Romero‑Ramírez; R. Medina‑Carnicer</p>
-            <p class="pub-meta"><em>Virtual Reality</em>, 2023 · <a href="https://doi.org/10.1007/s10055-023-00853-5"
-                target="_blank" rel="noopener">doi:10.1007/s10055-023-00853-5</a></p>
-          </article>
-
-          <article class="card" style="border-left-color:var(--q1)">
-            <h3>Planar fiducial markers: A comparative study</h3>
-            <p class="pub-authors">David Jurado‑Rodríguez; R. Muñoz‑Salinas; S. Garrido‑Jurado; R.
-              Medina‑Carnicer</p>
-            <p class="pub-meta"><em>Virtual Reality</em>, 2023 · <a href="https://doi.org/10.1007/s10055-023-00772-5"
-                target="_blank" rel="noopener">doi:10.1007/s10055-023-00772-5</a></p>
-          </article>
-
-          <article class="card" style="border-left-color:var(--q2)">
-            <h3>Reflection‑Aware Generation and Identification of Square Marker Dictionaries</h3>
-            <p class="pub-authors">S. Garrido‑Jurado; J. Garrido; David Jurado‑Rodríguez; F. Vázquez; R.
-              Muñoz‑Salinas</p>
-            <p class="pub-meta"><em>Sensors</em>, 2022 · <a href="https://doi.org/10.3390/s22218548" target="_blank"
-                rel="noopener">doi:10.3390/s22218548</a></p>
-          </article>
-
-          <article class="card" style="border-left-color:var(--q2)">
-            <h3>Semantic segmentation of 3D car parts using UAV‑based images</h3>
-            <p class="pub-authors">David Jurado‑Rodríguez; J. M. Jurado; L. Pádua; A. Neto; R.
-              Muñoz‑Salinas; J. J. Sousa</p>
-            <p class="pub-meta"><em>Computers & Graphics</em>, 2022 · <a
-                href="https://doi.org/10.1016/j.cag.2022.07.008" target="_blank"
-                rel="noopener">doi:10.1016/j.cag.2022.07.008</a></p>
-          </article>
-
-          <article class="card" style="border-left-color:var(--q2)">
-            <h3>Design, Detection, and Tracking of Customized Fiducial Markers</h3>
-            <p class="pub-authors">David Jurado‑Rodríguez; R. Muñoz‑Salinas; S. Garrido‑Jurado; R.
-              Medina‑Carnicer</p>
-            <p class="pub-meta"><em>IEEE Access</em>, 2021 · <a href="https://doi.org/10.1109/access.2021.3118049"
-                target="_blank" rel="noopener">doi:10.1109/access.2021.3118049</a></p>
-          </article>
-
-          <article class="card" style="border-left-color:var(--q2)">
-            <h3>GEUINF: real‑time visualization of indoor facilities using mixed reality</h3>
-            <p class="pub-authors">David Jurado‑Rodríguez; J. M. Jurado; L. Ortega; F. R. Feito</p>
-            <p class="pub-meta"><em>Sensors</em>, 2021 · <a href="https://doi.org/10.3390/s21041123" target="_blank"
-                rel="noopener">doi:10.3390/s21041123</a></p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="congresos">
-      <div class="container stack-2">
-
-        <div class="title">
-          <h2>Congresos y Conferencias</h2>
-          <p>
-            18 contribuciones:
-            8 internacionales ·
-            6 nacionales ·
-            1 taller ·
-            2 charlas invitadas ·
-            1 workshop
-          </p>
-        </div>
-
-        <div class="stack-1">
-
-          <!-- 2025 -->
-          <div class="card row" style="border-left-color:var(--pri)">
-            <div class="pill acc">Oral</div>
-            <div>
-              <h3>Assessing Olive Tree Detection Performance in UAV Images</h3>
-              <p>IDEAL 2025 · International Conference (Internacional)</p>
-            </div>
-          </div>
-
-          <div class="card row" style="border-left-color:var(--pri)">
-            <div class="pill acc">Oral</div>
-            <div>
-              <h3>Development of a Geospatial Predictive System of Crop Yield in Vineyards</h3>
-              <p>GEOProcessing 2025 · International Conference (Internacional)</p>
-            </div>
-          </div>
-
-          <div class="card row" style="border-left-color:var(--pri)">
-            <div class="pill acc">Oral</div>
-            <div>
-              <h3>Virtual Reality and how to learn to see how it was</h3>
-              <p>CEIG 2025 · Spanish Computer Graphics Conference (Nacional)</p>
-            </div>
-          </div>
-
-          <div class="card row" style="border-left-color:var(--pri)">
-            <div class="pill acc">Poster</div>
-            <div>
-              <h3>Diseño metodológico para la generación de imágenes multiresolución etiquetadas</h3>
-              <p>CEIG 2025 · Spanish Computer Graphics Conference (Nacional)</p>
-            </div>
-          </div>
-
-          <div class="card row" style="border-left-color:var(--pri)">
-            <div class="pill acc">Poster</div>
-            <div>
-              <h3>First steps in the dimensionality reduction of hyperspectral images of real-world scenarios based on
-                curve representation</h3>
-              <p>CEIG 2025 · Spanish Computer Graphics Conference (Nacional)</p>
-            </div>
-          </div>
-
-          <!-- 2024 -->
-          <div class="card row" style="border-left-color:var(--pri)">
-            <div class="pill acc">Poster</div>
-            <div>
-              <h3>Portable LiDAR Scanners</h3>
-              <p>WEB3D 2024 · Guimarães (PT) · 25–27/09/2024 (Internacional)</p>
-            </div>
-          </div>
-
-          <div class="card row" style="border-left-color:var(--pri)">
-            <div class="pill acc">Oral</div>
-            <div>
-              <h3>SAM-Based Detection of Structural Anomalies</h3>
-              <p>VISAPP 2024 · Roma (IT) · 27–29/02/2024 (Internacional)</p>
-            </div>
-          </div>
-
-          <div class="card row" style="border-left-color:var(--pri)">
-            <div class="pill acc">Poster</div>
-            <div>
-              <h3>3D Modeling of Rural Environments</h3>
-              <p>CEIG 2024 · A Coruña (ES) · 17–19/06/2024 (Nacional)</p>
-            </div>
-          </div>
-
-          <!-- 2023 -->
-          <div class="card row" style="border-left-color:var(--pri)">
-            <div class="pill acc">Oral</div>
-            <div>
-              <h3>Routine monitoring of hydraulic infrastructures</h3>
-              <p>CENTERIS 2023 · Oporto (PT) · 08/11/2023 (Internacional)</p>
-            </div>
-          </div>
-
-          <div class="card row" style="border-left-color:var(--pri)">
-            <div class="pill acc">Oral</div>
-            <div>
-              <h3>GEU-AGRO: monitorización multisensorial</h3>
-              <p>Expoliva 2023 · Jaén (ES) · 11/05/2023 (Nacional)</p>
-            </div>
-          </div>
-
-          <div class="card row" style="border-left-color:var(--pri)">
-            <div class="pill acc">Oral</div>
-            <div>
-              <h3>Planar fiducial markers</h3>
-              <p>CEIG 2023 · Mallorca (ES) · 03–06/07/2023 (Nacional)</p>
-            </div>
-          </div>
-
-          <div class="card row" style="border-left-color:var(--pri)">
-            <div class="pill acc">Poster</div>
-            <div>
-              <h3>Workflow for labeled datasets using Omniverse</h3>
-              <p>CEIG 2023 · Mallorca (ES) · 03–06/07/2023 (Nacional)</p>
-            </div>
-          </div>
-
-          <!-- 2019–2020 -->
-          <div class="card row" style="border-left-color:var(--pri)">
-            <div class="pill acc">Poster</div>
-            <div>
-              <h3>3D Environment Understanding in Real-time</h3>
-              <p>CEIG 2019 · San Sebastián (ES) · 26–28/06/2019 (Nacional)</p>
-            </div>
-          </div>
-
-          <div class="card row" style="border-left-color:var(--pri)">
-            <div class="pill acc">T</div>
-            <div>
-              <h3>Workshop NVIDIA OMNIVERSE</h3>
-              <p>HPC Admintech 2023 · Oporto (PT) · 02/06/2023 (Workshop internacional)</p>
-            </div>
-          </div>
-
-          <div class="card row" style="border-left-color:var(--pri)">
-            <div class="pill acc">I</div>
-            <div>
-              <h3>Realidad Mixta para infraestructuras</h3>
-              <p>Jornadas Innovación IG & RV · Granada (ES) · 11–12/12/2019 (Charla invitada)</p>
-            </div>
-          </div>
-
-          <div class="card row" style="border-left-color:var(--pri)">
-            <div class="pill acc">I</div>
-            <div>
-              <h3>#UCODIvulga. Más allá de los papers</h3>
-              <p>Córdoba (ES) · 11/03/2020 (Charla invitada)</p>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </section>
 
 
+  <!-- DEFINICIÓN (genérica) + ATERRIZAJE (Soil) -->
+  <section class="definition-section">
+    <div class="container">
 
-    <section id="proyectos" style="background:var(--bg2)">
-      <div class="container stack-2">
-
-        <div class="title">
-          <h2>Proyectos de Investigación</h2>
-          <p>8 - 1 internacional, 5 nacionales y 2 autonómicos</p>
-        </div>
-
-        <div class="stack-1">
-
-          <!-- INTERNACIONAL / EUROPEO -->
-          <div class="card">
-            <span class="tag eu">Internacional</span>
-            <h3>LivingSoiLL – Healthy Soil to Permanent Crops Living Labs</h3>
-            <p><strong>2024 – 2028</strong></p>
-            <p>Creación y validación de Living Labs europeos para la monitorización, análisis y mejora de la salud del
-              suelo en cultivos permanentes.</p>
-            <p class="pub-meta">Financiación total: <strong>1.081.352,50 €</strong> · Universidad de Jaén</p>
-          </div>
-
-          <!-- NACIONAL -->
-          <div class="card">
-            <span class="tag nat">Nacional</span>
-            <h3>Digitalización multisensorial y modelado 3D de entornos naturales</h3>
-            <p><strong>2023 – 2026</strong></p>
-            <p>Desarrollo de técnicas de adquisición multisensorial y modelado 3D para la simulación y análisis de
-              escenarios naturales.</p>
-            <p class="pub-meta">Financiación: <strong>104.500,00 €</strong> · Universidad de Jaén</p>
-          </div>
-
-          <!-- NACIONAL -->
-          <div class="card">
-            <span class="tag nat">Nacional</span>
-            <h3>Espacio de Datos de Suelos (Soil DataSpace)</h3>
-            <p><strong>2024 – 2026</strong></p>
-            <p>Diseño e implementación de un espacio federado de datos de suelos para su uso en agricultura, medio
-              ambiente y cambio climático.</p>
-            <p class="pub-meta">Financiación: <strong>1.063.932,44 €</strong> · Universidad de Jaén</p>
-          </div>
-
-          <!-- NACIONAL -->
-          <div class="card">
-            <span class="tag nat">Nacional</span>
-            <h3>Estimación de pose para aplicaciones en robótica, medicina y RA</h3>
-            <p><strong>2020 – 2022</strong></p>
-            <p>Investigación en métodos avanzados de estimación de pose con aplicaciones en robótica, navegación y
-              realidad aumentada.</p>
-            <p class="pub-meta">Financiación: <strong>69.696 €</strong> · Universidad de Córdoba</p>
-          </div>
-
-          <!-- NACIONAL -->
-          <div class="card">
-            <span class="tag nat">Nacional</span>
-            <h3>Herramientas de informática gráfica para gestión de datos 3D/4D</h3>
-            <p><strong>2017 – 2019</strong></p>
-            <p>Desarrollo de herramientas de visualización y gestión de datos 3D/4D para infraestructuras y patrimonio
-              mediante RV y RA.</p>
-            <p class="pub-meta">Financiación: <strong>143.990 €</strong> · Universidad de Jaén</p>
-          </div>
-
-          <!-- NACIONAL -->
-          <div class="card">
-            <span class="tag nat">Nacional</span>
-            <h3>Predicción temprana de cosecha de viñedos mediante inteligencia artificial</h3>
-            <p><strong>2025 – 2026</strong></p>
-            <p>Aplicación de modelos de inteligencia artificial para la predicción temprana del rendimiento en viñedos.
-            </p>
-            <p class="pub-meta">Financiación: <strong>22.787,20 €</strong> · Universidad Internacional de la Rioja </p>
-          </div>
-
-          <!-- AUTONÓMICO -->
-          <div class="card">
-            <span class="tag auto">Autonómico</span>
-            <h3>Pastores digitales contra el fuego</h3>
-            <p><strong>2024 – 2029</strong></p>
-            <p>Desarrollo de soluciones digitales para la prevención y gestión de incendios forestales.</p>
-            <p class="pub-meta">Financiación: <strong>183.274,55 €</strong> · Universida de Jaén</p>
-          </div>
-
-          <!-- AUTONÓMICO -->
-          <div class="card">
-            <span class="tag auto">Autonómico</span>
-            <h3>ARBOCARBOLIVO I</h3>
-            <p><strong>2024 – 2029</strong></p>
-            <p>Evaluación del secuestro de carbono y certificación ambiental en sistemas de olivar tradicional.</p>
-            <p class="pub-meta">Financiación: <strong>276.659,61 €</strong> · Universidad de Jaén</p>
-          </div>
-
-
-        </div>
-
-
-        <div class="title" style="margin-top:1.5rem">
-          <h2>Proyectos de Innovación Docente</h2>
-        </div>
-
-        <div class="stack-1">
-          <div class="card">
-            <h3>PRO-ACTIVO: Aprendizaje Activo en Programación</h3>
-            <p><strong>2024 – 2025</strong></p>
-            <p>Proyecto de innovación docente orientado al aprendizaje activo en asignaturas de programación en
-              titulaciones de ingeniería.</p>
-            <p class="pub-meta">Financiación: 2.020 €</p>
-          </div>
-
-          <div class="card">
-            <h3>MICRO_GAME: Aprendizaje basado en juegos en Microbiología</h3>
-            <p><strong>2025 – 2026</strong></p>
-            <p>Aplicación de estrategias de gamificación para mejorar la motivación y el aprendizaje del alumnado.</p>
-          </div>
-
-        </div>
-        <div class="title" style="margin-top:1.5rem">
-          <h2>Proyectos de Transferencia de Conocimiento</h2>
-          <p> 4 Contratos art. 60 LOSU con entidades públicas y privadas</p>
-        </div>
-
-        <div class="stack-1">
-
-          <div class="card">
-            <h3>PDental: automatización y generación de prótesis provisionales en implantología digital</h3>
-            <p><strong>2026 – 2028</strong></p>
-            <p> Desarrollo, mejora y validación del software PDental, orientado a la automatización de procesos en
-              implantología.</p>
-            <p class="pub-meta">Laboratorios Pedro Perales S.L.P · Importe: 348.480,00 €</p>
-          </div>
-        </div>
-
-        <div class="card">
-          <h3>Short-term Training Courses (CEIA3)</h3>
-          <p><strong>2025</strong></p>
-          <p>Actividad de transferencia mediante formación especializada en el ámbito agroalimentario.</p>
-          <p class="pub-meta">CEIA3 · Importe: 800 €</p>
-        </div>
-
-        <div class="card">
-          <h3>Asesoramiento técnico en el proyecto FOTOSWIRX</h3>
-          <p><strong>2025 – 2025</strong></p>
-          <p>Proyecto de I+D+i colaborativa financiado por CDTI, centrado en análisis avanzado de datos geoespaciales.
-          </p>
-          <p class="pub-meta">LABERIT SISTEMAS S.L. · Importe: 14.000 €</p>
-        </div>
-
-        <div class="card">
-          <h3>Generación automática de prótesis dentales 3D</h3>
-          <p><strong>2025 – 2026</strong></p>
-          <p>Desarrollo de técnicas avanzadas de alineación y fusión de modelos 3D en implantología dental.</p>
-          <p class="pub-meta">Laboratorios Pedro Perales S.L.P · Importe: 12.000 €</p>
-        </div>
+      <div class="def-intro">
+        <h2>¿Qué es un Espacio de Datos?</h2>
+        <p>
+          Un espacio de datos no es una base de datos centralizada. Es una <strong>infraestructura federada y
+            segura</strong>
+          donde cada entidad mantiene la soberanía de su información y decide cómo compartirla bajo reglas comunes.
+        </p>
+        <p>
+          En esta jornada lo aterrizamos en el ámbito agroalimentario con <strong>Soil Data Space</strong>, conectando
+          datos de suelo,
+          clima y agua para habilitar servicios digitales “del suelo al cultivo”.
+        </p>
       </div>
 
-      </div>
-    </section>
+      <div class="cases-grid">
 
-
-
-    <section id="docencia">
-      <div class="container stack-2">
-
-        <div class="title">
-          <h2>Docencia</h2>
-          <p>
-            Desde 15/09/2022 · Profesor Sustituto · Dpto. Ingeniería del Software · Universidad de Jaén ·
-            <strong>79,5 ECTS impartidos</strong>
-          </p>
-        </div>
-
-        <div class="stack-2" style="max-width:820px;margin:auto;text-align:center">
-
-          <div>
-            <strong style="color:var(--pri);font-size:1.05rem">
-              Grado en Ingeniería Informática
-            </strong>
-            <p style="color:var(--mut);margin-top:.2rem">
-              Fundamentos de Programación ·
-              Programación Orientada a Objetos ·
-              Sistemas de Información Espacial ·
-              Fundamentos de Ingeniería del Software
-            </p>
+        <div class="case-card">
+          <div class="case-header header-agri">
+            <i class="fas fa-seedling"></i>
+            <h3>Caso AGRI</h3>
           </div>
-
-          <div>
-            <strong style="color:var(--pri);font-size:1.05rem">
-              Máster en Ingeniería Informática
-            </strong>
-            <p style="color:var(--mut);margin-top:.2rem">
-              Interfaces de Usuario Multimodales
-            </p>
+          <div class="case-body">
+            <p><strong>Monitorización de la fertilidad y salud del suelo.</strong> Integración de datos multiescala
+              (IoT, satélite, dron) para una agricultura de precisión.</p>
+            <div class="case-tags">
+              <span class="c-tag">Fertilidad</span>
+              <span class="c-tag">IA y SIG</span>
+              <span class="c-tag">Nutrientes</span>
+            </div>
           </div>
+        </div>
 
-          <div>
-            <strong style="color:var(--pri);font-size:1.05rem">
-              Otros Grados
-            </strong>
-            <p style="color:var(--mut);margin-top:.2rem">
-              Ingeniería Electrónica Industrial ·
-              Biología ·
-              Gestión y Administración Pública
-            </p>
+        <div class="case-card">
+          <div class="case-header header-clima">
+            <i class="fas fa-cloud-sun"></i>
+            <h3>Caso CLIMA</h3>
           </div>
-
-        </div>
-      </div>
-    </section>
-
-
-
-    <section id="tfg-tfm" style="background:var(--bg2)">
-      <div class="container stack-2">
-
-        <div class="title">
-          <h2>Dirección de TFG y TFM</h2>
-          <p>
-            4 trabajos fin de grado y 3 trabajos fin de máster
-          </p>
-        </div>
-
-        <div class="stack-1">
-
-          <!-- 2025 · TFG -->
-          <article class="card">
-            <span class="tag tfg">TFG</span>
-            <h3>Desarrollo de una Plataforma de Análisis Financiero para PYMES Utilizando Big Data</h3>
-            <p class="pub-authors"><strong>Estudiante:</strong> María de las Nieves Garrido Ruiz</p>
-            <p class="pub-meta">Grado en Finanzas y Contabilidad · UJA · 2025 · Sobresaliente (10)</p>
-          </article>
-
-          <!-- 2025 · TFG -->
-          <article class="card">
-            <span class="tag tfg">TFG</span>
-            <h3>Plataforma de realidad aumentada para la exploración de zonas de interés turístico en ciudades</h3>
-            <p class="pub-authors"><strong>Estudiante:</strong> Andrés Serrano Barajas</p>
-            <p class="pub-meta">Grado en Ingeniería Informática · UJA · 2025 · Sobresaliente (9)</p>
-          </article>
-
-          <!-- 2025 · TFM -->
-          <article class="card">
-            <span class="tag tfm">TFM</span>
-            <h3>Desarrollo de Métodos para el Etiquetado y Visualización de Datos Multisensoriales en Plantaciones de
-              Olivar</h3>
-            <p class="pub-authors"><strong>Estudiante:</strong> Elena Carmona Vallecillo</p>
-            <p class="pub-meta">Máster en Ingeniería Informática · UJA · 2025 · Sobresaliente (9,5)</p>
-          </article>
-
-          <!-- 2025 · TFM -->
-          <article class="card">
-            <span class="tag tfm">TFM</span>
-            <h3>Desarrollo de métodos para el etiquetado y visualización de datos multisensoriales en plantaciones de
-              olivar</h3>
-            <p class="pub-authors"><strong>Estudiante:</strong> Pablo Latorre Hortelano</p>
-            <p class="pub-meta">Máster en Ingeniería Informática · UJA · 2025 · Sobresaliente (9,5)</p>
-          </article>
-
-          <!-- 2024 · TFM -->
-          <article class="card">
-            <span class="tag tfm">TFM</span>
-            <h3>Plataforma para visualización interactiva de Realidad Aumentada. Caso de uso: videojuego móvil LandmARk
-            </h3>
-            <p class="pub-authors"><strong>Estudiante:</strong> Juan Carlos Fernández Pérez</p>
-            <p class="pub-meta">Máster en Ingeniería Informática · UJA · 2024 · Sobresaliente (9,5)</p>
-          </article>
-
-          <!-- 2024 · TFG -->
-          <article class="card">
-            <span class="tag tfg">TFG</span>
-            <h3>Prototipo para la visualización de entornos naturales basado en la combinación de impresión 3D y
-              realidad aumentada</h3>
-            <p class="pub-authors"><strong>Estudiante:</strong> Elena Carmona Vallecillo</p>
-            <p class="pub-meta">Grado en Ingeniería Informática · UJA · 2024 · Sobresaliente (9,7)</p>
-          </article>
-
-          <!-- 2024 · TFG -->
-          <article class="card">
-            <span class="tag tfg">TFG</span>
-            <h3>Aplicación WebGL para la gestión, monitorización y predicción de la evolución de plantaciones de olivar
-            </h3>
-            <p class="pub-authors"><strong>Estudiante:</strong> Pablo Latorre Hortelano</p>
-            <p class="pub-meta">Grado en Ingeniería Informática · UJA · 2024 · Sobresaliente (9)</p>
-          </article>
-
-        </div>
-      </div>
-    </section>
-
-
-
-
-    <section id="contacto" style="background:var(--bg2)">
-      <div class="container stack-2 contact">
-
-        <div class="title">
-          <h2>Contacto</h2>
-        </div>
-
-        <div class="card" style="border-left-color:var(--pri)">
-          <div class="stack-1">
-
-            <div class="item">
-              <strong>Email:</strong>
-              <a href="mailto:drodrigu@ujaen.es">drodrigu@ujaen.es</a>
+          <div class="case-body">
+            <p><strong>Fijación de carbono y mitigación.</strong> Impulso de servicios digitales para medir y valorizar
+              la captura de carbono en suelos españoles.</p>
+            <div class="case-tags">
+              <span class="c-tag">Créditos CO2</span>
+              <span class="c-tag">Sostenibilidad</span>
+              <span class="c-tag">Satélite</span>
             </div>
+          </div>
+        </div>
 
-            <div class="item">
-              <strong>Institución:</strong>
-              Universidad de Jaén · Departamento de Ingeniería del Software
+        <div class="case-card">
+          <div class="case-header header-hidro">
+            <i class="fas fa-water"></i>
+            <h3>Caso HIDRO</h3>
+          </div>
+          <div class="case-body">
+            <p><strong>Gestión de riesgos hidrológicos.</strong> Modelado de erosión y apoyo a la gestión del agua en
+              cuencas mediante datos federados.</p>
+            <div class="case-tags">
+              <span class="c-tag">Riesgo Erosivo</span>
+              <span class="c-tag">Gestión Agua</span>
+              <span class="c-tag">Cuencas</span>
             </div>
-
-            <div class="item">
-              <strong>Perfiles académicos:</strong>
-              <a href="https://orcid.org/0000-0003-2408-4926" target="_blank" rel="noopener">ORCID</a> ·
-              <a href="https://scholar.google.com/citations?user=XXXXXXX" target="_blank" rel="noopener">Google
-                Scholar</a> ·
-              <a href="https://www.researchgate.net/profile/David-Jurado-Rodriguez" target="_blank"
-                rel="noopener">ResearchGate</a> ·
-              <a href="https://www.unia.es/personal/david-jurado-rodriguez" target="_blank" rel="noopener">Perfil
-                UJA</a>
-            </div>
-
           </div>
         </div>
 
       </div>
-    </section>
+    </div>
+  </section>
 
 
+  <!-- AGENDA -->
+  <section id="agenda" class="agenda-section">
+    <div class="container">
+      <h2 class="agenda-title">Agenda del Evento</h2>
 
+      <div class="agenda-columns">
 
-  </main>
+        <div class="session-box">
+          <div class="session-header">
+            <span class="tag-am">Sesión Abierta</span>
+            <h3>Mañana: Divulgación</h3>
+          </div>
+          <ul class="timeline-list">
+            <li class="t-item">
+              <div class="t-time">09:00</div>
+              <div class="t-content">
+                <span class="t-title">Inauguración Institucional</span>
+                <span class="t-desc">SEDIA, MAPA, Junta de Andalucía y UJA.</span>
+              </div>
+            </li>
+            <li class="t-item">
+              <div class="t-time">09:40</div>
+              <div class="t-content">
+                <span class="t-title">Economía del Dato y Kit Digital</span>
+                <span class="t-desc">Ponencia marco sobre financiación (SEDIA).</span>
+              </div>
+            </li>
+            <li class="t-item">
+              <div class="t-time">10:20</div>
+              <div class="t-content">
+                <span class="t-title">Espacios de Datos: Estado del Arte</span>
+                <span class="t-desc">Principios, interoperabilidad, gobernanza y despliegues.</span>
+              </div>
+            </li>
+            <li class="t-item">
+              <div class="t-time">12:00</div>
+              <div class="t-content">
+                <span class="t-title" style="color:var(--secondary)">Taller: Valor para la Empresa</span>
+                <span class="t-desc">Casos de uso y retorno (agro/urbano). Entidades por confirmar.</span>
+              </div>
+            </li>
+          </ul>
+        </div>
 
-  <footer>
-    <div class="container">&copy; 2025 Dr. David Jurado Rodríguez</div>
-  </footer>
+        <div class="session-box">
+          <div class="session-header">
+            <span class="tag-pm">Sesión Técnica</span>
+            <h3>Tarde: Coordinación</h3>
+          </div>
+          <ul class="timeline-list">
+            <li class="t-item" style="background: #fafafa;">
+              <div class="t-time"><i class="fas fa-info-circle"></i></div>
+              <div class="t-content">
+                <span class="t-desc">Sesión exclusiva para gestores de proyectos (plazas limitadas).</span>
+              </div>
+            </li>
+            <li class="t-item">
+              <div class="t-time">16:00</div>
+              <div class="t-content">
+                <span class="t-title">Gobernanza</span>
+                <span class="t-desc">Roles, contratos y reglas de compartición.</span>
+              </div>
+            </li>
+            <li class="t-item">
+              <div class="t-time">16:30</div>
+              <div class="t-content">
+                <span class="t-title">Sostenibilidad</span>
+                <span class="t-desc">Modelos de operación y escalado a largo plazo.</span>
+              </div>
+            </li>
+            <li class="t-item">
+              <div class="t-time">17:00</div>
+              <div class="t-content">
+                <span class="t-title">Estrategia Integrada</span>
+                <span class="t-desc">Visión de coordinación entre iniciativas.</span>
+              </div>
+            </li>
+          </ul>
+        </div>
 
-  <script>
-    // Menú accesible y responsive
-    const btn = document.querySelector('.menu');
-    const list = document.getElementById('site-nav');
-    const toggleNav = () => {
-      const open = list.hasAttribute('hidden');
-      if (open) list.removeAttribute('hidden'); else list.setAttribute('hidden', '');
-      btn.setAttribute('aria-expanded', String(open));
-    };
-    btn.addEventListener('click', toggleNav);
+      </div>
+    </div>
+  </section>
 
-    // Cerrar el menú al navegar (móvil)
-    list.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-      if (window.innerWidth <= 980) { list.setAttribute('hidden', ''); btn.setAttribute('aria-expanded', 'false'); }
-    }));
+  <!-- ECOSISTEMA (solo 2 por ahora) -->
+  <section class="ecosystem-section">
+    <div class="container eco-container">
 
-    // Scroll suave con compensación del header
-    document.querySelectorAll('a[href^="#"]').forEach(a => {
-      a.addEventListener('click', e => {
-        const hash = a.getAttribute('href');
-        const el = document.querySelector(hash);
-        if (!el) return;
-        e.preventDefault();
-        const y = el.getBoundingClientRect().top + window.scrollY - 70;
-        window.scrollTo({ top: y, behavior: 'smooth' });
-      });
-    });
-  </script>
+      <h3 class="spaces-title">Iniciativas y espacios participantes</h3>
+      <p style="color:#666; font-size: 1rem; max-width: 740px; margin: 0 auto;">
+        La jornada busca conectar iniciativas reales ya en marcha. Por el momento, se incluyen como referencia y
+        colaboración
+        estas dos: una agro-sectorial y otra urbana.
+      </p>
+
+      <div class="spaces-list">
+        <div class="space-card">
+          <div class="sp-icon" style="background:#e8f5e9; color: var(--secondary);"><i class="fas fa-lemon"></i></div>
+          <div class="sp-info">
+            <strong>CitriData (Córdoba)</strong>
+            <span>Espacio de datos para la cadena de valor de cítricos y servicios digitales asociados.</span>
+          </div>
+        </div>
+
+        <div class="space-card">
+          <div class="sp-icon" style="background:#e3f2fd; color: #1976d2;"><i class="fas fa-city"></i></div>
+          <div class="sp-info">
+            <strong>EDINT / CEOD Málaga</strong>
+            <span>Datos e interoperabilidad para infraestructuras y servicios urbanos.</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FORMULARIO -->
+  <div id="registro">
+    <div class="container">
+      <h2 style="color: white; margin-bottom: 10px;">Reserva tu plaza ahora</h2>
+      <p style="color: rgba(255,255,255,0.8); margin-bottom: 30px;">Recibe la documentación de adhesión y la fecha
+        definitiva.</p>
+
+      <div class="form-wrapper">
+        <form class="form-grid" onsubmit="alert('Solicitud enviada. Te contactaremos pronto.'); return false;">
+
+          <div class="form-group">
+            <label>Nombre Completo</label>
+            <input type="text" class="form-input" placeholder="Tu nombre" required>
+          </div>
+          <div class="form-group">
+            <label>Email Corporativo</label>
+            <input type="email" class="form-input" placeholder="nombre@empresa.com" required>
+          </div>
+
+          <div class="form-group">
+            <label>Organización / Entidad</label>
+            <input type="text" class="form-input" placeholder="Nombre de la empresa" required>
+          </div>
+          <div class="form-group">
+            <label>Tipo de Entidad</label>
+            <select class="form-select">
+              <option value="">Selecciona una opción...</option>
+              <option value="cooperativa">Cooperativa Agroalimentaria</option>
+              <option value="tecnologica">Empresa Tecnológica</option>
+              <option value="administracion">Administración Pública</option>
+              <option value="investigacion">Centro de Investigación</option>
+              <option value="otro">Otro</option>
+            </select>
+          </div>
+
+          <div class="form-group full-width">
+            <label>¿Qué datos te interesa compartir o consumir?</label>
+            <textarea class="form-textarea"
+              placeholder="Ej. Sensores de suelo, imágenes satelitales, datos de riego..."></textarea>
+          </div>
+
+          <button type="submit" class="btn-submit-form">Finalizar Inscripción</button>
+        </form>
+      </div>
+
+      <p style="margin-top: 50px; font-size: 0.8rem; color: rgba(255,255,255,0.5);">Organizado por SEDIA, MAPA y Junta
+        de Andalucía.</p>
+    </div>
+  </div>
+
 </body>
 
 </html>
