@@ -4,10 +4,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Dr. David Jurado Rodríguez — Perfil</title>
+  <title>David Jurado Rodriguez - Perfil Academico Institucional</title>
   <meta name="description"
-    content="Perfil académico e investigador del Dr. David Jurado Rodríguez (UJA). Visión por Computador, Modelado 3D y RA/RV." />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+    content="Perfil academico institucional de David Jurado Rodriguez (UJA). Investigacion en vision por computador, modelado 3D, RA/RV, docencia y transferencia de conocimiento." />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700;800&family=Source+Serif+4:wght@600;700&display=swap"
+    rel="stylesheet" />
   <style>
     .tag {
       display: inline-block;
@@ -336,6 +338,751 @@
     }
 
     /* mismo estilo, rojo/granate */
+    /* Institutional visual refresh */
+    :root {
+      --pri: #16395f;
+      --pri2: #245a89;
+      --txt: #1e2f44;
+      --mut: #4f637a;
+      --bg: #f4f7fb;
+      --bg2: #eaf0f6;
+      --acc: #2f6e9d;
+      --bor: #d6e0ea;
+      --q1: #2b8c5e;
+      --q2: #6e5f94;
+    }
+
+    body {
+      font-family: "Source Sans 3", "Segoe UI", Tahoma, sans-serif;
+      background:
+        radial-gradient(circle at 8% 0%, rgba(36, 90, 137, .13), transparent 26%),
+        linear-gradient(180deg, #f9fbfe 0%, var(--bg) 100%);
+      letter-spacing: .01em;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      font-family: "Source Serif 4", Georgia, serif;
+      letter-spacing: -.02em;
+    }
+
+    h2 {
+      padding-bottom: .45rem;
+    }
+
+    .skip:focus {
+      position: fixed !important;
+      left: 14px !important;
+      top: 14px !important;
+      width: auto !important;
+      height: auto !important;
+      overflow: visible !important;
+      padding: .6rem .85rem;
+      background: #fff;
+      border: 1px solid var(--bor);
+      border-radius: 8px;
+      z-index: 100;
+    }
+
+    header {
+      background: rgba(255, 255, 255, .97);
+      box-shadow: 0 8px 22px rgba(22, 57, 95, .08);
+      border-bottom: 1px solid var(--bor);
+    }
+
+    nav {
+      padding: 11px 12px;
+      justify-content: flex-start;
+      gap: .7rem;
+    }
+
+    .logo {
+      display: inline-flex;
+      align-items: center;
+      gap: .65rem;
+    }
+
+    .logo-mark {
+      display: inline-grid;
+      place-items: center;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(145deg, #245a89 0%, #16395f 100%);
+      color: #fff;
+      font-family: "Source Sans 3", sans-serif;
+      font-size: .86rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      box-shadow: 0 7px 18px rgba(22, 57, 95, .24);
+    }
+
+    .logo-brand {
+      display: grid;
+      line-height: 1.1;
+      font-size: .97rem;
+      color: var(--pri);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+
+    .logo-brand small {
+      font-size: .65rem;
+      font-weight: 700;
+      color: #4f637a;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+
+    .nav {
+      gap: .55rem;
+      flex-wrap: wrap;
+    }
+
+    .nav a {
+      text-decoration: none;
+      color: #254a72;
+      font-weight: 700;
+      font-size: .85rem;
+      text-transform: none;
+      letter-spacing: .02em;
+      padding: .4rem .32rem;
+      border-radius: 8px;
+      transition: background-color .2s ease, color .2s ease;
+    }
+
+    .nav a:hover {
+      background: rgba(36, 90, 137, .09);
+      color: #16395f;
+    }
+
+    .hero {
+      grid-template-columns: 1.15fr .85fr;
+      gap: 1.2rem;
+      margin-top: 8px;
+      padding: 96px 18px 28px;
+      border: 1px solid var(--bor);
+      border-radius: 14px;
+      background: linear-gradient(155deg, #ffffff 0%, #eef3f8 100%);
+      box-shadow: 0 16px 34px rgba(22, 57, 95, .09);
+    }
+
+    .hero-kicker {
+      display: inline-block;
+      margin-bottom: .45rem;
+      color: #274e77;
+      background: #fff;
+      border: 1px solid var(--bor);
+      border-radius: 999px;
+      padding: .3rem .75rem;
+      font-size: .75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .hero-copy p {
+      max-width: 66ch;
+    }
+
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .45rem;
+      margin-top: .45rem;
+    }
+
+    .chip {
+      background: #fff;
+      border-radius: 999px;
+      color: #264f79;
+      font-weight: 700;
+      font-size: .82rem;
+      padding: .3rem .65rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .6rem;
+      margin-top: .85rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      padding: .58rem .9rem;
+      border-radius: 9px;
+      font-weight: 700;
+      font-size: .87rem;
+      letter-spacing: .03em;
+      text-transform: uppercase;
+      border: 1px solid transparent;
+    }
+
+    .btn-primary {
+      background: linear-gradient(180deg, #245a89 0%, #173b60 100%);
+      color: #fff;
+      box-shadow: 0 10px 20px rgba(22, 57, 95, .24);
+    }
+
+    .btn-secondary {
+      background: #fff;
+      color: #1f4a74;
+      border-color: #1f4a74;
+    }
+
+    .hero-media {
+      display: grid;
+      justify-items: center;
+      gap: .8rem;
+    }
+
+    .hero img {
+      width: 252px;
+      height: 252px;
+      border-radius: 50%;
+      border: 3px solid rgba(255, 255, 255, .75);
+      object-fit: cover;
+      object-position: 50% 30%;
+      box-shadow: 0 14px 30px rgba(0, 0, 0, .22);
+      filter: grayscale(85%) contrast(1.04);
+      opacity: .8;
+    }
+
+    .hero-role {
+      margin: .1rem 0 .35rem;
+      color: rgba(255, 255, 255, .96);
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: .01em;
+    }
+
+    .hero-affiliation {
+      margin-top: .45rem;
+      color: rgba(255, 255, 255, .93);
+      font-size: .92rem;
+      font-weight: 600;
+      line-height: 1.35;
+    }
+
+    main section {
+      padding: 32px 0;
+    }
+
+
+    .title {
+      margin-bottom: 12px;
+    }
+
+    .card {
+      border-radius: 11px;
+      border: 1px solid var(--bor);
+      border-left-width: 4px;
+      padding: 12px 14px;
+      box-shadow: 0 9px 22px rgba(22, 57, 95, .06);
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 26px rgba(22, 57, 95, .1);
+    }
+
+    .pill,
+    .tag {
+      font-weight: 700;
+      letter-spacing: .02em;
+    }
+
+    footer {
+      margin-top: 22px;
+      background: #102a46;
+      border-top: 1px solid rgba(255, 255, 255, .1);
+      font-weight: 600;
+      letter-spacing: .03em;
+    }
+
+    @media (max-width: 980px) {
+      .logo-brand {
+        font-size: .86rem;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+        text-align: left;
+      }
+
+      .hero-media {
+        justify-items: start;
+      }
+
+      .hero img {
+        width: 206px;
+        height: 206px;
+      }
+
+      .nav {
+        max-width: min(92vw, 320px);
+      }
+    }
+
+    @media (max-width: 720px) {
+      .logo-brand small {
+        letter-spacing: .07em;
+      }
+
+      .logo-brand {
+        font-size: .78rem;
+      }
+
+      .hero {
+        padding: 90px 14px 22px;
+      }
+
+      .hero-kicker {
+        font-size: .67rem;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+
+    /* Marketing + dynamics layer */
+    .hero {
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .hero:before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(120deg, rgba(8, 26, 46, .82), rgba(14, 44, 74, .64)),
+        url("./assets/hero-jaen.png") center/cover no-repeat;
+      opacity: 1;
+      z-index: -2;
+    }
+
+    .hero:after {
+      content: "";
+      position: absolute;
+      width: 420px;
+      height: 420px;
+      right: -140px;
+      top: -120px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(36, 90, 137, .26) 0%, rgba(36, 90, 137, 0) 70%);
+      z-index: -1;
+    }
+
+    .hero-copy,
+    .hero-media {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-copy h1,
+    .hero-copy h3,
+    .hero-copy p {
+      color: #fff;
+      text-shadow: 0 2px 12px rgba(0, 0, 0, .28);
+    }
+
+    .hero-kicker {
+      background: rgba(255, 255, 255, .14);
+      border-color: rgba(255, 255, 255, .5);
+      color: #fff;
+    }
+
+    .impact-strip {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: .7rem;
+    }
+
+    .impact-card {
+      border: 1px solid var(--bor);
+      background: #fff;
+      border-radius: 10px;
+      padding: .8rem .85rem;
+      box-shadow: 0 8px 18px rgba(22, 57, 95, .08);
+    }
+
+    .impact-card p {
+      margin: 0;
+      font-size: .75rem;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: #4f637a;
+      font-weight: 700;
+    }
+
+    .impact-card strong {
+      display: block;
+      margin: .08rem 0 .15rem;
+      font-size: 1.5rem;
+      color: #173b60;
+      line-height: 1.05;
+    }
+
+    .impact-card span {
+      font-size: .84rem;
+      color: #4f637a;
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .85rem;
+      margin-top: .55rem;
+      margin-bottom: .6rem;
+      border-bottom: 1px solid var(--bor);
+      padding-bottom: .35rem;
+    }
+
+    .filter-btn {
+      border: 0;
+      border-bottom: 2px solid transparent;
+      background: transparent;
+      color: #526c89;
+      border-radius: 0;
+      padding: .2rem 0 .35rem;
+      font-size: .86rem;
+      font-weight: 700;
+      letter-spacing: .02em;
+      cursor: pointer;
+      transition: color .2s ease, border-color .2s ease;
+    }
+
+    .filter-btn:hover {
+      color: #1f4a74;
+    }
+
+    .filter-btn.is-active {
+      background: transparent;
+      color: #173b60;
+      border-color: #173b60;
+      box-shadow: none;
+    }
+
+    .is-hidden {
+      display: none !important;
+    }
+
+    .reveal-in {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity .55s ease, transform .55s ease;
+    }
+
+    .reveal-in.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 980px) {
+      .impact-strip {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 720px) {
+      .impact-strip {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal-in {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+    }
+
+    /* Docencia upgrade */
+    .docencia-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      align-items: start;
+    }
+
+    .docencia-panel h3 {
+      margin-bottom: .65rem;
+    }
+
+    .docencia-timeline {
+      display: grid;
+      gap: .7rem;
+      margin-top: .2rem;
+    }
+
+    .docencia-step {
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      gap: .7rem;
+      align-items: start;
+      padding: .55rem .6rem;
+      border: 1px solid var(--bor);
+      border-radius: 8px;
+      background: linear-gradient(180deg, #fff, #f8fbff);
+    }
+
+    .docencia-year {
+      font-weight: 800;
+      font-size: .86rem;
+      color: #173b60;
+      letter-spacing: .02em;
+      padding-top: .12rem;
+    }
+
+    .docencia-step p {
+      margin: .15rem 0 0;
+      font-size: .92rem;
+    }
+
+    .docencia-map {
+      display: grid;
+      gap: .65rem;
+    }
+
+    .docencia-track {
+      border: 1px solid var(--bor);
+      border-left: 4px solid #2b5f8e;
+      border-radius: 8px;
+      padding: .6rem .7rem;
+      background: #fff;
+    }
+
+    .docencia-track h4 {
+      font-size: 1rem;
+      margin-bottom: .25rem;
+      color: #183b60;
+    }
+
+    .docencia-track p {
+      margin: 0;
+      line-height: 1.45;
+    }
+
+    .docencia-mini-kpis {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: .65rem;
+      margin-top: .7rem;
+    }
+
+    .docencia-mini-kpis .mini {
+      border: 1px solid var(--bor);
+      border-radius: 8px;
+      background: #fff;
+      padding: .6rem .7rem;
+      text-align: center;
+    }
+
+    .docencia-mini-kpis strong {
+      display: block;
+      color: #173b60;
+      font-size: 1.22rem;
+      line-height: 1.05;
+      margin-bottom: .15rem;
+    }
+
+    .docencia-mini-kpis span {
+      font-size: .82rem;
+      color: #4f637a;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      font-weight: 700;
+    }
+
+    @media (max-width: 980px) {
+      .docencia-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .docencia-step {
+        grid-template-columns: 1fr;
+      }
+
+      .docencia-mini-kpis {
+        grid-template-columns: 1fr;
+      }
+
+    }
+
+    .doc-years {
+      display: grid;
+      gap: .65rem;
+    }
+
+    .year-card {
+      border: 1px solid var(--bor);
+      border-radius: 8px;
+      padding: .58rem .68rem;
+      background: #fff;
+    }
+
+    .year-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: .6rem;
+      margin-bottom: .28rem;
+    }
+
+    .year-head h4 {
+      margin: 0;
+      color: #173b60;
+      font-size: 1rem;
+    }
+
+    .year-badge {
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      color: #385a7d;
+      border: 1px solid var(--bor);
+      border-radius: 999px;
+      padding: .14rem .5rem;
+      background: #f8fbff;
+    }
+
+    .subject-list {
+      margin: 0;
+      padding-left: 1.1rem;
+      display: grid;
+      gap: .18rem;
+      color: #3f546e;
+      font-size: .92rem;
+    }
+
+    .subject-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: .35rem;
+      font-size: .9rem;
+    }
+
+    .subject-table th,
+    .subject-table td {
+      border-bottom: 1px solid var(--bor);
+      padding: .45rem .3rem;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .subject-table th {
+      color: #173b60;
+      font-size: .78rem;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .subject-hours {
+      white-space: nowrap;
+      font-weight: 700;
+      color: #2d4d72;
+    }
+
+    .cross-role-note {
+      margin-top: .35rem;
+      margin-bottom: 0;
+      font-size: .84rem;
+      color: #2b5a86;
+      font-weight: 700;
+    }
+
+    .teach-chart {
+      border: 1px solid var(--bor);
+      border-radius: 10px;
+      background: #fff;
+      padding: .7rem .8rem;
+      margin-bottom: .7rem;
+    }
+
+    .teach-chart h4 {
+      margin: 0 0 .45rem;
+      color: #173b60;
+      font-size: .95rem;
+    }
+
+    .teach-bar {
+      display: grid;
+      grid-template-columns: 92px 1fr 72px;
+      gap: .5rem;
+      align-items: center;
+      margin: .35rem 0;
+    }
+
+    .teach-label {
+      font-size: .82rem;
+      color: #37536f;
+      font-weight: 700;
+    }
+
+    .teach-track {
+      width: 100%;
+      height: 10px;
+      border-radius: 999px;
+      background: #e8edf4;
+      overflow: hidden;
+    }
+
+    .teach-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #2d5f8f, #3f77ad);
+    }
+
+    .teach-value {
+      font-size: .8rem;
+      color: #2d4d72;
+      font-weight: 700;
+      text-align: right;
+    }
+
+    .year-card details {
+      border-top: 1px dashed var(--bor);
+      margin-top: .45rem;
+      padding-top: .35rem;
+    }
+
+    .year-card summary {
+      cursor: pointer;
+      color: #27496a;
+      font-size: .84rem;
+      font-weight: 700;
+      list-style: none;
+    }
+
+    .year-card summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .year-card summary::after {
+      content: " +";
+      color: #45688b;
+    }
+
+    .year-card details[open] summary::after {
+      content: " -";
+    }
   </style>
 </head>
 
@@ -345,7 +1092,6 @@
 
   <header>
     <nav class="container" aria-label="principal">
-      <div class="logo" aria-label="Marca">DJR</div>
       <button class="menu" aria-label="Abrir menú" aria-controls="site-nav" aria-expanded="false">☰</button>
       <ul id="site-nav" class="nav" hidden>
         <li><a href="#sobre-mi">Sobre mí</a></li>
@@ -353,24 +1099,46 @@
         <li><a href="#congresos">Congresos</a></li>
         <li><a href="#proyectos">Proyectos</a></li>
         <li><a href="#docencia">Docencia</a></li>
-        <li><a href="#tfg-tfm">TFG / TFM</a></li>
+        <li><a href="#tfg-tfm">TFG y TFM</a></li>
         <li><a href="#contacto">Contacto</a></li>
       </ul>
     </nav>
   </header>
 
-  <section class="hero container" aria-label="presentación">
-    <div>
-      <h1>Dr. David Jurado Rodríguez</h1>
-      <h3 style="color:var(--pri);font-weight:600">Investigador Doctor — Universidad de Jaén</h3>
-      <p>Especialista en Visión por Computador, Modelado 3D y Realidad Aumentada/Virtual.</p>
+  <section class="hero container" aria-label="presentacion">
+    <div class="hero-copy">
+      <h1>David Jurado Rodriguez</h1>
+      <p class="hero-role">Investigador Doctor · Universidad de Jaén </p>
+      <p class="hero-affiliation">Departamento de Informática</p>
+      <p>Investigación en visión por computador, modelado 3D aplicada a la transferencia tecnológica e
+        innovación.</p>
     </div>
-    <div style="display:flex;justify-content:center">
-      <img src="https://placehold.co/300x300/1a72a8/ffffff?text=Dr.+David+Jurado"
-        alt="Foto profesional del Dr. David Jurado Rodríguez" />
+    <div class="hero-media">
+      <img src="./assets/image.jpeg" alt="Foto profesional de David Jurado Rodriguez" />
     </div>
   </section>
-
+  <section class="container impact-strip" aria-label="Indicadores de actividad">
+    <article class="impact-card">
+      <p>Produccion</p>
+      <strong data-count="9">9</strong>
+      <span>articulos indexados</span>
+    </article>
+    <article class="impact-card">
+      <p>Difusion</p>
+      <strong data-count="18">18</strong>
+      <span>contribuciones en congresos</span>
+    </article>
+    <article class="impact-card">
+      <p>Proyectos</p>
+      <strong data-count="14">14</strong>
+      <span>I+D, innovacion y transferencia</span>
+    </article>
+    <article class="impact-card">
+      <p>Formacion</p>
+      <strong data-count="79">79</strong>
+      <span>ECTS impartidos</span>
+    </article>
+  </section>
   <main id="contenido">
     <section id="sobre-mi">
       <div class="container stack-2">
@@ -420,6 +1188,11 @@
       <div class="container stack-2">
         <div class="title">
           <h2>Publicaciones</h2>
+          <div class="filters" id="pub-filters" aria-label="Filtros de publicaciones">
+            <button class="filter-btn is-active" type="button" data-filter="all">Todas</button>
+            <button class="filter-btn" type="button" data-filter="q1">Q1</button>
+            <button class="filter-btn" type="button" data-filter="q2">Q2</button>
+          </div>
           <p>
             9 artículos en revistas indexadas ·
             <span class="pill q1">Q1</span> 6 ·
@@ -511,6 +1284,12 @@
 
         <div class="title">
           <h2>Congresos y Conferencias</h2>
+          <div class="filters" id="cong-filters" aria-label="Filtros de congresos">
+            <button class="filter-btn is-active" type="button" data-filter="all">Todas</button>
+            <button class="filter-btn" type="button" data-filter="int">Internacionales</button>
+            <button class="filter-btn" type="button" data-filter="nac">Nacionales</button>
+            <button class="filter-btn" type="button" data-filter="oth">Otros formatos</button>
+          </div>
           <p>
             18 contribuciones:
             8 internacionales ·
@@ -666,8 +1445,15 @@
       <div class="container stack-2">
 
         <div class="title">
-          <h2>Proyectos de Investigación</h2>
-          <p>8 - 1 internacional, 5 nacionales y 2 autonómicos</p>
+          <h2 id="projects-main-title">Proyectos</h2>
+          <div class="filters" id="proj-filters" aria-label="Filtros de proyectos">
+            <button class="filter-btn is-active" type="button" data-filter="all">Todos</button>
+            <button class="filter-btn" type="button" data-filter="investigacion">Investigacion</button>
+            <button class="filter-btn" type="button" data-filter="innovacion">Innovacion</button>
+            <button class="filter-btn" type="button" data-filter="transferencia">Transferencia</button>
+          </div>
+          <p id="projects-main-subtitle">14 proyectos en total: 8 de investigación, 2 de innovación docente y 4 de
+            transferencia.</p>
         </div>
 
         <div class="stack-1">
@@ -815,133 +1601,418 @@
 
       </div>
     </section>
-
-
-
     <section id="docencia">
       <div class="container stack-2">
 
         <div class="title">
           <h2>Docencia</h2>
           <p>
-            Desde 15/09/2022 · Profesor Sustituto · Dpto. Ingeniería del Software · Universidad de Jaén ·
-            <strong>79,5 ECTS impartidos</strong>
+            Desde 15/09/2022 · Universidad de Jaén ·
+            <strong>79,5 ECTS impartidos</strong> · Certificado oficial de Ordenación Académica (06/03/2026)
           </p>
         </div>
 
-        <div class="stack-2" style="max-width:820px;margin:auto;text-align:center">
+        <div class="docencia-layout">
+          <article class="card docencia-panel">
+            <h3>Docencia por curso académico</h3>
+            <div class="teach-chart" aria-label="Carga docente por curso">
+              <div class="teach-bar">
+                <span class="teach-label">2022-23</span>
+                <div class="teach-track">
+                  <div class="teach-fill" style="width:100%"></div>
+                </div>
+                <span class="teach-value">265 h</span>
+              </div>
+              <div class="teach-bar">
+                <span class="teach-label">2023-24</span>
+                <div class="teach-track">
+                  <div class="teach-fill" style="width:85%"></div>
+                </div>
+                <span class="teach-value">225 h</span>
+              </div>
+              <div class="teach-bar">
+                <span class="teach-label">2024-25</span>
+                <div class="teach-track">
+                  <div class="teach-fill" style="width:74%"></div>
+                </div>
+                <span class="teach-value">195 h</span>
+              </div>
+              <div class="teach-bar">
+                <span class="teach-label">2025-26</span>
+                <div class="teach-track">
+                  <div class="teach-fill" style="width:9%"></div>
+                </div>
+                <span class="teach-value">25 h</span>
+              </div>
+            </div>
+            <div class="doc-years">
+              <div class="year-card">
+                <div class="year-head">
+                  <h4>Curso 2025-2026</h4>
+                  <span class="year-badge">Investigador Doctor · LSI</span>
+                </div>
+                <details>
+                  <summary>1 asignatura · ver detalle</summary>
+                  <table class="subject-table">
+                    <thead>
+                      <tr>
+                        <th>Asignatura</th>
+                        <th>Titulación</th>
+                        <th>Horas</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Sistemas de Información Espacial (Obligatoria, 1C)</td>
+                        <td>Grado en Ingeniería Informática</td>
+                        <td class="subject-hours">P: 25</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </details>
+              </div>
 
-          <div>
-            <strong style="color:var(--pri);font-size:1.05rem">
-              Grado en Ingeniería Informática
-            </strong>
-            <p style="color:var(--mut);margin-top:.2rem">
-              Fundamentos de Programación ·
-              Programación Orientada a Objetos ·
-              Sistemas de Información Espacial ·
-              Fundamentos de Ingeniería del Software
-            </p>
-          </div>
+              <div class="year-card">
+                <div class="year-head">
+                  <h4>Curso 2024-2025</h4>
+                  <span class="year-badge">Profesor Sustituto · LSI</span>
+                </div>
+                <details>
+                  <summary>5 asignaturas · ver detalle</summary>
+                  <table class="subject-table">
+                    <thead>
+                      <tr>
+                        <th>Asignatura</th>
+                        <th>Titulación</th>
+                        <th>Horas</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Fundamentos de la Programación (Básica, 1C)</td>
+                        <td>Grado en Ingeniería Informática</td>
+                        <td class="subject-hours">P: 60</td>
+                      </tr>
+                      <tr>
+                        <td>Fundamentos de Ingeniería del Software (Obligatoria, 1C)</td>
+                        <td>Grado en Ingeniería Informática</td>
+                        <td class="subject-hours">P: 30</td>
+                      </tr>
+                      <tr>
+                        <td>Sistemas de Información Espacial (Obligatoria, 1C)</td>
+                        <td>Grado en Ingeniería Informática</td>
+                        <td class="subject-hours">P: 30</td>
+                      </tr>
+                      <tr>
+                        <td>Informática Aplicada a la Gestión Pública (Obligatoria, 2C)</td>
+                        <td>Grado en Gestión y Administración Pública</td>
+                        <td class="subject-hours">T: 25 · P: 50</td>
+                      </tr>
+                      <tr>
+                        <td>Programación Orientada a Objetos (Básica, 2C)</td>
+                        <td>Grado en Ingeniería Informática</td>
+                        <td class="subject-hours">P: 30</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </details>
+              </div>
 
-          <div>
-            <strong style="color:var(--pri);font-size:1.05rem">
-              Máster en Ingeniería Informática
-            </strong>
-            <p style="color:var(--mut);margin-top:.2rem">
-              Interfaces de Usuario Multimodales
-            </p>
-          </div>
+              <div class="year-card">
+                <div class="year-head">
+                  <h4>Curso 2023-2024</h4>
+                  <span class="year-badge">Profesor Sustituto · LSI</span>
+                </div>
+                <details>
+                  <summary>5 asignaturas · ver detalle</summary>
+                  <table class="subject-table">
+                    <thead>
+                      <tr>
+                        <th>Asignatura</th>
+                        <th>Titulación</th>
+                        <th>Horas</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Calidad del Software (Obligatoria, 2C)</td>
+                        <td>Grado en Ingeniería Informática</td>
+                        <td class="subject-hours">P: 25</td>
+                      </tr>
+                      <tr>
+                        <td>Desarrollo de Aplicaciones Empresariales (Obligatoria, 1C)</td>
+                        <td>Grado en Ingeniería Informática</td>
+                        <td class="subject-hours">P: 30</td>
+                      </tr>
+                      <tr>
+                        <td>Ejercicio Profesional de la Informática (Optativa, 1C)</td>
+                        <td>Grado en Ingeniería Informática</td>
+                        <td class="subject-hours">P: 30</td>
+                      </tr>
+                      <tr>
+                        <td>Fundamentos de la Programación (Básica, 1C)</td>
+                        <td>Grado en Ingeniería Informática</td>
+                        <td class="subject-hours">P: 90</td>
+                      </tr>
+                      <tr>
+                        <td>Informática Aplicada a la Gestión Pública (Básica, 1C)</td>
+                        <td>Grado en Gestión y Administración Pública</td>
+                        <td class="subject-hours">T: 25 · P: 25</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </details>
+              </div>
 
-          <div>
-            <strong style="color:var(--pri);font-size:1.05rem">
-              Otros Grados
-            </strong>
-            <p style="color:var(--mut);margin-top:.2rem">
-              Ingeniería Electrónica Industrial ·
-              Biología ·
-              Gestión y Administración Pública
-            </p>
-          </div>
+              <div class="year-card">
+                <div class="year-head">
+                  <h4>Curso 2022-2023</h4>
+                  <span class="year-badge">Profesor Sustituto Interino · CCIA</span>
+                </div>
+                <details>
+                  <summary>6 asignaturas · ver detalle</summary>
+                  <table class="subject-table">
+                    <thead>
+                      <tr>
+                        <th>Asignatura</th>
+                        <th>Titulación</th>
+                        <th>Horas</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Interfaces de Usuario Multimodales (Obligatoria, 1C)</td>
+                        <td>Máster Universitario en Ingeniería Informática</td>
+                        <td class="subject-hours">T: 10 · P: 10</td>
+                      </tr>
+                      <tr>
+                        <td>Programación (Optativa, 1C)</td>
+                        <td>Grado en Ingeniería Electrónica Industrial</td>
+                        <td class="subject-hours">T: 30 · P: 25</td>
+                      </tr>
+                      <tr>
+                        <td>Seguridad en Tecnologías de la Información (Obligatoria, 1C)</td>
+                        <td>Grado en Ingeniería Informática</td>
+                        <td class="subject-hours">P: 50</td>
+                      </tr>
+                      <tr>
+                        <td>Bioinformática (Básica, 2C)</td>
+                        <td>Grado en Biología</td>
+                        <td class="subject-hours">T: 12 · P: 23</td>
+                      </tr>
+                      <tr>
+                        <td>Inteligencia Artificial (Obligatoria, 2C)</td>
+                        <td>Grado en Ingeniería Informática</td>
+                        <td class="subject-hours">P: 50</td>
+                      </tr>
+                      <tr>
+                        <td>Minería Web (Optativa, 2C)</td>
+                        <td>Grado en Ingeniería Informática</td>
+                        <td class="subject-hours">T: 30 · P: 25</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </details>
+              </div>
+            </div>
+          </article>
 
         </div>
       </div>
     </section>
 
-
-
     <section id="tfg-tfm" style="background:var(--bg2)">
       <div class="container stack-2">
 
         <div class="title">
-          <h2>Dirección de TFG y TFM</h2>
-          <p>
-            4 trabajos fin de grado y 3 trabajos fin de máster
+          <h2 id="acad-main-title">Dirección de TFG, TFM y Tribunales</h2>
+          <div class="filters" id="acad-filters" aria-label="Filtros de dirección académica">
+            <button class="filter-btn is-active" type="button" data-filter="all">Todos</button>
+            <button class="filter-btn" type="button" data-filter="tfg">TFG</button>
+            <button class="filter-btn" type="button" data-filter="tfm">TFM</button>
+            <button class="filter-btn" type="button" data-filter="tribunales">Tribunales</button>
+          </div>
+          <p id="acad-main-subtitle">Datos actualizados según certificados de TFGs, TFMs y Tribunales (febrero 2026).
           </p>
         </div>
 
-        <div class="stack-1">
+        <div id="acad-kpis" class="docencia-mini-kpis" aria-label="Resumen de dirección académica">
+          <div class="mini" data-kind="tfg"><strong>6</strong><span>TFG dirigidos</span></div>
+          <div class="mini" data-kind="tfm"><strong>3</strong><span>TFM dirigidos</span></div>
+          <div class="mini" data-kind="tribunales"><strong>10</strong><span>tribunales</span></div>
+        </div>
 
-          <!-- 2025 · TFG -->
+        <div id="tfg-title-block" class="title" style="margin-top:.3rem">
+          <h2>TFG</h2>
+        </div>
+        <div id="tfg-stack" class="stack-1">
           <article class="card">
-            <span class="tag tfg">TFG</span>
-            <h3>Desarrollo de una Plataforma de Análisis Financiero para PYMES Utilizando Big Data</h3>
-            <p class="pub-authors"><strong>Estudiante:</strong> María de las Nieves Garrido Ruiz</p>
-            <p class="pub-meta">Grado en Finanzas y Contabilidad · UJA · 2025 · Sobresaliente (10)</p>
-          </article>
-
-          <!-- 2025 · TFG -->
-          <article class="card">
-            <span class="tag tfg">TFG</span>
-            <h3>Plataforma de realidad aumentada para la exploración de zonas de interés turístico en ciudades</h3>
-            <p class="pub-authors"><strong>Estudiante:</strong> Andrés Serrano Barajas</p>
-            <p class="pub-meta">Grado en Ingeniería Informática · UJA · 2025 · Sobresaliente (9)</p>
-          </article>
-
-          <!-- 2025 · TFM -->
-          <article class="card">
-            <span class="tag tfm">TFM</span>
-            <h3>Desarrollo de Métodos para el Etiquetado y Visualización de Datos Multisensoriales en Plantaciones de
-              Olivar</h3>
-            <p class="pub-authors"><strong>Estudiante:</strong> Elena Carmona Vallecillo</p>
-            <p class="pub-meta">Máster en Ingeniería Informática · UJA · 2025 · Sobresaliente (9,5)</p>
-          </article>
-
-          <!-- 2025 · TFM -->
-          <article class="card">
-            <span class="tag tfm">TFM</span>
-            <h3>Desarrollo de métodos para el etiquetado y visualización de datos multisensoriales en plantaciones de
-              olivar</h3>
-            <p class="pub-authors"><strong>Estudiante:</strong> Pablo Latorre Hortelano</p>
-            <p class="pub-meta">Máster en Ingeniería Informática · UJA · 2025 · Sobresaliente (9,5)</p>
-          </article>
-
-          <!-- 2024 · TFM -->
-          <article class="card">
-            <span class="tag tfm">TFM</span>
-            <h3>Plataforma para visualización interactiva de Realidad Aumentada. Caso de uso: videojuego móvil LandmARk
-            </h3>
-            <p class="pub-authors"><strong>Estudiante:</strong> Juan Carlos Fernández Pérez</p>
-            <p class="pub-meta">Máster en Ingeniería Informática · UJA · 2024 · Sobresaliente (9,5)</p>
-          </article>
-
-          <!-- 2024 · TFG -->
-          <article class="card">
-            <span class="tag tfg">TFG</span>
-            <h3>Prototipo para la visualización de entornos naturales basado en la combinación de impresión 3D y
-              realidad aumentada</h3>
-            <p class="pub-authors"><strong>Estudiante:</strong> Elena Carmona Vallecillo</p>
-            <p class="pub-meta">Grado en Ingeniería Informática · UJA · 2024 · Sobresaliente (9,7)</p>
-          </article>
-
-          <!-- 2024 · TFG -->
-          <article class="card">
-            <span class="tag tfg">TFG</span>
+            <span class="tag tfg">TFG · Codirector</span>
             <h3>Aplicación WebGL para la gestión, monitorización y predicción de la evolución de plantaciones de olivar
             </h3>
             <p class="pub-authors"><strong>Estudiante:</strong> Pablo Latorre Hortelano</p>
-            <p class="pub-meta">Grado en Ingeniería Informática · UJA · 2024 · Sobresaliente (9)</p>
+            <p class="pub-meta">Grado en Ingeniería Informática · Defensa: 14-JUL-2023 · 2022-23 · Sobresaliente (10)
+            </p>
           </article>
 
+          <article class="card">
+            <span class="tag tfg">TFG · Director</span>
+            <h3>Prototipo para la visualización de entornos naturales basado en la combinación de las tecnologías de
+              impresión 3D y realidad aumentada</h3>
+            <p class="pub-authors"><strong>Estudiante:</strong> Elena Carmona Vallecillo</p>
+            <p class="pub-meta">Grado en Ingeniería Informática · Defensa: 15-JUL-2024 · 2023-24 · Sobresaliente (9,7)
+            </p>
+          </article>
+
+          <article class="card">
+            <span class="tag tfg">TFG · Director</span>
+            <h3>Plataforma de realidad aumentada para la exploración de zonas de interés turísticas en ciudades</h3>
+            <p class="pub-authors"><strong>Estudiante:</strong> Andrés Serrano Barajas</p>
+            <p class="pub-meta">Grado en Ingeniería Informática · Defensa: 03-MAR-2025 · 2024-25 · Sobresaliente (9)</p>
+          </article>
+
+          <article class="card">
+            <span class="tag tfg">TFG · Director</span>
+            <h3>Desarrollo de Técnicas Avanzadas para la Reconstrucción 3D y Digitalización de Invernaderos</h3>
+            <p class="pub-authors"><strong>Estudiante:</strong> Juan Antonio Rodríguez Fernández</p>
+            <p class="pub-meta">Grado en Ingeniería Informática · Defensa: 23-JUN-2025 · 2024-25 · Matrícula de Honor
+              (9,6)</p>
+          </article>
+
+          <article class="card">
+            <span class="tag tfg">TFG · Director</span>
+            <h3>Desarrollo de Técnicas de Teledetección Avanzada para la Clasificación de Especies Arbóreas Usando
+              Imágenes de Drones</h3>
+            <p class="pub-authors"><strong>Estudiante:</strong> Francisco García del Castillo</p>
+            <p class="pub-meta">Grado en Ingeniería Informática · Defensa: 11-JUL-2025 · 2024-25 · Sobresaliente (10)
+            </p>
+          </article>
+
+          <article class="card">
+            <span class="tag tfg">TFG · Director</span>
+            <h3>Desarrollo de una Plataforma de Análisis Financiero para PYMES Utilizando Big Data</h3>
+            <p class="pub-authors"><strong>Estudiante:</strong> María de las Nieves Garrido Ruíz</p>
+            <p class="pub-meta">Grado en Finanzas y Contabilidad · Defensa: 08-JUL-2025 · 2024-25 · Sobresaliente (10)
+            </p>
+          </article>
+        </div>
+
+        <div id="tfm-title-block" class="title" style="margin-top:.3rem">
+          <h2>TFM</h2>
+        </div>
+        <div id="tfm-stack" class="stack-1">
+          <article class="card">
+            <span class="tag tfm">TFM · Director</span>
+            <h3>Plataforma para visualización interactiva de Realidad Aumentada. Caso de uso: videojuego móvil LandmARk
+            </h3>
+            <p class="pub-authors"><strong>Estudiante:</strong> Juan Carlos Fernández Pérez</p>
+            <p class="pub-meta">Máster Univ. en Ingeniería Informática · Defensa: 13-SEP-2024 · 2023-24 · Sobresaliente
+              (9,5)</p>
+          </article>
+
+          <article class="card">
+            <span class="tag tfm">TFM · Director</span>
+            <h3>Desarrollo de Métodos para el Etiquetado y Visualización de Datos Multisensoriales en Plantaciones de
+              Olivar</h3>
+            <p class="pub-authors"><strong>Estudiante:</strong> Pablo Latorre Hortelano</p>
+            <p class="pub-meta">Máster Univ. en Ingeniería Informática · Defensa: 16-ENE-2025 · 2024-25 · Sobresaliente
+              (9,5)</p>
+          </article>
+
+          <article class="card">
+            <span class="tag tfm">TFM · Director</span>
+            <h3>Caracterización individual de especies arbóreas mediante análisis multisensorial y modelado 3D en
+              entornos naturales</h3>
+            <p class="pub-authors"><strong>Estudiante:</strong> Elena Carmona Vallecillo</p>
+            <p class="pub-meta">Máster Univ. en Ingeniería Informática · Defensa: 18-NOV-2025 · 2025-26 · Sobresaliente
+              (10)</p>
+          </article>
+        </div>
+
+        <div id="trib-title-block" class="title" style="margin-top:.3rem">
+          <h2>Participación en tribunales</h2>
+          <p>Registro de participaciones en 2023-24 y 2024-25.</p>
+        </div>
+        <div id="trib-stack" class="stack-1">
+          <article class="card">
+            <span class="pill acc">Vocal</span>
+            <h3>Plataforma basada en Agentes para generar y gestionar Gemelos Digitales</h3>
+            <p class="pub-authors"><strong>Alumno:</strong> Jaime Gutiérrez Ávila</p>
+            <p class="pub-meta">Grado en Ingeniería Informática · Defensa: 30-JUL-2025 · 2024-25 · Sobresaliente (9,5)
+            </p>
+          </article>
+
+          <article class="card">
+            <span class="pill acc">Secretario</span>
+            <h3>Análisis y desarrollo de una aplicación para la digitalización de carnés de socios de clubes deportivos
+            </h3>
+            <p class="pub-authors"><strong>Alumna:</strong> Lucía Gómez Carpio</p>
+            <p class="pub-meta">Grado en Ingeniería Informática · Defensa: 07-JUL-2025 · 2024-25 · Sobresaliente (10)
+            </p>
+          </article>
+
+          <article class="card">
+            <span class="pill acc">Secretario</span>
+            <h3>Plataforma de Realidad Aumentada para la Exploración de Zonas de Interés Turísticas en Ciudades</h3>
+            <p class="pub-authors"><strong>Alumno:</strong> Andrés Serrano Barajas</p>
+            <p class="pub-meta">Grado en Ingeniería Informática · Defensa: 03-MAR-2025 · 2024-25 · Sobresaliente (9)</p>
+          </article>
+
+          <article class="card">
+            <span class="pill acc">Secretario</span>
+            <h3>Aplicación móvil para personal de sala en hostelería</h3>
+            <p class="pub-authors"><strong>Alumno:</strong> Manuel Jesús Morales Pérez</p>
+            <p class="pub-meta">Grado en Ingeniería Informática · Defensa: 24-SEP-2024 · 2023-24 · Sobresaliente (9,5)
+            </p>
+          </article>
+
+          <article class="card">
+            <span class="pill acc">Presidente</span>
+            <h3>Desarrollo de un prototipo de videojuego</h3>
+            <p class="pub-authors"><strong>Alumno:</strong> José Luis Díaz Verdejo</p>
+            <p class="pub-meta">Grado en Ingeniería Informática · Defensa: 18-SEP-2024 · 2023-24 · Notable (7,5)</p>
+          </article>
+
+          <article class="card">
+            <span class="pill acc">Secretario</span>
+            <h3>Desarrollo de un Serious Game</h3>
+            <p class="pub-authors"><strong>Alumno:</strong> David Pulido Marchal</p>
+            <p class="pub-meta">Grado en Ingeniería Informática · Defensa: 18-SEP-2024 · 2023-24 · Notable (7)</p>
+          </article>
+
+          <article class="card">
+            <span class="pill acc">Vocal</span>
+            <h3>Análisis descriptivo y predictivo de características de asteroides y sus trayectorias</h3>
+            <p class="pub-authors"><strong>Alumno:</strong> Samuel Sánchez Carrasco</p>
+            <p class="pub-meta">Grado en Ingeniería Informática · Defensa: 16-SEP-2024 · 2023-24 · Sobresaliente (10)
+            </p>
+          </article>
+
+          <article class="card">
+            <span class="pill acc">Secretario</span>
+            <h3>Desarrollo de un gestor de contenido multimedia con reproductor de vídeo integrado</h3>
+            <p class="pub-authors"><strong>Alumno:</strong> Juan Llavero Company</p>
+            <p class="pub-meta">Grado en Ingeniería Informática · Defensa: 12-SEP-2024 · 2023-24 · Sobresaliente (9,3)
+            </p>
+          </article>
+
+          <article class="card">
+            <span class="pill acc">Secretario</span>
+            <h3>Plataforma para visualización interactiva de Realidad Aumentada. Caso de uso: videojuego móvil LandmARk
+            </h3>
+            <p class="pub-authors"><strong>Alumno:</strong> Juan Carlos Fernández Pérez</p>
+            <p class="pub-meta">Máster Univ. en Ingeniería Informática · Defensa: 13-SEP-2024 · 2023-24 · Sobresaliente
+              (9,5)</p>
+          </article>
+
+          <article class="card">
+            <span class="pill acc">Secretario</span>
+            <h3>Prototipo para la visualización de entornos naturales basado en la combinación de las tecnologías de
+              impresión 3D y realidad aumentada</h3>
+            <p class="pub-authors"><strong>Alumna:</strong> Elena Carmona Vallecillo</p>
+            <p class="pub-meta">Grado en Ingeniería Informática · Defensa: 15-JUL-2024 · 2023-24 · Sobresaliente (9,7)
+            </p>
+          </article>
         </div>
       </div>
     </section>
@@ -992,11 +2063,11 @@
   </main>
 
   <footer>
-    <div class="container">&copy; 2025 Dr. David Jurado Rodríguez</div>
+    <div class="container">&copy; 2025 David Jurado Rodríguez</div>
   </footer>
 
   <script>
-    // Menú accesible y responsive
+    // Menu accesible y responsive
     const btn = document.querySelector('.menu');
     const list = document.getElementById('site-nav');
     const toggleNav = () => {
@@ -1006,12 +2077,10 @@
     };
     btn.addEventListener('click', toggleNav);
 
-    // Cerrar el menú al navegar (móvil)
     list.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
       if (window.innerWidth <= 980) { list.setAttribute('hidden', ''); btn.setAttribute('aria-expanded', 'false'); }
     }));
 
-    // Scroll suave con compensación del header
     document.querySelectorAll('a[href^="#"]').forEach(a => {
       a.addEventListener('click', e => {
         const hash = a.getAttribute('href');
@@ -1022,6 +2091,269 @@
         window.scrollTo({ top: y, behavior: 'smooth' });
       });
     });
+
+    const withCachedCategory = (item, key, resolver) => {
+      if (!item.dataset[key]) item.dataset[key] = resolver(item);
+      return item.dataset[key];
+    };
+
+    const setupFilterGroup = (containerId, itemSelector, key, resolver) => {
+      const wrap = document.getElementById(containerId);
+      if (!wrap) return;
+      const buttons = Array.from(wrap.querySelectorAll('button[data-filter]'));
+      const items = Array.from(document.querySelectorAll(itemSelector));
+      if (!buttons.length || !items.length) return;
+
+      const apply = (filter) => {
+        items.forEach((item) => {
+          const category = withCachedCategory(item, key, resolver);
+          const show = filter === 'all' || category === filter;
+          item.classList.toggle('is-hidden', !show);
+        });
+      };
+
+      buttons.forEach((button) => {
+        button.addEventListener('click', () => {
+          buttons.forEach((b) => b.classList.remove('is-active'));
+          button.classList.add('is-active');
+          apply(button.dataset.filter || 'all');
+        });
+      });
+
+      apply('all');
+    };
+
+    setupFilterGroup(
+      'pub-filters',
+      '#publicaciones .stack-1 > article.card',
+      'pub',
+      (item) => item.getAttribute('style')?.includes('var(--q1)') ? 'q1' : 'q2'
+    );
+
+    setupFilterGroup(
+      'cong-filters',
+      '#congresos .stack-1 > .card',
+      'cong',
+      (item) => {
+        const txt = item.textContent.toLowerCase();
+        if (txt.includes('(internacional)')) return 'int';
+        if (txt.includes('(nacional)')) return 'nac';
+        return 'oth';
+      }
+    );
+
+    const projectFilterWrap = document.getElementById('proj-filters');
+    const projectContainer = document.querySelector('#proyectos > .container.stack-2');
+    if (projectFilterWrap && projectContainer) {
+      const projectMainTitle = document.getElementById('projects-main-title');
+      const projectMainSubtitle = document.getElementById('projects-main-subtitle');
+      const projectButtons = Array.from(projectFilterWrap.querySelectorAll('button[data-filter]'));
+      const directChildren = Array.from(projectContainer.children);
+      const titles = directChildren.filter((el) => el.classList.contains('title'));
+      const stacks = directChildren.filter((el) => el.classList.contains('stack-1'));
+
+      const innovationTitle = titles[1];
+      const transferTitle = titles[2];
+      const researchStack = stacks[0];
+      const innovationStack = stacks[1];
+      const transferStack = stacks[2];
+
+      const transferExtras = [];
+      if (transferStack) {
+        let next = transferStack.nextElementSibling;
+        while (next && next.classList.contains('card')) {
+          transferExtras.push(next);
+          next = next.nextElementSibling;
+        }
+      }
+
+      const setVisibility = (el, show) => {
+        if (!el) return;
+        el.classList.toggle('is-hidden', !show);
+      };
+
+      const applyProjectFilter = (filter) => {
+        const showResearch = filter === 'all' || filter === 'investigacion';
+        const showInnovation = filter === 'all' || filter === 'innovacion';
+        const showTransfer = filter === 'all' || filter === 'transferencia';
+        const onlyOneType = filter !== 'all';
+
+        setVisibility(researchStack, showResearch);
+        setVisibility(innovationTitle, showInnovation && !onlyOneType);
+        setVisibility(innovationStack, showInnovation);
+        setVisibility(transferTitle, showTransfer && !onlyOneType);
+        setVisibility(transferStack, showTransfer);
+        transferExtras.forEach((card) => setVisibility(card, showTransfer));
+
+        if (projectMainTitle && projectMainSubtitle) {
+          if (filter === 'investigacion') {
+            projectMainTitle.textContent = 'Proyectos de Investigación';
+            projectMainSubtitle.textContent = '8 proyectos competitivos: 1 internacional, 5 nacionales y 2 autonómicos';
+          } else if (filter === 'innovacion') {
+            projectMainTitle.textContent = 'Proyectos de Innovación Docente';
+            projectMainSubtitle.textContent = '2 proyectos de innovación docente vigentes y finalizados';
+          } else if (filter === 'transferencia') {
+            projectMainTitle.textContent = 'Proyectos de Transferencia de Conocimiento';
+            projectMainSubtitle.textContent = '4 contratos art. 60 LOSU con entidades públicas y privadas';
+          } else {
+            projectMainTitle.textContent = 'Proyectos';
+            projectMainSubtitle.textContent = '14 proyectos en total: 8 de investigación, 2 de innovación docente y 4 de transferencia.';
+          }
+        }
+      };
+
+      projectButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          projectButtons.forEach((b) => b.classList.remove('is-active'));
+          button.classList.add('is-active');
+          applyProjectFilter(button.dataset.filter || 'all');
+        });
+      });
+
+      applyProjectFilter('all');
+    }
+
+    const acadFilterWrap = document.getElementById('acad-filters');
+    const acadMainTitle = document.getElementById('acad-main-title');
+    const acadMainSubtitle = document.getElementById('acad-main-subtitle');
+    const acadKpis = document.getElementById('acad-kpis');
+    const acadKpiItems = acadKpis ? Array.from(acadKpis.querySelectorAll('.mini[data-kind]')) : [];
+    const tfgTitleBlock = document.getElementById('tfg-title-block');
+    const tfmTitleBlock = document.getElementById('tfm-title-block');
+    const tribTitleBlock = document.getElementById('trib-title-block');
+    const tfgStack = document.getElementById('tfg-stack');
+    const tfmStack = document.getElementById('tfm-stack');
+    const tribStack = document.getElementById('trib-stack');
+    if (acadFilterWrap && acadMainTitle && acadMainSubtitle) {
+      const acadButtons = Array.from(acadFilterWrap.querySelectorAll('button[data-filter]'));
+      const setVisibility = (el, show) => {
+        if (!el) return;
+        el.classList.toggle('is-hidden', !show);
+      };
+
+      const applyAcademicFilter = (filter) => {
+        const showTFG = filter === 'all' || filter === 'tfg';
+        const showTFM = filter === 'all' || filter === 'tfm';
+        const showTrib = filter === 'all' || filter === 'tribunales';
+        const singleType = filter !== 'all';
+
+        setVisibility(tfgTitleBlock, showTFG && !singleType);
+        setVisibility(tfgStack, showTFG);
+        setVisibility(tfmTitleBlock, showTFM && !singleType);
+        setVisibility(tfmStack, showTFM);
+        setVisibility(tribTitleBlock, showTrib && !singleType);
+        setVisibility(tribStack, showTrib);
+
+        if (acadKpis) {
+          setVisibility(acadKpis, filter === 'all');
+          acadKpiItems.forEach((item) => {
+            setVisibility(item, true);
+          });
+        }
+
+        if (filter === 'tfg') {
+          acadMainTitle.textContent = 'Dirección de TFG';
+          acadMainSubtitle.textContent = '6 trabajos dirigidos con defensas entre 2023 y 2025.';
+        } else if (filter === 'tfm') {
+          acadMainTitle.textContent = 'Dirección de TFM';
+          acadMainSubtitle.textContent = '3 trabajos de máster dirigidos entre 2024 y 2025.';
+        } else if (filter === 'tribunales') {
+          acadMainTitle.textContent = 'Participación en Tribunales';
+          acadMainSubtitle.textContent = '10 participaciones registradas en defensas de 2023-24 y 2024-25.';
+        } else {
+          acadMainTitle.textContent = 'Dirección de TFG, TFM y Tribunales';
+          acadMainSubtitle.textContent = 'Datos actualizados según certificados de TFGs, TFMs y Tribunales (febrero 2026).';
+        }
+      };
+
+      acadButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          acadButtons.forEach((b) => b.classList.remove('is-active'));
+          button.classList.add('is-active');
+          applyAcademicFilter(button.dataset.filter || 'all');
+        });
+      });
+
+      applyAcademicFilter('all');
+    }
+
+    const normalizeTitle = (text) =>
+      (text || '')
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]+/g, ' ')
+        .trim();
+
+    const tfgCards = Array.from(document.querySelectorAll('#tfg-stack .card'));
+    const tfmCards = Array.from(document.querySelectorAll('#tfm-stack .card'));
+    const tribCards = Array.from(document.querySelectorAll('#trib-stack .card'));
+    const directedCards = [...tfgCards, ...tfmCards];
+
+    const directedTitleSet = new Set(
+      directedCards
+        .map((card) => normalizeTitle(card.querySelector('h3')?.textContent || ''))
+        .filter(Boolean)
+    );
+    const tribunalTitleSet = new Set(
+      tribCards
+        .map((card) => normalizeTitle(card.querySelector('h3')?.textContent || ''))
+        .filter(Boolean)
+    );
+
+    tribCards.forEach((card) => {
+      const title = normalizeTitle(card.querySelector('h3')?.textContent || '');
+      if (!title || !directedTitleSet.has(title)) return;
+      if (card.querySelector('.cross-role-note')) return;
+      const note = document.createElement('p');
+      note.className = 'cross-role-note';
+      note.textContent = 'Tambien en TFG/TFM (direccion o codireccion).';
+      card.appendChild(note);
+    });
+
+    directedCards.forEach((card) => {
+      const title = normalizeTitle(card.querySelector('h3')?.textContent || '');
+      if (!title || !tribunalTitleSet.has(title)) return;
+      if (card.querySelector('.cross-role-note')) return;
+      const note = document.createElement('p');
+      note.className = 'cross-role-note';
+      note.textContent = 'Tambien en tribunales.';
+      card.appendChild(note);
+    });
+
+    const revealTargets = document.querySelectorAll('.hero-copy, .hero-media, .impact-card, .title, .card');
+    revealTargets.forEach((el) => el.classList.add('reveal-in'));
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0.12 });
+    revealTargets.forEach((el) => revealObserver.observe(el));
+
+    const countUp = (el, endValue, duration = 1100) => {
+      const start = performance.now();
+      const step = (now) => {
+        const progress = Math.min((now - start) / duration, 1);
+        const value = Math.round(endValue * progress);
+        el.textContent = value.toLocaleString('es-ES');
+        if (progress < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    };
+
+    const counters = document.querySelectorAll('[data-count]');
+    const counterObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        const el = entry.target;
+        const target = Number(el.dataset.count || 0);
+        countUp(el, target);
+        observer.unobserve(el);
+      });
+    }, { threshold: 0.5 });
+    counters.forEach((el) => counterObserver.observe(el));
   </script>
 </body>
 
