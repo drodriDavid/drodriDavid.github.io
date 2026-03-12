@@ -2383,9 +2383,9 @@
         const onlyOneType = filter !== 'all';
 
         setVisibility(researchStack, showResearch);
-        setVisibility(innovationTitle, showInnovation && !onlyOneType);
+        setVisibility(innovationTitle, showInnovation && onlyOneType);
         setVisibility(innovationStack, showInnovation);
-        setVisibility(transferTitle, showTransfer && !onlyOneType);
+        setVisibility(transferTitle, showTransfer && onlyOneType);
         setVisibility(transferStack, showTransfer);
         transferExtras.forEach((card) => setVisibility(card, showTransfer));
 
