@@ -249,7 +249,7 @@
 
     .project-card {
       display: grid;
-      grid-template-columns: minmax(210px, 33%) 1fr;
+      grid-template-columns: 320px 1fr;
       align-items: stretch;
       overflow: hidden;
       text-decoration: none;
@@ -272,7 +272,14 @@
       height: 100%;
       min-height: 170px;
       object-fit: cover;
+      object-position: center;
       display: block;
+    }
+
+    .project-image--soil {
+      object-fit: contain !important;
+      background: #f3f6f9;
+      padding: .45rem;
     }
 
     .project-card .copy {
@@ -536,7 +543,8 @@
       </div>
       <div class="projects-grid">
         <a class="project-card" href="https://soildataspace.es/home" target="_blank" rel="noopener">
-          <img src="./assets/soil-dataspace-poster.png" alt="Espacio de Datos Federado de Suelos" />
+          <img class="project-image--soil" src="./assets/soil-dataspace-poster.png"
+            alt="Espacio de Datos Federado de Suelos" />
           <div class="copy">
             <div class="project-top">
               <h3>Espacio de Datos del Olivar</h3>
