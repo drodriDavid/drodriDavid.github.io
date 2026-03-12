@@ -859,11 +859,17 @@
     /* Ajuste de lectura en Sobre mi */
     #sobre-mi .grid-2 {
       gap: .6rem;
-      align-items: start;
+      align-items: stretch;
     }
 
     #sobre-mi .stack-1 {
       gap: .35rem;
+    }
+
+    #sobre-mi .grid-2 > .stack-1:first-child {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
     #sobre-mi .stack-1>p {
@@ -910,6 +916,10 @@
 
       .impact-strip {
         grid-template-columns: 1fr;
+      }
+
+      #sobre-mi .grid-2 {
+        align-items: start;
       }
     }
 
