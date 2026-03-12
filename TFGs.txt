@@ -1,0 +1,129 @@
+
+--- PAGE 1 ---
+UXXI Académico Fecha y hora : 25/02/2026 11:11          JJMORENO       Pag. 1 de 1  
+Certificado de docencia en Trabajos fin de Título
+D/Dª LINA GUADALUPE GARCÍA CABRERA, Secretario/a del/de la ESCUELA POLITÉCNICA
+SUPERIOR (JAÉN) de la UNIVERSIDAD DE JAÉN, acredita que según resulta de los 
+antecedentes y documentos que obran en este Centro, D/Dña. DAVID JURADO RODRÍGUEZ, con 
+DNI 53598046L ha desarrollado la actividad académica que se relaciona:
+Cargo: Codirector/a
+Alumno/a: LATORRE HORTELANO, PABLO
+Trabajo fin Título o Tesis
+Plan de estudios:
+Fecha defensa: 14-JUL-23
+Curso académico:
+Calificación: Sobresaliente (10)
+Aplicación WebGL para la gestión, monitorización y predicción de la 
+evolución de plantaciones de olivar
+133A - Grado en Ingeniería informática
+2022-23
+Código seguro de Verificación : UJAPFIR-e589-a3fc-6073-3f62-f6ca-0f55-5039-4b61 | Puede verificar la integridad de este documento en la siguiente dirección : https://sede.ujaen.es/publico/validadordedocumentos
+CSV : UJAPFIR-e589-a3fc-6073-3f62-f6ca-0f55-5039-4b61
+Web : https://sede.ujaen.es/publico/validadordedocumentos
+FIRMANTE(1) : LINA GUADALUPE GARCIA CABRERA | FECHA : 25/02/2026 20:01 | Sin acción específica | Sello de Tiempo: 25/02/2026
+20:01
+Cargo:
+Alumno/a:
+Trabajo fin Título o Tesis
+Plan de estudios:
+Fecha defensa:
+Curso académico:
+Calificación:
+Director/a
+CARMONA VALLECILLO, ELENA
+Prototipo para la visualización de entornos naturales basado en la 
+combinación de las tecnologías de impresión 3D y realidad aumentada 
+133A - Grado en Ingeniería informática
+15-JUL-24
+2023-24
+Sobresaliente (9,7)
+Cargo:
+Alumno/a:
+Trabajo fin Título o Tesis
+Plan de estudios:
+Fecha defensa:
+Curso académico:
+Calificación:
+Director/a
+SERRANO BARAJAS, ANDRES
+Plataforma de realidad aumentada para la exploración de zonas de 
+interés turísticas en ciudades
+133A - Grado en Ingeniería informática
+03-MAR-25
+2024-25
+Sobresaliente (9)
+
+--- PAGE 2 ---
+UXXI Académico Fecha y hora : 25/02/2026 11:14          JJMORENO       Pag. 2 de 2  
+Código seguro de Verificación : UJAPFIR-e3c2-aced-1a1d-8b26-36f8-4ca4-3052-d690 | Puede verificar la integridad de este documento en la siguiente dirección : https://sede.ujaen.es/publico/validadordedocumentos
+CSV : UJAPFIR-e3c2-aced-1a1d-8b26-36f8-4ca4-3052-d690
+Web : https://sede.ujaen.es/publico/validadordedocumentos
+FIRMANTE(1) : LINA GUADALUPE GARCIA CABRERA | FECHA : 25/02/2026 20:01 | Sin acción específica | Sello de Tiempo: 25/02/2026
+20:01
+Cargo:
+Alumno/a:
+Trabajo fin Título o Tesis
+Plan de estudios:
+Fecha defensa:
+Curso académico:
+Calificación:
+Cargo:
+Alumno/a:
+Trabajo fin Título o Tesis
+Plan de estudios:
+Fecha defensa:
+Curso académico:
+Calificación:
+Director/a
+RODRÍGUEZ FERNÁNDEZ, JUAN ANTONIO
+Desarrollo de Técnicas Avanzadas para la Reconstrucción 3D y 
+Digitalización de Invernaderos
+133A - Grado en Ingeniería informática
+23-JUN-25
+2024-25
+Matrícula de Honor (9,6)
+Cargo:
+Alumno/a:
+Trabajo fin Título o Tesis
+Plan de estudios:
+Fecha defensa:
+Curso académico:
+Calificación:
+Cargo:
+Alumno/a:
+Trabajo fin Título o Tesis
+Plan de estudios:
+Fecha defensa:
+Curso académico:
+Calificación:
+Director/a
+GARCÍA DEL CASTILLO, FRANCISCO 
+Desarrollo de Técnicas de Teledetección Avanzada para la 
+Clasificación de Especies Arbóreas Usando Imágenes de Drones
+133A - Grado en Ingeniería informática
+11-JUL-25
+2024-25
+SOBRESALIENTE
+ (10)
+Cargo:
+Alumno/a:
+Trabajo fin Título o Tesis
+Plan de estudios:
+Fecha defensa:
+Curso académico:
+Calificación:
+Cargo:
+Alumno/a:
+Trabajo fin Título o Tesis
+Plan de estudios:
+Fecha defensa:
+Curso académico:
+Calificación:
+Director/a
+GARRIDO RUÍZ, MARÍA DE LAS NIEVES  
+Desarrollo de una Plataforma de Análisis Financiero para 
+PYMES Utilizando Big Data
+133A - Grado en Finanzas y Contabilidad
+08-JUL-25
+2024-25
+SOBRESALIENTE (10)
