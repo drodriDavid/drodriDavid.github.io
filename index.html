@@ -168,16 +168,6 @@
       position: relative;
     }
 
-    .timeline::before {
-      content: "";
-      position: absolute;
-      left: 8px;
-      top: 7px;
-      bottom: 7px;
-      width: 2px;
-      background: #d5e1ed;
-    }
-
     .timeline li {
       position: relative;
       display: grid;
@@ -185,6 +175,16 @@
       column-gap: .44rem;
       align-items: start;
       padding: 0 0 .52rem;
+    }
+
+    .timeline li:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      left: 8px;
+      top: 12px;
+      bottom: -2px;
+      width: 2px;
+      background: #d5e1ed;
     }
 
     .timeline li:last-child {
