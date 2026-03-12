@@ -821,6 +821,96 @@
       }
     }
 
+    /* Sobre mi (alineado con index) */
+    .about-intro {
+      margin-bottom: .7rem;
+    }
+
+    .about-resume {
+      margin-top: .15rem;
+      border-top: 1px solid #dbe5ef;
+      padding-top: .7rem;
+    }
+
+    .about-resume-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: .95rem;
+    }
+
+    .about-col h3 {
+      margin: 0 0 .45rem;
+      font-size: .98rem;
+      color: var(--pri);
+      font-weight: 700;
+    }
+
+    .about-timeline {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      position: relative;
+    }
+
+    .about-timeline::before {
+      content: "";
+      position: absolute;
+      left: 6px;
+      top: 7px;
+      bottom: 7px;
+      width: 1.5px;
+      background: #d5e1ed;
+    }
+
+    .about-timeline li {
+      position: relative;
+      display: grid;
+      grid-template-columns: 18px 1fr;
+      column-gap: .45rem;
+      align-items: start;
+      padding: 0 0 .56rem;
+    }
+
+    .about-timeline li:last-child {
+      padding-bottom: 0;
+    }
+
+    .about-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      background: #ffffff;
+      border: 1.5px solid #7ea6cb;
+      margin-top: .12rem;
+    }
+
+    .about-title {
+      display: block;
+      color: #1f3f5f;
+      font-size: .93rem;
+      line-height: 1.32;
+    }
+
+    .about-sub {
+      display: block;
+      color: #6a7f94;
+      font-size: .82rem;
+      line-height: 1.25;
+      margin-top: .05rem;
+    }
+
+    .about-meta {
+      color: var(--mut);
+      font-size: .84rem;
+    }
+
+    @media (max-width: 900px) {
+      .about-resume-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
     /* Docencia upgrade */
     #docencia {
       font-family: "Source Sans 3", "Segoe UI", Tahoma, sans-serif;
@@ -1309,39 +1399,94 @@
         <div class="title">
           <h2>Sobre mí</h2>
         </div>
-        <div class="grid-2">
-          <div class="stack-1">
-            <p>Doctor en Tecnologías de la Información y la Comunicación por la Universidad de Córdoba
-              (2019–2022), con mención <strong>Cum Laude</strong>, <strong>Industrial</strong> e
-              <strong>Internacional</strong>. Tesis: «Contributions to camera pose estimation in
-              industrial augmented reality applications», en colaboración con Seabery Soluciones S.L. y el
-              grupo AVA.
-            </p>
-            <p>Estancia internacional (3 meses) en UTAD (Vila Real, Portugal), generando colaboraciones con
-              publicaciones de alto impacto.</p>
-            <p>Especializado en <strong>visión por computador</strong>, <strong>modelado 3D</strong>,
-              <strong>segmentación de nubes de puntos</strong> y <strong>estimación de pose</strong>, con
-              aplicaciones en RA, robótica, navegación autónoma y medicina.
-            </p>
-          </div>
-          <div class="stack-1">
-            <h3>Formación Académica</h3>
-            <div class="card">
-              <h4>Máster en Profesorado de Secundaria</h4>
-              <p>Universidad de Jaén | 2023–2024</p>
+        <div class="about-intro stack-1">
+          <p>Doctor en Tecnologías de la Información y la Comunicación por la Universidad de Córdoba
+            (2019-2022), con mención <strong>Cum Laude</strong>, <strong>Industrial</strong> e
+            <strong>Internacional</strong>. Tesis: «Contributions to camera pose estimation in
+            industrial augmented reality applications», en colaboración con Seabery Soluciones S.L. y el
+            grupo AVA.
+          </p>
+          <p>Estancia internacional (3 meses) en UTAD (Vila Real, Portugal), generando colaboraciones con
+            publicaciones de alto impacto.</p>
+          <p>Especializado en <strong>visión por computador</strong>, <strong>modelado 3D</strong>,
+            <strong>segmentación de nubes de puntos</strong> y <strong>estimación de pose</strong>, con
+            aplicaciones en RA, robótica, navegación autónoma y medicina.
+          </p>
+        </div>
+
+        <div class="about-resume" aria-label="Formación académica y trayectoria profesional">
+          <div class="about-resume-grid">
+            <div class="about-col">
+              <h3>Formación académica</h3>
+              <ul class="about-timeline">
+                <li>
+                  <span class="about-dot" aria-hidden="true"></span>
+                  <div>
+                    <strong class="about-title">Máster Universitario en Profesorado de Educación Secundaria
+                      Obligatoria</strong>
+                    <span class="about-sub">Universidad de Jaén · 2022-2023</span>
+                    <span class="about-meta">Formación docente para enseñanza reglada en secundaria, bachillerato y
+                      FP.</span>
+                  </div>
+                </li>
+                <li>
+                  <span class="about-dot" aria-hidden="true"></span>
+                  <div>
+                    <strong class="about-title">Doctorado en Computación Avanzada, Energía y Plasmas</strong>
+                    <span class="about-sub">Universidad de Córdoba · 2019-2022</span>
+                    <span class="about-meta">Mención Cum Laude, Industrial e Internacional.</span>
+                  </div>
+                </li>
+                <li>
+                  <span class="about-dot" aria-hidden="true"></span>
+                  <div>
+                    <strong class="about-title">Máster en Ingeniería Informática</strong>
+                    <span class="about-sub">Universidad de Jaén · 2018-2019</span>
+                    <span class="about-meta">Especialización en visión por computador y transferencia
+                      tecnológica.</span>
+                  </div>
+                </li>
+                <li>
+                  <span class="about-dot" aria-hidden="true"></span>
+                  <div>
+                    <strong class="about-title">Grado en Ingeniería Informática</strong>
+                    <span class="about-sub">Universidad de Jaén · 2014-2018</span>
+                    <span class="about-meta">Base en sistemas inteligentes, programación y computación
+                      aplicada.</span>
+                  </div>
+                </li>
+              </ul>
             </div>
-            <div class="card">
-              <h4>Doctorado en Computación Avanzada Energía y Plasmas de la Universidad de Jaén</h4>
-              <p>Universidad de Córdoba | 2019–2022</p>
-              <p><em>Cum Laude · Industrial · Internacional</em></p>
-            </div>
-            <div class="card">
-              <h4>Máster en Ingeniería Informática</h4>
-              <p>Universidad de Jaén | 2018–2019</p>
-            </div>
-            <div class="card">
-              <h4>Grado en Ingeniería Informática</h4>
-              <p>Universidad de Jaén | 2014–2018</p>
+
+            <div class="about-col">
+              <h3>Trayectoria profesional</h3>
+              <ul class="about-timeline">
+                <li>
+                  <span class="about-dot" aria-hidden="true"></span>
+                  <div>
+                    <strong class="about-title">Investigador Doctor</strong>
+                    <span class="about-sub">Universidad de Jaén · 2025-actualidad</span>
+                    <span class="about-meta">Coordinación técnica de equipo multidisciplinar e investigación aplicada
+                      en visión por computador y modelado 3D.</span>
+                  </div>
+                </li>
+                <li>
+                  <span class="about-dot" aria-hidden="true"></span>
+                  <div>
+                    <strong class="about-title">Profesor Sustituto</strong>
+                    <span class="about-sub">Universidad de Jaén · 2022-2025</span>
+                    <span class="about-meta">Docencia universitaria en informática y tecnologías digitales.</span>
+                  </div>
+                </li>
+                <li>
+                  <span class="about-dot" aria-hidden="true"></span>
+                  <div>
+                    <strong class="about-title">Ph.D Student Researcher</strong>
+                    <span class="about-sub">Seabery Soluciones, S.L. · Universidad de Córdoba · 2019-2022</span>
+                    <span class="about-meta">Transferencia universidad-empresa en contextos industriales.</span>
+                  </div>
+                </li>
+              </ul>
             </div>
           </div>
         </div>
