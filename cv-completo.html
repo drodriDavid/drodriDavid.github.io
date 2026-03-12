@@ -1541,6 +1541,10 @@
       resize: vertical;
     }
 
+    .quick-field[hidden] {
+      display: none !important;
+    }
+
     .quick-add-actions {
       display: flex;
       justify-content: flex-end;
@@ -2561,8 +2565,118 @@
         <label for="quick-title">Título</label>
         <input id="quick-title" type="text" maxlength="180" required />
 
-        <label for="quick-meta">Meta (año, revista, entidad, etc.)</label>
-        <input id="quick-meta" type="text" maxlength="220" />
+        <div class="quick-field" data-types="tfg,tfm">
+          <label for="quick-student">Estudiante</label>
+          <input id="quick-student" type="text" maxlength="120" />
+        </div>
+
+        <div class="quick-field" data-types="tfg,tfm">
+          <label for="quick-role">Rol</label>
+          <select id="quick-role">
+            <option value="Director">Director</option>
+            <option value="Codirector">Codirector</option>
+          </select>
+        </div>
+
+        <div class="quick-field" data-types="tfg,tfm">
+          <label for="quick-degree">Titulación</label>
+          <input id="quick-degree" type="text" maxlength="160" placeholder="Grado en Ingeniería Informática" />
+        </div>
+
+        <div class="quick-field" data-types="tfg,tfm">
+          <label for="quick-defense">Defensa</label>
+          <input id="quick-defense" type="text" maxlength="40" placeholder="14-JUL-2026" />
+        </div>
+
+        <div class="quick-field" data-types="tfg,tfm">
+          <label for="quick-course">Curso académico</label>
+          <input id="quick-course" type="text" maxlength="20" placeholder="2025-26" />
+        </div>
+
+        <div class="quick-field" data-types="tfg,tfm">
+          <label for="quick-grade">Calificación</label>
+          <input id="quick-grade" type="text" maxlength="60" placeholder="Sobresaliente (9,5)" />
+        </div>
+
+        <div class="quick-field" data-types="articulo">
+          <label for="quick-authors">Autores</label>
+          <input id="quick-authors" type="text" maxlength="260" />
+        </div>
+
+        <div class="quick-field" data-types="articulo">
+          <label for="quick-journal">Revista</label>
+          <input id="quick-journal" type="text" maxlength="160" />
+        </div>
+
+        <div class="quick-field" data-types="articulo">
+          <label for="quick-year">Año</label>
+          <input id="quick-year" type="text" maxlength="10" placeholder="2026" />
+        </div>
+
+        <div class="quick-field" data-types="articulo">
+          <label for="quick-doi">DOI</label>
+          <input id="quick-doi" type="text" maxlength="120" placeholder="10.xxxx/xxxx" />
+        </div>
+
+        <div class="quick-field" data-types="articulo">
+          <label for="quick-quartile">Cuartil</label>
+          <select id="quick-quartile">
+            <option value="q1">Q1</option>
+            <option value="q2">Q2</option>
+          </select>
+        </div>
+
+        <div class="quick-field" data-types="proyecto">
+          <label for="quick-project-cat">Categoría de proyecto</label>
+          <select id="quick-project-cat">
+            <option value="investigacion">Investigación</option>
+            <option value="innovación">Innovación</option>
+            <option value="transferencia">Transferencia</option>
+          </select>
+        </div>
+
+        <div class="quick-field" data-types="proyecto">
+          <label for="quick-period">Periodo</label>
+          <input id="quick-period" type="text" maxlength="30" placeholder="2026-2028" />
+        </div>
+
+        <div class="quick-field" data-types="proyecto">
+          <label for="quick-funding">Financiación</label>
+          <input id="quick-funding" type="text" maxlength="50" placeholder="120.000 €" />
+        </div>
+
+        <div class="quick-field" data-types="proyecto">
+          <label for="quick-entity">Entidad</label>
+          <input id="quick-entity" type="text" maxlength="160" placeholder="Universidad de Jaén" />
+        </div>
+
+        <div class="quick-field" data-types="ponencia">
+          <label for="quick-talk-kind">Formato</label>
+          <select id="quick-talk-kind">
+            <option value="Oral">Oral</option>
+            <option value="Poster">Poster</option>
+            <option value="Invitada">Invitada</option>
+          </select>
+        </div>
+
+        <div class="quick-field" data-types="ponencia">
+          <label for="quick-event">Evento</label>
+          <input id="quick-event" type="text" maxlength="180" />
+        </div>
+
+        <div class="quick-field" data-types="ponencia">
+          <label for="quick-location-date">Lugar y fecha</label>
+          <input id="quick-location-date" type="text" maxlength="180" placeholder="Jaén · 12/05/2026" />
+        </div>
+
+        <div class="quick-field" data-types="ponencia">
+          <label for="quick-talk-cat">Clasificación</label>
+          <select id="quick-talk-cat">
+            <option value="Internacional">Internacional</option>
+            <option value="Nacional">Nacional</option>
+            <option value="Invitación">Invitación</option>
+          </select>
+        </div>
 
         <label for="quick-desc">Descripción</label>
         <textarea id="quick-desc" maxlength="600"></textarea>
@@ -2572,7 +2686,7 @@
           <button type="submit">Guardar</button>
         </div>
       </form>
-      <p class="quick-add-help">Se guarda en este navegador y se añade en la sección correspondiente.</p>
+      <p class="quick-add-help">Los campos cambian según el tipo y se guarda en este navegador.</p>
     </div>
   </div>
 
@@ -2636,8 +2750,27 @@
     const quickAddForm = document.getElementById('quick-add-form');
     const quickType = document.getElementById('quick-type');
     const quickTitle = document.getElementById('quick-title');
-    const quickMeta = document.getElementById('quick-meta');
     const quickDesc = document.getElementById('quick-desc');
+    const quickFields = Array.from(document.querySelectorAll('.quick-field'));
+    const quickStudent = document.getElementById('quick-student');
+    const quickRole = document.getElementById('quick-role');
+    const quickDegree = document.getElementById('quick-degree');
+    const quickDefense = document.getElementById('quick-defense');
+    const quickCourse = document.getElementById('quick-course');
+    const quickGrade = document.getElementById('quick-grade');
+    const quickAuthors = document.getElementById('quick-authors');
+    const quickJournal = document.getElementById('quick-journal');
+    const quickYear = document.getElementById('quick-year');
+    const quickDoi = document.getElementById('quick-doi');
+    const quickQuartile = document.getElementById('quick-quartile');
+    const quickProjectCat = document.getElementById('quick-project-cat');
+    const quickPeriod = document.getElementById('quick-period');
+    const quickFunding = document.getElementById('quick-funding');
+    const quickEntity = document.getElementById('quick-entity');
+    const quickTalkKind = document.getElementById('quick-talk-kind');
+    const quickEvent = document.getElementById('quick-event');
+    const quickLocationDate = document.getElementById('quick-location-date');
+    const quickTalkCat = document.getElementById('quick-talk-cat');
 
     const getQuickEntries = () => {
       try {
@@ -2657,28 +2790,72 @@
       }
     };
 
+    const escapeHtml = (text) =>
+      String(text || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+
+    const setQuickFormMode = () => {
+      const currentType = quickType.value;
+      quickFields.forEach((group) => {
+        const accepted = (group.dataset.types || '').split(',').map((s) => s.trim());
+        const show = accepted.includes(currentType);
+        group.hidden = !show;
+      });
+    };
+
+    const getProjectStacks = () => {
+      const container = document.querySelector('#proyectos > .container.stack-2');
+      if (!container) return {};
+      const stacks = Array.from(container.children).filter((el) => el.classList.contains('stack-1'));
+      return {
+        investigacion: stacks[0],
+        innovación: stacks[1],
+        transferencia: stacks[2]
+      };
+    };
+
     const createCardNode = (entry) => {
-      const { type, title, meta, desc } = entry;
+      const { type, title, desc, extra = {} } = entry;
+      const legacyMeta = entry.meta || '';
       if (type === 'tfg' || type === 'tfm') {
         const card = document.createElement('article');
         card.className = 'card';
+        const tagClass = type === 'tfg' ? 'tfg' : 'tfm';
+        const roleLabel = escapeHtml(extra.role || 'Director');
+        const student = escapeHtml(extra.student || 'Pendiente');
+        const metaChunks = [
+          extra.degree || '',
+          extra.defense ? `Defensa: ${extra.defense}` : '',
+          extra.course || '',
+          extra.grade || ''
+        ].filter(Boolean);
         card.innerHTML = `
-          <h3>${title}</h3>
-          ${meta ? `<p class="pub-meta">${meta}</p>` : ''}
-          ${desc ? `<p>${desc}</p>` : ''}
+          <span class="tag ${tagClass}">${type.toUpperCase()} · ${roleLabel}</span>
+          <h3>${escapeHtml(title)}</h3>
+          <p class="pub-authors"><strong>Estudiante:</strong> ${student}</p>
+          ${(metaChunks.length || legacyMeta) ? `<p class="pub-meta">${escapeHtml(metaChunks.length ? metaChunks.join(' · ') : legacyMeta)}</p>` : ''}
+          ${desc ? `<p>${escapeHtml(desc)}</p>` : ''}
         `;
         return card;
       }
 
       if (type === 'articulo') {
+        const quartile = extra.quartile === 'q1' ? 'q1' : 'q2';
         const card = document.createElement('article');
         card.className = 'card';
-        card.style.borderLeftColor = 'var(--q2)';
+        card.style.borderLeftColor = quartile === 'q1' ? 'var(--q1)' : 'var(--q2)';
+        const meta = [extra.journal || '', extra.year || '', extra.doi ? `doi:${extra.doi}` : '']
+          .filter(Boolean)
+          .join(' · ');
         card.innerHTML = `
-          <h3>${title}</h3>
-          <p class="pub-authors">Entrada añadida manualmente</p>
-          <p class="pub-meta">${meta || 'Pendiente de completar metadatos.'}</p>
-          ${desc ? `<p>${desc}</p>` : ''}
+          <h3>${escapeHtml(title)}</h3>
+          <p class="pub-authors">${escapeHtml(extra.authors || 'Autores pendientes')}</p>
+          <p class="pub-meta">${escapeHtml(meta || legacyMeta || 'Pendiente de completar metadatos.')}</p>
+          ${desc ? `<p>${escapeHtml(desc)}</p>` : ''}
         `;
         return card;
       }
@@ -2686,11 +2863,15 @@
       if (type === 'proyecto') {
         const card = document.createElement('div');
         card.className = 'card';
+        const cat = extra.projectCategory || 'investigacion';
+        const tagClass = cat === 'transferencia' ? 'tra' : (cat === 'innovación' ? 'inn' : 'nat');
+        const tagLabel = cat === 'transferencia' ? 'Transferencia' : (cat === 'innovación' ? 'Innovación' : 'Investigación');
+        const metaBits = [extra.period || '', extra.funding ? `Financiación: ${extra.funding}` : '', extra.entity || ''].filter(Boolean);
         card.innerHTML = `
-          <span class="tag nat">Añadido</span>
-          <h3>${title}</h3>
-          ${meta ? `<p><strong>${meta}</strong></p>` : ''}
-          ${desc ? `<p>${desc}</p>` : ''}
+          <span class="tag ${tagClass}">${tagLabel}</span>
+          <h3>${escapeHtml(title)}</h3>
+          ${(metaBits.length || legacyMeta) ? `<p class="pub-meta">${escapeHtml(metaBits.length ? metaBits.join(' · ') : legacyMeta)}</p>` : ''}
+          ${desc ? `<p>${escapeHtml(desc)}</p>` : ''}
         `;
         return card;
       }
@@ -2698,27 +2879,33 @@
       const row = document.createElement('div');
       row.className = 'card row';
       row.style.borderLeftColor = 'var(--pri)';
+      const metaLine = [extra.event || '', extra.locationDate || '', extra.talkCategory ? `(${extra.talkCategory})` : '']
+        .filter(Boolean)
+        .join(' · ');
       row.innerHTML = `
-        <div class="pill acc">Ponencia</div>
+        <div class="pill acc">${escapeHtml(extra.talkKind || 'Ponencia')}</div>
         <div>
-          <h3>${title}</h3>
-          <p>${meta || 'Entrada añadida manualmente'}</p>
-          ${desc ? `<p>${desc}</p>` : ''}
+          <h3>${escapeHtml(title)}</h3>
+          <p>${escapeHtml(metaLine || legacyMeta || 'Entrada añadida manualmente')}</p>
+          ${desc ? `<p>${escapeHtml(desc)}</p>` : ''}
         </div>
       `;
       return row;
     };
 
-    const getInsertTarget = (type) => {
-      if (type === 'tfg') return document.getElementById('tfg-stack');
-      if (type === 'tfm') return document.getElementById('tfm-stack');
-      if (type === 'articulo') return document.querySelector('#publicaciones .stack-1');
-      if (type === 'proyecto') return document.querySelector('#proyectos .stack-1');
+    const getInsertTarget = (entry) => {
+      if (entry.type === 'tfg') return document.getElementById('tfg-stack');
+      if (entry.type === 'tfm') return document.getElementById('tfm-stack');
+      if (entry.type === 'articulo') return document.querySelector('#publicaciones .stack-1');
+      if (entry.type === 'proyecto') {
+        const stacks = getProjectStacks();
+        return stacks[entry.extra?.projectCategory || 'investigacion'] || stacks.investigacion;
+      }
       return document.querySelector('#congresos .stack-1');
     };
 
     const appendQuickEntry = (entry) => {
-      const target = getInsertTarget(entry.type);
+      const target = getInsertTarget(entry);
       if (!target) return;
       const node = createCardNode(entry);
       node.dataset.quickAdded = 'true';
@@ -2727,13 +2914,17 @@
 
     const openQuickModal = () => {
       quickAddModal.removeAttribute('hidden');
+      setQuickFormMode();
       quickTitle.focus();
     };
 
     const closeQuickModal = () => {
       quickAddModal.setAttribute('hidden', '');
       quickAddForm.reset();
+      setQuickFormMode();
     };
+
+    quickType?.addEventListener('change', setQuickFormMode);
 
     quickAddBtn?.addEventListener('click', openQuickModal);
     quickAddClose?.addEventListener('click', closeQuickModal);
@@ -2746,12 +2937,40 @@
       e.preventDefault();
       const title = (quickTitle.value || '').trim();
       if (!title) return;
+      const type = quickType.value;
+      const extra = {};
+
+      if (type === 'tfg' || type === 'tfm') {
+        extra.student = (quickStudent.value || '').trim();
+        extra.role = (quickRole.value || '').trim();
+        extra.degree = (quickDegree.value || '').trim();
+        extra.defense = (quickDefense.value || '').trim();
+        extra.course = (quickCourse.value || '').trim();
+        extra.grade = (quickGrade.value || '').trim();
+      } else if (type === 'articulo') {
+        extra.authors = (quickAuthors.value || '').trim();
+        extra.journal = (quickJournal.value || '').trim();
+        extra.year = (quickYear.value || '').trim();
+        extra.doi = (quickDoi.value || '').trim();
+        extra.quartile = (quickQuartile.value || 'q2').trim();
+      } else if (type === 'proyecto') {
+        extra.projectCategory = (quickProjectCat.value || 'investigacion').trim();
+        extra.period = (quickPeriod.value || '').trim();
+        extra.funding = (quickFunding.value || '').trim();
+        extra.entity = (quickEntity.value || '').trim();
+      } else {
+        extra.talkKind = (quickTalkKind.value || '').trim();
+        extra.event = (quickEvent.value || '').trim();
+        extra.locationDate = (quickLocationDate.value || '').trim();
+        extra.talkCategory = (quickTalkCat.value || '').trim();
+      }
+
       const entry = {
         id: Date.now(),
-        type: quickType.value,
+        type,
         title,
-        meta: (quickMeta.value || '').trim(),
-        desc: (quickDesc.value || '').trim()
+        desc: (quickDesc.value || '').trim(),
+        extra
       };
       const entries = getQuickEntries();
       entries.push(entry);
@@ -2760,6 +2979,7 @@
       closeQuickModal();
     });
 
+    setQuickFormMode();
     getQuickEntries().forEach(appendQuickEntry);
 
     const withCachedCategory = (item, key, resolver) => {
