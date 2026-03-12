@@ -1447,6 +1447,133 @@
       margin-top: .35rem;
       font-weight: 600;
     }
+
+    .quick-add-btn {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 1200;
+      border: 0;
+      border-radius: 999px;
+      padding: .62rem .95rem;
+      font-weight: 700;
+      font-size: .86rem;
+      color: #fff;
+      background: linear-gradient(180deg, #245a89 0%, #173b60 100%);
+      box-shadow: 0 10px 18px rgba(19, 47, 76, .24);
+      cursor: pointer;
+    }
+
+    .quick-add-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1201;
+      display: grid;
+      place-items: center;
+      padding: 1rem;
+      background: rgba(7, 20, 34, .34);
+      backdrop-filter: blur(2px);
+    }
+
+    .quick-add-modal[hidden] {
+      display: none;
+    }
+
+    .quick-add-card {
+      width: min(92vw, 460px);
+      background: #fff;
+      border-radius: 14px;
+      border: 1px solid #d5e1ee;
+      box-shadow: 0 22px 34px rgba(9, 24, 40, .24);
+      padding: .9rem;
+      display: grid;
+      gap: .62rem;
+    }
+
+    .quick-add-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: .6rem;
+    }
+
+    .quick-add-head h3 {
+      margin: 0;
+    }
+
+    .quick-add-close {
+      border: 1px solid #c9d9ea;
+      background: #f6fbff;
+      color: #20496f;
+      border-radius: 8px;
+      width: 32px;
+      height: 32px;
+      font-size: 1.1rem;
+      line-height: 1;
+      cursor: pointer;
+    }
+
+    .quick-add-form {
+      display: grid;
+      gap: .55rem;
+    }
+
+    .quick-add-form label {
+      font-size: .8rem;
+      color: #2a4c70;
+      font-weight: 700;
+    }
+
+    .quick-add-form input,
+    .quick-add-form select,
+    .quick-add-form textarea {
+      width: 100%;
+      padding: .52rem .6rem;
+      border-radius: 8px;
+      border: 1px solid #cad9e8;
+      color: #1f3550;
+      font: inherit;
+      background: #fff;
+    }
+
+    .quick-add-form textarea {
+      min-height: 92px;
+      resize: vertical;
+    }
+
+    .quick-add-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: .5rem;
+      margin-top: .18rem;
+    }
+
+    .quick-add-actions button {
+      border: 1px solid #c9d9ea;
+      border-radius: 8px;
+      padding: .5rem .75rem;
+      font-weight: 700;
+      cursor: pointer;
+      background: #f7fbff;
+      color: #224c74;
+    }
+
+    .quick-add-actions button[type="submit"] {
+      background: #204c74;
+      border-color: #204c74;
+      color: #fff;
+    }
+
+    .quick-add-help {
+      margin: 0;
+      font-size: .78rem;
+      color: #56708b;
+    }
+
+    body.gated .quick-add-btn,
+    body.gated .quick-add-modal {
+      display: none !important;
+    }
   </style>
 </head>
 
@@ -2412,6 +2539,43 @@
     </div>
   </div>
 
+  <button id="quick-add-btn" class="quick-add-btn" type="button" title="Añadir nueva entrada">+ Añadir</button>
+
+  <div id="quick-add-modal" class="quick-add-modal" role="dialog" aria-modal="true" aria-labelledby="quick-add-title"
+    hidden>
+    <div class="quick-add-card">
+      <div class="quick-add-head">
+        <h3 id="quick-add-title">Añadir nueva entrada</h3>
+        <button id="quick-add-close" class="quick-add-close" type="button" aria-label="Cerrar">×</button>
+      </div>
+      <form id="quick-add-form" class="quick-add-form">
+        <label for="quick-type">Tipo</label>
+        <select id="quick-type" required>
+          <option value="tfg">TFG</option>
+          <option value="tfm">TFM</option>
+          <option value="articulo">Artículo</option>
+          <option value="proyecto">Proyecto</option>
+          <option value="ponencia">Ponencia</option>
+        </select>
+
+        <label for="quick-title">Título</label>
+        <input id="quick-title" type="text" maxlength="180" required />
+
+        <label for="quick-meta">Meta (año, revista, entidad, etc.)</label>
+        <input id="quick-meta" type="text" maxlength="220" />
+
+        <label for="quick-desc">Descripción</label>
+        <textarea id="quick-desc" maxlength="600"></textarea>
+
+        <div class="quick-add-actions">
+          <button type="button" id="quick-add-cancel">Cancelar</button>
+          <button type="submit">Guardar</button>
+        </div>
+      </form>
+      <p class="quick-add-help">Se guarda en este navegador y se añade en la sección correspondiente.</p>
+    </div>
+  </div>
+
   <script>
     // Bloqueo visual por contraseña (protección básica en frontend)
     const AUTH_PASSWORD = 'drodrigu040417';
@@ -2464,6 +2628,140 @@
       });
     });
 
+    const QUICK_STORAGE_KEY = 'cvQuickEntriesV1';
+    const quickAddBtn = document.getElementById('quick-add-btn');
+    const quickAddModal = document.getElementById('quick-add-modal');
+    const quickAddClose = document.getElementById('quick-add-close');
+    const quickAddCancel = document.getElementById('quick-add-cancel');
+    const quickAddForm = document.getElementById('quick-add-form');
+    const quickType = document.getElementById('quick-type');
+    const quickTitle = document.getElementById('quick-title');
+    const quickMeta = document.getElementById('quick-meta');
+    const quickDesc = document.getElementById('quick-desc');
+
+    const getQuickEntries = () => {
+      try {
+        const raw = localStorage.getItem(QUICK_STORAGE_KEY);
+        const parsed = raw ? JSON.parse(raw) : [];
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (_) {
+        return [];
+      }
+    };
+
+    const saveQuickEntries = (entries) => {
+      try {
+        localStorage.setItem(QUICK_STORAGE_KEY, JSON.stringify(entries));
+      } catch (_) {
+        // ignore storage errors
+      }
+    };
+
+    const createCardNode = (entry) => {
+      const { type, title, meta, desc } = entry;
+      if (type === 'tfg' || type === 'tfm') {
+        const card = document.createElement('article');
+        card.className = 'card';
+        card.innerHTML = `
+          <h3>${title}</h3>
+          ${meta ? `<p class="pub-meta">${meta}</p>` : ''}
+          ${desc ? `<p>${desc}</p>` : ''}
+        `;
+        return card;
+      }
+
+      if (type === 'articulo') {
+        const card = document.createElement('article');
+        card.className = 'card';
+        card.style.borderLeftColor = 'var(--q2)';
+        card.innerHTML = `
+          <h3>${title}</h3>
+          <p class="pub-authors">Entrada añadida manualmente</p>
+          <p class="pub-meta">${meta || 'Pendiente de completar metadatos.'}</p>
+          ${desc ? `<p>${desc}</p>` : ''}
+        `;
+        return card;
+      }
+
+      if (type === 'proyecto') {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <span class="tag nat">Añadido</span>
+          <h3>${title}</h3>
+          ${meta ? `<p><strong>${meta}</strong></p>` : ''}
+          ${desc ? `<p>${desc}</p>` : ''}
+        `;
+        return card;
+      }
+
+      const row = document.createElement('div');
+      row.className = 'card row';
+      row.style.borderLeftColor = 'var(--pri)';
+      row.innerHTML = `
+        <div class="pill acc">Ponencia</div>
+        <div>
+          <h3>${title}</h3>
+          <p>${meta || 'Entrada añadida manualmente'}</p>
+          ${desc ? `<p>${desc}</p>` : ''}
+        </div>
+      `;
+      return row;
+    };
+
+    const getInsertTarget = (type) => {
+      if (type === 'tfg') return document.getElementById('tfg-stack');
+      if (type === 'tfm') return document.getElementById('tfm-stack');
+      if (type === 'articulo') return document.querySelector('#publicaciones .stack-1');
+      if (type === 'proyecto') return document.querySelector('#proyectos .stack-1');
+      return document.querySelector('#congresos .stack-1');
+    };
+
+    const appendQuickEntry = (entry) => {
+      const target = getInsertTarget(entry.type);
+      if (!target) return;
+      const node = createCardNode(entry);
+      node.dataset.quickAdded = 'true';
+      target.prepend(node);
+    };
+
+    const openQuickModal = () => {
+      quickAddModal.removeAttribute('hidden');
+      quickTitle.focus();
+    };
+
+    const closeQuickModal = () => {
+      quickAddModal.setAttribute('hidden', '');
+      quickAddForm.reset();
+    };
+
+    quickAddBtn?.addEventListener('click', openQuickModal);
+    quickAddClose?.addEventListener('click', closeQuickModal);
+    quickAddCancel?.addEventListener('click', closeQuickModal);
+    quickAddModal?.addEventListener('click', (e) => {
+      if (e.target === quickAddModal) closeQuickModal();
+    });
+
+    quickAddForm?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const title = (quickTitle.value || '').trim();
+      if (!title) return;
+      const entry = {
+        id: Date.now(),
+        type: quickType.value,
+        title,
+        meta: (quickMeta.value || '').trim(),
+        desc: (quickDesc.value || '').trim()
+      };
+      const entries = getQuickEntries();
+      entries.push(entry);
+      saveQuickEntries(entries);
+      appendQuickEntry(entry);
+      closeQuickModal();
+    });
+
+    getQuickEntries().forEach(appendQuickEntry);
+
     const withCachedCategory = (item, key, resolver) => {
       if (!item.dataset[key]) item.dataset[key] = resolver(item);
       return item.dataset[key];
@@ -2473,10 +2771,11 @@
       const wrap = document.getElementById(containerId);
       if (!wrap) return;
       const buttons = Array.from(wrap.querySelectorAll('button[data-filter]'));
-      const items = Array.from(document.querySelectorAll(itemSelector));
-      if (!buttons.length || !items.length) return;
+      if (!buttons.length) return;
 
       const apply = (filter) => {
+        const items = Array.from(document.querySelectorAll(itemSelector));
+        if (!items.length) return;
         items.forEach((item) => {
           const category = withCachedCategory(item, key, resolver);
           const show = filter === 'all' || category === filter;
