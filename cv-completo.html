@@ -1584,6 +1584,10 @@
       display: none !important;
     }
 
+    .quick-title-wrap[hidden] {
+      display: none !important;
+    }
+
     .quick-type-wrap[hidden] {
       display: none !important;
     }
@@ -2703,11 +2707,14 @@
             <option value="proyecto">Proyecto</option>
             <option value="ponencia">Ponencia</option>
             <option value="asignatura">Asignatura</option>
+            <option value="contacto">Contacto</option>
           </select>
         </div>
 
-        <label id="quick-title-label" for="quick-title">Título</label>
-        <input id="quick-title" type="text" maxlength="180" required />
+        <div id="quick-title-wrap" class="quick-title-wrap">
+          <label id="quick-title-label" for="quick-title">Título</label>
+          <input id="quick-title" type="text" maxlength="180" required />
+        </div>
 
         <div class="quick-field" data-types="trabajo">
           <label for="quick-work-kind">Modalidad</label>
@@ -2861,6 +2868,41 @@
           <input id="quick-subject-course" type="text" maxlength="20" placeholder="2025-26" />
         </div>
 
+        <div class="quick-field" data-types="contacto">
+          <label for="quick-contact-email-text">Email (texto)</label>
+          <input id="quick-contact-email-text" type="text" maxlength="120" />
+        </div>
+
+        <div class="quick-field" data-types="contacto">
+          <label for="quick-contact-email-link">Email (enlace mailto)</label>
+          <input id="quick-contact-email-link" type="text" maxlength="160" placeholder="mailto:correo@dominio.com" />
+        </div>
+
+        <div class="quick-field" data-types="contacto">
+          <label for="quick-contact-institution">Institución (texto)</label>
+          <input id="quick-contact-institution" type="text" maxlength="220" />
+        </div>
+
+        <div class="quick-field" data-types="contacto">
+          <label for="quick-contact-orcid">Enlace ORCID</label>
+          <input id="quick-contact-orcid" type="text" maxlength="220" />
+        </div>
+
+        <div class="quick-field" data-types="contacto">
+          <label for="quick-contact-scholar">Enlace Google Scholar</label>
+          <input id="quick-contact-scholar" type="text" maxlength="220" />
+        </div>
+
+        <div class="quick-field" data-types="contacto">
+          <label for="quick-contact-rg">Enlace ResearchGate</label>
+          <input id="quick-contact-rg" type="text" maxlength="220" />
+        </div>
+
+        <div class="quick-field" data-types="contacto">
+          <label for="quick-contact-uja">Enlace Perfil UJA</label>
+          <input id="quick-contact-uja" type="text" maxlength="220" />
+        </div>
+
         <div class="quick-add-actions">
           <button type="button" id="quick-add-cancel">Cancelar</button>
           <button type="submit">Guardar</button>
@@ -2936,6 +2978,7 @@
     const quickAddForm = document.getElementById('quick-add-form');
     const quickTypeWrap = document.getElementById('quick-type-wrap');
     const quickType = document.getElementById('quick-type');
+    const quickTitleWrap = document.getElementById('quick-title-wrap');
     const quickTitleLabel = document.getElementById('quick-title-label');
     const quickTitle = document.getElementById('quick-title');
     const quickFields = Array.from(document.querySelectorAll('.quick-field'));
@@ -2966,6 +3009,13 @@
     const quickSubjectHoursT = document.getElementById('quick-subject-hours-t');
     const quickSubjectHoursP = document.getElementById('quick-subject-hours-p');
     const quickSubjectCourse = document.getElementById('quick-subject-course');
+    const quickContactEmailText = document.getElementById('quick-contact-email-text');
+    const quickContactEmailLink = document.getElementById('quick-contact-email-link');
+    const quickContactInstitution = document.getElementById('quick-contact-institution');
+    const quickContactOrcid = document.getElementById('quick-contact-orcid');
+    const quickContactScholar = document.getElementById('quick-contact-scholar');
+    const quickContactRg = document.getElementById('quick-contact-rg');
+    const quickContactUja = document.getElementById('quick-contact-uja');
     const quickSubjectsBlock = document.getElementById('quick-subjects-block');
     const pubQ3Btn = document.getElementById('pub-q3-btn');
     const pubQ3Summary = document.getElementById('pub-q3-summary');
@@ -3055,6 +3105,12 @@
 
       if (quickTitleLabel) {
         quickTitleLabel.textContent = currentType === 'asignatura' ? 'Asignatura' : 'Título';
+      }
+      if (quickTitleWrap) {
+        quickTitleWrap.hidden = currentType === 'contacto';
+      }
+      if (quickTitle) {
+        quickTitle.required = currentType !== 'contacto';
       }
       if (quickStudentLabel) {
         quickStudentLabel.textContent = currentType === 'tribunal' ? 'Alumno/a' : 'Estudiante';
@@ -3165,6 +3221,32 @@
         return card;
       }
 
+      if (type === 'contacto') {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.style.borderLeftColor = 'var(--pri)';
+        card.innerHTML = `
+          <div class="stack-1">
+            <div class="item">
+              <strong>Email:</strong>
+              <a href="${escapeHtml(extra.contactEmailLink || 'mailto:')}">${escapeHtml(extra.contactEmailText || '')}</a>
+            </div>
+            <div class="item">
+              <strong>Institución:</strong>
+              ${escapeHtml(extra.contactInstitution || '')}
+            </div>
+            <div class="item">
+              <strong>Perfiles académicos:</strong>
+              <a href="${escapeHtml(extra.contactOrcid || '#')}" target="_blank" rel="noopener">ORCID</a> ·
+              <a href="${escapeHtml(extra.contactScholar || '#')}" target="_blank" rel="noopener">Google Scholar</a> ·
+              <a href="${escapeHtml(extra.contactRg || '#')}" target="_blank" rel="noopener">ResearchGate</a> ·
+              <a href="${escapeHtml(extra.contactUja || '#')}" target="_blank" rel="noopener">Perfil UJA</a>
+            </div>
+          </div>
+        `;
+        return card;
+      }
+
       const row = document.createElement('div');
       row.className = 'card row';
       row.style.borderLeftColor = 'var(--pri)';
@@ -3194,6 +3276,7 @@
         return stacks[entry.extra?.projectCategory || 'investigacion'] || stacks.investigacion;
       }
       if (type === 'asignatura') return document.getElementById('quick-subjects-stack');
+      if (type === 'contacto') return document.querySelector('#contacto .card');
       return document.querySelector('#congresos .stack-1');
     };
 
@@ -3206,6 +3289,7 @@
       '#tfg-stack .card',
       '#tfm-stack .card',
       '#trib-stack .card',
+      '#contacto .card',
       '#quick-subjects-stack .card'
     ].join(', ');
 
@@ -3219,6 +3303,7 @@
       if (card.closest('#congresos')) return 'ponencia';
       if (card.closest('#proyectos')) return 'proyecto';
       if (card.closest('#trib-stack')) return 'tribunal';
+      if (card.closest('#contacto')) return 'contacto';
       if (card.closest('#quick-subjects-stack')) return 'asignatura';
       if (card.closest('#tfg-stack') || card.closest('#tfm-stack')) return 'trabajo';
       return 'proyecto';
@@ -3318,6 +3403,22 @@
         return entry;
       }
 
+      if (type === 'contacto') {
+        const items = Array.from(card.querySelectorAll('.item'));
+        const emailLink = items[0]?.querySelector('a');
+        entry.extra.contactEmailText = (emailLink?.textContent || '').trim();
+        entry.extra.contactEmailLink = (emailLink?.getAttribute('href') || '').trim();
+        entry.extra.contactInstitution = (items[1]?.textContent || '')
+          .replace('Institución:', '')
+          .trim();
+        const links = Array.from(items[2]?.querySelectorAll('a') || []);
+        entry.extra.contactOrcid = links[0]?.getAttribute('href') || '';
+        entry.extra.contactScholar = links[1]?.getAttribute('href') || '';
+        entry.extra.contactRg = links[2]?.getAttribute('href') || '';
+        entry.extra.contactUja = links[3]?.getAttribute('href') || '';
+        return entry;
+      }
+
       entry.extra.talkKind = (card.querySelector('.pill')?.textContent || '').trim();
       const talkMeta = parseMetaChunks(card.querySelector('p')?.textContent || '');
       entry.extra.event = talkMeta[0] || '';
@@ -3359,6 +3460,13 @@
       quickSubjectHoursT.value = normalizedHours.t;
       quickSubjectHoursP.value = normalizedHours.p;
       quickSubjectCourse.value = entry.extra?.subjectCourse || '';
+      quickContactEmailText.value = entry.extra?.contactEmailText || '';
+      quickContactEmailLink.value = entry.extra?.contactEmailLink || '';
+      quickContactInstitution.value = entry.extra?.contactInstitution || '';
+      quickContactOrcid.value = entry.extra?.contactOrcid || '';
+      quickContactScholar.value = entry.extra?.contactScholar || '';
+      quickContactRg.value = entry.extra?.contactRg || '';
+      quickContactUja.value = entry.extra?.contactUja || '';
     };
 
     const ensureInlineEditButton = (card) => {
@@ -3522,12 +3630,17 @@
     const appendQuickEntry = (entry) => {
       const target = getInsertTarget(entry);
       if (!target) return;
+      const type = (entry.type === 'tfg' || entry.type === 'tfm') ? 'trabajo' : entry.type;
       const node = createCardNode(entry);
+      if (type === 'contacto' && target.matches('#contacto .card')) {
+        target.innerHTML = node.innerHTML;
+        refreshEditableCards();
+        return;
+      }
       node.dataset.quickAdded = 'true';
       node.dataset.quickEntryId = String(entry.id || '');
       if (entry.id) node.dataset.editId = `quick-${entry.id}`;
       target.prepend(node);
-      const type = (entry.type === 'tfg' || entry.type === 'tfm') ? 'trabajo' : entry.type;
       if (type === 'asignatura' && quickSubjectsBlock) {
         quickSubjectsBlock.classList.remove('is-hidden');
       }
@@ -3708,6 +3821,14 @@
         extra.subjectHoursT = (quickSubjectHoursT.value || '').trim();
         extra.subjectHoursP = (quickSubjectHoursP.value || '').trim();
         extra.subjectCourse = (quickSubjectCourse.value || '').trim();
+      } else if (type === 'contacto') {
+        extra.contactEmailText = (quickContactEmailText.value || '').trim();
+        extra.contactEmailLink = (quickContactEmailLink.value || '').trim();
+        extra.contactInstitution = (quickContactInstitution.value || '').trim();
+        extra.contactOrcid = (quickContactOrcid.value || '').trim();
+        extra.contactScholar = (quickContactScholar.value || '').trim();
+        extra.contactRg = (quickContactRg.value || '').trim();
+        extra.contactUja = (quickContactUja.value || '').trim();
       } else {
         extra.talkKind = (quickTalkKind.value || '').trim();
         extra.event = (quickEvent.value || '').trim();
