@@ -2278,6 +2278,10 @@
 
         </div>
       </div>
+      <div id="quick-subjects-block" class="title is-hidden" style="margin-top:.4rem">
+        <h2>Asignaturas añadidas</h2>
+      </div>
+      <div id="quick-subjects-stack" class="stack-1"></div>
     </section>
 
     <section id="tfg-tfm" style="background:var(--bg2)">
@@ -2561,9 +2565,10 @@
           <option value="articulo">Artículo</option>
           <option value="proyecto">Proyecto</option>
           <option value="ponencia">Ponencia</option>
+          <option value="asignatura">Asignatura</option>
         </select>
 
-        <label for="quick-title">Título</label>
+        <label id="quick-title-label" for="quick-title">Título</label>
         <input id="quick-title" type="text" maxlength="180" required />
 
         <div class="quick-field" data-types="trabajo">
@@ -2693,6 +2698,21 @@
           </select>
         </div>
 
+        <div class="quick-field" data-types="asignatura">
+          <label for="quick-subject-degree">Titulación</label>
+          <input id="quick-subject-degree" type="text" maxlength="160" />
+        </div>
+
+        <div class="quick-field" data-types="asignatura">
+          <label for="quick-subject-hours">Horas</label>
+          <input id="quick-subject-hours" type="text" maxlength="40" placeholder="T: 20 · P: 30" />
+        </div>
+
+        <div class="quick-field" data-types="asignatura">
+          <label for="quick-subject-course">Curso académico</label>
+          <input id="quick-subject-course" type="text" maxlength="20" placeholder="2025-26" />
+        </div>
+
         <div class="quick-field" data-types="proyecto">
           <label for="quick-desc">Descripción</label>
           <textarea id="quick-desc" maxlength="600"></textarea>
@@ -2766,6 +2786,7 @@
     const quickAddCancel = document.getElementById('quick-add-cancel');
     const quickAddForm = document.getElementById('quick-add-form');
     const quickType = document.getElementById('quick-type');
+    const quickTitleLabel = document.getElementById('quick-title-label');
     const quickTitle = document.getElementById('quick-title');
     const quickDesc = document.getElementById('quick-desc');
     const quickFields = Array.from(document.querySelectorAll('.quick-field'));
@@ -2790,6 +2811,10 @@
     const quickLocation = document.getElementById('quick-location');
     const quickTalkDate = document.getElementById('quick-talk-date');
     const quickTalkCat = document.getElementById('quick-talk-cat');
+    const quickSubjectDegree = document.getElementById('quick-subject-degree');
+    const quickSubjectHours = document.getElementById('quick-subject-hours');
+    const quickSubjectCourse = document.getElementById('quick-subject-course');
+    const quickSubjectsBlock = document.getElementById('quick-subjects-block');
 
     const getQuickEntries = () => {
       try {
@@ -2824,6 +2849,9 @@
         const show = accepted.includes(currentType);
         group.hidden = !show;
       });
+      if (quickTitleLabel) {
+        quickTitleLabel.textContent = currentType === 'asignatura' ? 'Asignatura' : 'Título';
+      }
     };
 
     const getProjectStacks = () => {
@@ -2838,12 +2866,14 @@
     };
 
     const createCardNode = (entry) => {
-      const { type, title, desc, extra = {} } = entry;
+      const rawType = entry.type;
+      const type = (rawType === 'tfg' || rawType === 'tfm') ? 'trabajo' : rawType;
+      const { title, desc, extra = {} } = entry;
       const legacyMeta = entry.meta || '';
       if (type === 'trabajo') {
         const card = document.createElement('article');
         card.className = 'card';
-        const workKind = (extra.workKind || 'tfg').toLowerCase() === 'tfm' ? 'tfm' : 'tfg';
+        const workKind = ((extra.workKind || rawType || 'tfg').toLowerCase() === 'tfm') ? 'tfm' : 'tfg';
         const tagClass = workKind;
         const roleLabel = escapeHtml(extra.role || 'Director');
         const student = escapeHtml(extra.student || 'Pendiente');
@@ -2895,6 +2925,17 @@
         return card;
       }
 
+      if (type === 'asignatura') {
+        const card = document.createElement('article');
+        card.className = 'card';
+        const metaBits = [extra.subjectCourse || '', extra.subjectDegree || '', extra.subjectHours || ''].filter(Boolean);
+        card.innerHTML = `
+          <h3>${escapeHtml(title)}</h3>
+          ${metaBits.length ? `<p class="pub-meta">${escapeHtml(metaBits.join(' · '))}</p>` : ''}
+        `;
+        return card;
+      }
+
       const row = document.createElement('div');
       row.className = 'card row';
       row.style.borderLeftColor = 'var(--pri)';
@@ -2912,15 +2953,17 @@
     };
 
     const getInsertTarget = (entry) => {
-      if (entry.type === 'trabajo') {
-        const workKind = (entry.extra?.workKind || 'tfg').toLowerCase();
+      const type = (entry.type === 'tfg' || entry.type === 'tfm') ? 'trabajo' : entry.type;
+      if (type === 'trabajo') {
+        const workKind = (entry.extra?.workKind || entry.type || 'tfg').toLowerCase();
         return workKind === 'tfm' ? document.getElementById('tfm-stack') : document.getElementById('tfg-stack');
       }
-      if (entry.type === 'articulo') return document.querySelector('#publicaciones .stack-1');
-      if (entry.type === 'proyecto') {
+      if (type === 'articulo') return document.querySelector('#publicaciones .stack-1');
+      if (type === 'proyecto') {
         const stacks = getProjectStacks();
         return stacks[entry.extra?.projectCategory || 'investigacion'] || stacks.investigacion;
       }
+      if (type === 'asignatura') return document.getElementById('quick-subjects-stack');
       return document.querySelector('#congresos .stack-1');
     };
 
@@ -2930,6 +2973,10 @@
       const node = createCardNode(entry);
       node.dataset.quickAdded = 'true';
       target.prepend(node);
+      const type = (entry.type === 'tfg' || entry.type === 'tfm') ? 'trabajo' : entry.type;
+      if (type === 'asignatura' && quickSubjectsBlock) {
+        quickSubjectsBlock.classList.remove('is-hidden');
+      }
     };
 
     const openQuickModal = () => {
@@ -2979,6 +3026,10 @@
         extra.period = (quickPeriod.value || '').trim();
         extra.funding = (quickFunding.value || '').trim();
         extra.entity = (quickEntity.value || '').trim();
+      } else if (type === 'asignatura') {
+        extra.subjectDegree = (quickSubjectDegree.value || '').trim();
+        extra.subjectHours = (quickSubjectHours.value || '').trim();
+        extra.subjectCourse = (quickSubjectCourse.value || '').trim();
       } else {
         extra.talkKind = (quickTalkKind.value || '').trim();
         extra.event = (quickEvent.value || '').trim();
