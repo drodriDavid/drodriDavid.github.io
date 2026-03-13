@@ -1448,11 +1448,17 @@
       font-weight: 600;
     }
 
-    .quick-add-btn {
+    .quick-settings {
       position: fixed;
       right: 18px;
       bottom: 18px;
       z-index: 1200;
+      display: grid;
+      gap: .5rem;
+      justify-items: end;
+    }
+
+    .quick-settings-main {
       border: 0;
       border-radius: 999px;
       padding: .62rem .95rem;
@@ -1464,23 +1470,34 @@
       cursor: pointer;
     }
 
-    .quick-edit-mode-btn {
-      position: fixed;
-      right: 18px;
-      bottom: 64px;
-      z-index: 1200;
-      border: 1px solid #c9d9ea;
-      border-radius: 999px;
-      padding: .56rem .82rem;
-      font-weight: 700;
-      font-size: .8rem;
-      color: #1f4a74;
+    .quick-settings-menu {
+      display: grid;
+      gap: .42rem;
+      width: 172px;
+      padding: .52rem;
+      border: 1px solid #d0deec;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, .98);
+      box-shadow: 0 12px 22px rgba(19, 47, 76, .16);
+    }
+
+    .quick-settings-menu[hidden] {
+      display: none;
+    }
+
+    .quick-settings-item {
+      border: 1px solid #cadeef;
+      border-radius: 9px;
       background: #f7fbff;
-      box-shadow: 0 8px 14px rgba(19, 47, 76, .14);
+      color: #1f4a74;
+      font-size: .8rem;
+      font-weight: 700;
+      text-align: left;
+      padding: .45rem .58rem;
       cursor: pointer;
     }
 
-    .quick-edit-mode-btn.is-active {
+    .quick-settings-item.is-active {
       color: #fff;
       background: linear-gradient(180deg, #245a89 0%, #173b60 100%);
       border-color: #173b60;
@@ -1622,9 +1639,31 @@
       gap: .2rem;
     }
 
-    body.gated .quick-add-btn,
+    .inline-delete-btn {
+      position: absolute;
+      top: 8px;
+      right: 58px;
+      z-index: 2;
+      border: 1px solid #f0b4b4;
+      border-radius: 8px;
+      background: #fff5f5;
+      color: #9b1c1c;
+      font-size: .74rem;
+      font-weight: 700;
+      padding: .2rem .42rem;
+      cursor: pointer;
+      display: none;
+    }
+
+    body.delete-mode .inline-delete-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .2rem;
+    }
+
+    body.gated .quick-settings,
     body.gated .quick-add-modal,
-    body.gated .quick-edit-mode-btn {
+    body.gated .quick-edit-modal {
       display: none !important;
     }
   </style>
@@ -2598,9 +2637,14 @@
     </div>
   </div>
 
-  <button id="quick-add-btn" class="quick-add-btn" type="button" title="Añadir nueva entrada">+ Añadir</button>
-  <button id="quick-edit-mode-btn" class="quick-edit-mode-btn" type="button" title="Activar modo edición">✎ Modo
-    edición</button>
+  <div id="quick-settings" class="quick-settings">
+    <div id="quick-settings-menu" class="quick-settings-menu" hidden>
+      <button id="quick-settings-add" class="quick-settings-item" type="button">+ Añadir</button>
+      <button id="quick-settings-edit" class="quick-settings-item" type="button">✎ Modo edición</button>
+      <button id="quick-settings-delete" class="quick-settings-item" type="button">🗑 Modo eliminar</button>
+    </div>
+    <button id="quick-settings-main" class="quick-settings-main" type="button" title="Ajustes">⚙ Ajustes</button>
+  </div>
 
   <div id="quick-add-modal" class="quick-add-modal" role="dialog" aria-modal="true" aria-labelledby="quick-add-title"
     hidden>
@@ -2865,8 +2909,12 @@
 
     const QUICK_STORAGE_KEY = 'cvQuickEntriesV1';
     const QUICK_EDITS_STORAGE_KEY = 'cvCardEditsV1';
-    const quickAddBtn = document.getElementById('quick-add-btn');
-    const quickEditModeBtn = document.getElementById('quick-edit-mode-btn');
+    const quickSettings = document.getElementById('quick-settings');
+    const quickSettingsMain = document.getElementById('quick-settings-main');
+    const quickSettingsMenu = document.getElementById('quick-settings-menu');
+    const quickSettingsAdd = document.getElementById('quick-settings-add');
+    const quickSettingsEdit = document.getElementById('quick-settings-edit');
+    const quickSettingsDelete = document.getElementById('quick-settings-delete');
     const quickAddModal = document.getElementById('quick-add-modal');
     const quickAddClose = document.getElementById('quick-add-close');
     const quickAddCancel = document.getElementById('quick-add-cancel');
@@ -2942,6 +2990,24 @@
     const saveCardEdits = (edits) => {
       try {
         localStorage.setItem(QUICK_EDITS_STORAGE_KEY, JSON.stringify(edits));
+      } catch (_) {
+        // ignore storage errors
+      }
+    };
+
+    const QUICK_DELETES_STORAGE_KEY = 'cvCardDeletesV1';
+    const getCardDeletes = () => {
+      try {
+        const raw = localStorage.getItem(QUICK_DELETES_STORAGE_KEY);
+        const parsed = raw ? JSON.parse(raw) : [];
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (_) {
+        return [];
+      }
+    };
+    const saveCardDeletes = (deletes) => {
+      try {
+        localStorage.setItem(QUICK_DELETES_STORAGE_KEY, JSON.stringify(deletes));
       } catch (_) {
         // ignore storage errors
       }
@@ -3148,6 +3214,34 @@
       card.appendChild(btn);
     };
 
+    const deleteCard = (card) => {
+      if (!card) return;
+      const editId = card.dataset.editId;
+      const deletes = getCardDeletes();
+      if (editId && !deletes.includes(editId)) {
+        deletes.push(editId);
+        saveCardDeletes(deletes);
+      }
+
+      if (card.dataset.quickAdded === 'true' && card.dataset.quickEntryId) {
+        const entryId = String(card.dataset.quickEntryId);
+        const entries = getQuickEntries().filter((entry) => String(entry.id) !== entryId);
+        saveQuickEntries(entries);
+      }
+
+      card.remove();
+    };
+
+    const ensureInlineDeleteButton = (card) => {
+      if (!card || card.querySelector(':scope > .inline-delete-btn')) return;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'inline-delete-btn';
+      btn.textContent = 'Eliminar';
+      btn.addEventListener('click', () => deleteCard(card));
+      card.appendChild(btn);
+    };
+
     const refreshEditableCards = () => {
       const cards = Array.from(document.querySelectorAll(editableCardSelector));
       cards.forEach((card, idx) => {
@@ -3156,14 +3250,25 @@
           card.dataset.editId = `${section}-${idx + 1}`;
         }
         ensureInlineEditButton(card);
+        ensureInlineDeleteButton(card);
       });
 
       const edits = getCardEdits();
+      const deletes = new Set(getCardDeletes());
       cards.forEach((card) => {
         const editId = card.dataset.editId;
+        if (editId && deletes.has(editId)) {
+          card.remove();
+          return;
+        }
         if (!editId || !edits[editId]) return;
         applyEditToCard(card, edits[editId]);
       });
+
+      const subjectStack = document.getElementById('quick-subjects-stack');
+      if (quickSubjectsBlock && subjectStack && !subjectStack.querySelector('.card')) {
+        quickSubjectsBlock.classList.add('is-hidden');
+      }
     };
 
     const appendQuickEntry = (entry) => {
@@ -3171,6 +3276,8 @@
       if (!target) return;
       const node = createCardNode(entry);
       node.dataset.quickAdded = 'true';
+      node.dataset.quickEntryId = String(entry.id || '');
+      if (entry.id) node.dataset.editId = `quick-${entry.id}`;
       target.prepend(node);
       const type = (entry.type === 'tfg' || entry.type === 'tfm') ? 'trabajo' : entry.type;
       if (type === 'asignatura' && quickSubjectsBlock) {
@@ -3193,13 +3300,44 @@
 
     quickType?.addEventListener('change', setQuickFormMode);
 
-    quickAddBtn?.addEventListener('click', openQuickModal);
+    const updateSettingsActiveStates = () => {
+      quickSettingsEdit?.classList.toggle('is-active', document.body.classList.contains('edit-mode'));
+      quickSettingsDelete?.classList.toggle('is-active', document.body.classList.contains('delete-mode'));
+    };
+
+    quickSettingsMain?.addEventListener('click', () => {
+      if (!quickSettingsMenu) return;
+      if (quickSettingsMenu.hasAttribute('hidden')) quickSettingsMenu.removeAttribute('hidden');
+      else quickSettingsMenu.setAttribute('hidden', '');
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!quickSettings || !quickSettingsMenu) return;
+      if (quickSettings.contains(e.target)) return;
+      quickSettingsMenu.setAttribute('hidden', '');
+    });
+
+    quickSettingsAdd?.addEventListener('click', () => {
+      quickSettingsMenu?.setAttribute('hidden', '');
+      openQuickModal();
+    });
+
+    quickSettingsEdit?.addEventListener('click', () => {
+      document.body.classList.toggle('edit-mode');
+      document.body.classList.remove('delete-mode');
+      updateSettingsActiveStates();
+      quickSettingsMenu?.setAttribute('hidden', '');
+    });
+
+    quickSettingsDelete?.addEventListener('click', () => {
+      document.body.classList.toggle('delete-mode');
+      document.body.classList.remove('edit-mode');
+      updateSettingsActiveStates();
+      quickSettingsMenu?.setAttribute('hidden', '');
+    });
+
     quickAddClose?.addEventListener('click', closeQuickModal);
     quickAddCancel?.addEventListener('click', closeQuickModal);
-    quickEditModeBtn?.addEventListener('click', () => {
-      document.body.classList.toggle('edit-mode');
-      quickEditModeBtn.classList.toggle('is-active', document.body.classList.contains('edit-mode'));
-    });
     quickEditClose?.addEventListener('click', closeQuickEditModal);
     quickEditCancel?.addEventListener('click', closeQuickEditModal);
     quickAddModal?.addEventListener('click', (e) => {
@@ -3283,6 +3421,7 @@
     setQuickFormMode();
     getQuickEntries().forEach(appendQuickEntry);
     refreshEditableCards();
+    updateSettingsActiveStates();
 
     const withCachedCategory = (item, key, resolver) => {
       if (!item.dataset[key]) item.dataset[key] = resolver(item);
