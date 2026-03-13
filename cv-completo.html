@@ -3149,9 +3149,11 @@
       const entry = { type, title, desc: '', extra: {} };
 
       if (type === 'trabajo') {
-        const tagText = (card.querySelector('.tag')?.textContent || '').toUpperCase();
+        const tagTextRaw = (card.querySelector('.tag')?.textContent || '').trim();
+        const tagText = tagTextRaw.toUpperCase();
         entry.extra.workKind = tagText.includes('TFM') ? 'tfm' : 'tfg';
-        entry.extra.role = (tagText.split('·')[1] || 'Director').trim();
+        const roleRaw = (tagTextRaw.split('·')[1] || '').trim().toLowerCase();
+        entry.extra.role = roleRaw.includes('codirect') ? 'Codirector' : 'Director';
         const studentText = (card.querySelector('.pub-authors')?.textContent || '').replace('Estudiante:', '').trim();
         entry.extra.student = studentText;
         const parts = parseMetaChunks(card.querySelector('.pub-meta')?.textContent || '');
