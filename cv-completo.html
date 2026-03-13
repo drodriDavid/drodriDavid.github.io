@@ -1665,6 +1665,43 @@
       gap: .2rem;
     }
 
+    .subject-actions {
+      display: inline-flex;
+      gap: .3rem;
+      margin-left: .5rem;
+      vertical-align: middle;
+    }
+
+    .subject-edit-btn,
+    .subject-delete-btn {
+      border: 1px solid #c3d5e7;
+      border-radius: 6px;
+      background: #ffffff;
+      color: #20486f;
+      font-size: .7rem;
+      font-weight: 700;
+      padding: .12rem .35rem;
+      cursor: pointer;
+      display: none;
+      line-height: 1.1;
+    }
+
+    .subject-delete-btn {
+      border-color: #f0b4b4;
+      background: #fff5f5;
+      color: #9b1c1c;
+    }
+
+    body.edit-mode .subject-edit-btn {
+      display: inline-flex;
+      align-items: center;
+    }
+
+    body.delete-mode .subject-delete-btn {
+      display: inline-flex;
+      align-items: center;
+    }
+
     body.gated .quick-settings,
     body.gated .quick-add-modal {
       display: none !important;
@@ -3166,7 +3203,6 @@
       '#congresos .stack-1 > .card',
       '#proyectos .stack-1 > .card',
       '#proyectos > .container.stack-2 > .card',
-      '#docencia .card',
       '#tfg-stack .card',
       '#tfm-stack .card',
       '#trib-stack .card',
@@ -3175,6 +3211,8 @@
 
     let currentEditingCard = null;
     let currentEditingCardId = null;
+    let currentEditingSubjectRow = null;
+    let currentEditingSubjectId = null;
 
     const inferTypeFromCard = (card) => {
       if (card.closest('#publicaciones')) return 'articulo';
@@ -3389,6 +3427,75 @@
       refreshPublicationQ3Visibility();
     };
 
+    const parseHours = (value) => {
+      const txt = String(value || '');
+      const tMatch = txt.match(/T:\s*([0-9]+)/i);
+      const pMatch = txt.match(/P:\s*([0-9]+)/i);
+      return {
+        t: tMatch ? tMatch[1] : '',
+        p: pMatch ? pMatch[1] : ''
+      };
+    };
+
+    const buildHours = (t, p) => {
+      const parts = [];
+      if (t) parts.push(`T: ${t}`);
+      if (p) parts.push(`P: ${p}`);
+      return parts.join(' · ');
+    };
+
+    const ensureSubjectRowControls = () => {
+      const rows = Array.from(document.querySelectorAll('#docencia .subject-table tbody tr'));
+      rows.forEach((row, idx) => {
+        if (!row.dataset.subjectRowId) {
+          row.dataset.subjectRowId = `doc-subject-${idx + 1}`;
+        }
+
+        const cells = row.querySelectorAll('td');
+        if (cells.length < 3) return;
+        const hoursCell = cells[2];
+        let hoursValue = hoursCell.querySelector('.subject-hours-value');
+        if (!hoursValue) {
+          const raw = hoursCell.textContent.trim();
+          hoursCell.textContent = '';
+          hoursValue = document.createElement('span');
+          hoursValue.className = 'subject-hours-value';
+          hoursValue.textContent = raw;
+          hoursCell.appendChild(hoursValue);
+        }
+
+        if (!hoursCell.querySelector('.subject-actions')) {
+          const wrap = document.createElement('span');
+          wrap.className = 'subject-actions';
+          wrap.innerHTML = `
+            <button type="button" class="subject-edit-btn">Editar</button>
+            <button type="button" class="subject-delete-btn">Eliminar</button>
+          `;
+          hoursCell.appendChild(wrap);
+        }
+      });
+
+      const deletedIds = new Set(getCardDeletes());
+      const edits = getCardEdits();
+      rows.forEach((row) => {
+        const rowId = row.dataset.subjectRowId || '';
+        if (deletedIds.has(rowId)) {
+          row.remove();
+          return;
+        }
+        const saved = edits[rowId];
+        if (!saved || saved.type !== 'asignatura') return;
+        const cells = row.querySelectorAll('td');
+        if (cells.length < 3) return;
+        cells[0].textContent = saved.title || cells[0].textContent;
+        cells[1].textContent = saved.extra?.subjectDegree || cells[1].textContent;
+        const hoursCell = cells[2];
+        const hoursValue = hoursCell.querySelector('.subject-hours-value');
+        const merged = buildHours(saved.extra?.subjectHoursT || '', saved.extra?.subjectHoursP || '');
+        if (hoursValue && merged) hoursValue.textContent = merged;
+      });
+    };
+
     const appendQuickEntry = (entry) => {
       const target = getInsertTarget(entry);
       if (!target) return;
@@ -3405,7 +3512,7 @@
     };
 
     const openQuickModal = () => {
-      const isEditing = Boolean(currentEditingCard);
+      const isEditing = Boolean(currentEditingCard || currentEditingSubjectRow);
       if (quickTypeWrap) quickTypeWrap.hidden = isEditing;
       if (quickType) quickType.disabled = isEditing;
       quickAddModal.removeAttribute('hidden');
@@ -3421,6 +3528,8 @@
       setQuickFormMode();
       currentEditingCard = null;
       currentEditingCardId = null;
+      currentEditingSubjectRow = null;
+      currentEditingSubjectId = null;
       document.getElementById('quick-add-title').textContent = 'Añadir nueva entrada';
       quickAddForm.querySelector('button[type="submit"]').textContent = 'Guardar';
     };
@@ -3454,10 +3563,57 @@
       refreshEditableCards();
     });
 
+    document.addEventListener('click', (e) => {
+      const subjectEditBtn = e.target.closest('.subject-edit-btn');
+      if (!subjectEditBtn) return;
+      e.preventDefault();
+      const row = subjectEditBtn.closest('tr');
+      if (!row) return;
+      const cells = row.querySelectorAll('td');
+      if (cells.length < 3) return;
+      const hoursText = (cells[2].querySelector('.subject-hours-value')?.textContent || '').trim();
+      const hours = parseHours(hoursText);
+      currentEditingSubjectRow = row;
+      currentEditingSubjectId = row.dataset.subjectRowId || null;
+      currentEditingCard = null;
+      currentEditingCardId = null;
+
+      quickType.value = 'asignatura';
+      setQuickFormMode();
+      quickTitle.value = (cells[0].textContent || '').trim();
+      quickSubjectDegree.value = (cells[1].textContent || '').trim();
+      quickSubjectHoursT.value = hours.t;
+      quickSubjectHoursP.value = hours.p;
+      quickSubjectCourse.value = (row.closest('.year-card')?.querySelector('.year-head h4')?.textContent || '')
+        .replace('Curso', '')
+        .trim();
+      document.getElementById('quick-add-title').textContent = 'Editar asignatura';
+      quickAddForm.querySelector('button[type="submit"]').textContent = 'Guardar cambios';
+      openQuickModal();
+    });
+
+    document.addEventListener('click', (e) => {
+      const subjectDeleteBtn = e.target.closest('.subject-delete-btn');
+      if (!subjectDeleteBtn) return;
+      e.preventDefault();
+      const row = subjectDeleteBtn.closest('tr');
+      if (!row) return;
+      const rowId = row.dataset.subjectRowId;
+      const deletes = getCardDeletes();
+      if (rowId && !deletes.includes(rowId)) {
+        deletes.push(rowId);
+        saveCardDeletes(deletes);
+      }
+      row.remove();
+      ensureSubjectRowControls();
+    });
+
     quickSettingsAdd?.addEventListener('click', () => {
       quickSettingsMenu?.setAttribute('hidden', '');
       currentEditingCard = null;
       currentEditingCardId = null;
+      currentEditingSubjectRow = null;
+      currentEditingSubjectId = null;
       quickAddForm.reset();
       document.getElementById('quick-add-title').textContent = 'Añadir nueva entrada';
       quickAddForm.querySelector('button[type="submit"]').textContent = 'Guardar';
@@ -3537,6 +3693,28 @@
         desc: type === 'proyecto' ? (quickDesc.value || '').trim() : '',
         extra
       };
+      if (currentEditingSubjectRow) {
+        const cells = currentEditingSubjectRow.querySelectorAll('td');
+        if (cells.length >= 3) {
+          cells[0].textContent = title;
+          cells[1].textContent = extra.subjectDegree || '';
+          const hoursCell = cells[2];
+          const hoursValue = hoursCell.querySelector('.subject-hours-value');
+          const mergedHours = buildHours(extra.subjectHoursT, extra.subjectHoursP);
+          if (hoursValue) hoursValue.textContent = mergedHours;
+        }
+
+        if (currentEditingSubjectId) {
+          const edits = getCardEdits();
+          edits[currentEditingSubjectId] = entry;
+          saveCardEdits(edits);
+        }
+
+        ensureSubjectRowControls();
+        closeQuickModal();
+        return;
+      }
+
       if (currentEditingCard) {
         const rendered = createCardNode(entry);
         currentEditingCard.innerHTML = rendered.innerHTML;
@@ -3575,6 +3753,7 @@
     setQuickFormMode();
     getQuickEntries().forEach(appendQuickEntry);
     refreshEditableCards();
+    ensureSubjectRowControls();
     updateSettingsActiveStates();
 
     const withCachedCategory = (item, key, resolver) => {
