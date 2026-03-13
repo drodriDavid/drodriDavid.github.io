@@ -1642,7 +1642,7 @@
     .inline-delete-btn {
       position: absolute;
       top: 8px;
-      right: 58px;
+      right: 8px;
       z-index: 2;
       border: 1px solid #f0b4b4;
       border-radius: 8px;
@@ -3282,7 +3282,6 @@
       btn.type = 'button';
       btn.className = 'inline-delete-btn';
       btn.textContent = 'Eliminar';
-      btn.addEventListener('click', () => deleteCard(card));
       card.appendChild(btn);
     };
 
@@ -3366,6 +3365,16 @@
       if (!quickSettings || !quickSettingsMenu) return;
       if (quickSettings.contains(e.target)) return;
       quickSettingsMenu.setAttribute('hidden', '');
+    });
+
+    document.addEventListener('click', (e) => {
+      const deleteBtn = e.target.closest('.inline-delete-btn');
+      if (!deleteBtn) return;
+      e.preventDefault();
+      const card = deleteBtn.closest('.card');
+      if (!card) return;
+      deleteCard(card);
+      refreshEditableCards();
     });
 
     quickSettingsAdd?.addEventListener('click', () => {
