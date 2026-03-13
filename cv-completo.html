@@ -1662,8 +1662,7 @@
     }
 
     body.gated .quick-settings,
-    body.gated .quick-add-modal,
-    body.gated .quick-edit-modal {
+    body.gated .quick-add-modal {
       display: none !important;
     }
   </style>
@@ -2827,34 +2826,6 @@
     </div>
   </div>
 
-  <div id="quick-edit-modal" class="quick-add-modal" role="dialog" aria-modal="true" aria-labelledby="quick-edit-title"
-    hidden>
-    <div class="quick-add-card">
-      <div class="quick-add-head">
-        <h3 id="quick-edit-title">Editar entrada</h3>
-        <button id="quick-edit-close" class="quick-add-close" type="button" aria-label="Cerrar">×</button>
-      </div>
-      <form id="quick-edit-form" class="quick-add-form">
-        <label for="quick-edit-label">Etiqueta (opcional)</label>
-        <input id="quick-edit-label" type="text" maxlength="80" />
-
-        <label for="quick-edit-title-input">Título</label>
-        <input id="quick-edit-title-input" type="text" maxlength="220" />
-
-        <label for="quick-edit-meta">Línea principal</label>
-        <input id="quick-edit-meta" type="text" maxlength="260" />
-
-        <label for="quick-edit-desc">Descripción</label>
-        <textarea id="quick-edit-desc" maxlength="900"></textarea>
-
-        <div class="quick-add-actions">
-          <button type="button" id="quick-edit-cancel">Cancelar</button>
-          <button type="submit">Guardar cambios</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
   <script>
     // Bloqueo visual por contraseña (protección básica en frontend)
     const AUTH_PASSWORD = 'drodrigu040417';
@@ -2950,14 +2921,6 @@
     const quickSubjectHoursP = document.getElementById('quick-subject-hours-p');
     const quickSubjectCourse = document.getElementById('quick-subject-course');
     const quickSubjectsBlock = document.getElementById('quick-subjects-block');
-    const quickEditModal = document.getElementById('quick-edit-modal');
-    const quickEditClose = document.getElementById('quick-edit-close');
-    const quickEditCancel = document.getElementById('quick-edit-cancel');
-    const quickEditForm = document.getElementById('quick-edit-form');
-    const quickEditLabelInput = document.getElementById('quick-edit-label');
-    const quickEditTitleInput = document.getElementById('quick-edit-title-input');
-    const quickEditMetaInput = document.getElementById('quick-edit-meta');
-    const quickEditDescInput = document.getElementById('quick-edit-desc');
 
     const getQuickEntries = () => {
       try {
@@ -3151,57 +3114,130 @@
     };
 
     const editableCardSelector = [
-      '#sobre-mi .card',
-      '#publicaciones .card',
-      '#congresos .card',
-      '#proyectos .card',
-      '#docencia .card',
-      '#tfg-tfm .card'
+      '#publicaciones .stack-1 > article.card',
+      '#congresos .stack-1 > .card',
+      '#proyectos .stack-1 > .card',
+      '#tfg-stack .card',
+      '#tfm-stack .card',
+      '#quick-subjects-stack .card'
     ].join(', ');
 
     let currentEditingCard = null;
+    let currentEditingCardId = null;
 
-    const getCardEditRefs = (card) => {
-      const labelEl = card.querySelector('.tag, .pill');
-      const titleEl = card.querySelector('h3, h4');
-      const metaEl = card.querySelector('p.pub-meta') || card.querySelector('p');
-      const paragraphs = Array.from(card.querySelectorAll('p'));
-      let descEl = null;
-      if (paragraphs.length > 1) {
-        descEl = paragraphs.find((p) => p !== metaEl) || paragraphs[1];
+    const inferTypeFromCard = (card) => {
+      if (card.closest('#publicaciones')) return 'articulo';
+      if (card.closest('#congresos')) return 'ponencia';
+      if (card.closest('#proyectos')) return 'proyecto';
+      if (card.closest('#quick-subjects-stack')) return 'asignatura';
+      if (card.closest('#tfg-stack') || card.closest('#tfm-stack')) return 'trabajo';
+      return 'proyecto';
+    };
+
+    const parseMetaChunks = (text) => (text || '').split('·').map((s) => s.trim()).filter(Boolean);
+
+    const readEntryFromCard = (card) => {
+      const type = inferTypeFromCard(card);
+      const title = (card.querySelector('h3, h4')?.textContent || '').trim();
+      const entry = { type, title, desc: '', extra: {} };
+
+      if (type === 'trabajo') {
+        const tagText = (card.querySelector('.tag')?.textContent || '').toUpperCase();
+        entry.extra.workKind = tagText.includes('TFM') ? 'tfm' : 'tfg';
+        entry.extra.role = (tagText.split('·')[1] || 'Director').trim();
+        const studentText = (card.querySelector('.pub-authors')?.textContent || '').replace('Estudiante:', '').trim();
+        entry.extra.student = studentText;
+        const parts = parseMetaChunks(card.querySelector('.pub-meta')?.textContent || '');
+        parts.forEach((part) => {
+          if (part.startsWith('Defensa:')) entry.extra.defense = part.replace('Defensa:', '').trim();
+          else if (/^\d{4}/.test(part)) entry.extra.course = part;
+          else if (!entry.extra.degree) entry.extra.degree = part;
+          else entry.extra.grade = part;
+        });
+        return entry;
       }
-      return { labelEl, titleEl, metaEl, descEl };
-    };
 
-    const applyEditToCard = (card, data) => {
-      if (!card || !data) return;
-      const refs = getCardEditRefs(card);
-      if (refs.labelEl) refs.labelEl.textContent = data.label || '';
-      if (refs.titleEl) refs.titleEl.textContent = data.title || '';
-      if (refs.metaEl) refs.metaEl.textContent = data.meta || '';
-      if (refs.descEl) refs.descEl.textContent = data.desc || '';
-      if (!refs.descEl && data.desc) {
-        const p = document.createElement('p');
-        p.textContent = data.desc;
-        card.appendChild(p);
+      if (type === 'articulo') {
+        entry.extra.authors = (card.querySelector('.pub-authors')?.textContent || '').trim();
+        const meta = parseMetaChunks(card.querySelector('.pub-meta')?.textContent || '');
+        entry.extra.journal = meta[0] || '';
+        entry.extra.year = meta[1] || '';
+        const doiPart = meta.find((p) => p.toLowerCase().includes('doi:')) || '';
+        entry.extra.doi = doiPart.replace(/doi:/i, '').trim();
+        const style = card.getAttribute('style') || '';
+        entry.extra.quartile = style.includes('var(--q1)') ? 'q1' : (style.includes('#a855f7') ? 'q3' : 'q2');
+        return entry;
       }
+
+      if (type === 'proyecto') {
+        const tag = (card.querySelector('.tag')?.textContent || '').toLowerCase();
+        entry.extra.projectCategory = tag.includes('transfer') ? 'transferencia' : (tag.includes('innov') ? 'innovación' : 'investigacion');
+        const parts = parseMetaChunks(card.querySelector('.pub-meta')?.textContent || '');
+        parts.forEach((part) => {
+          if (/^\d{4}/.test(part)) entry.extra.period = part;
+          else if (part.toLowerCase().includes('financi')) entry.extra.funding = part.replace(/financiaci[oó]n:\s*/i, '').trim();
+          else entry.extra.entity = part;
+        });
+        const desc = Array.from(card.querySelectorAll('p')).find((p) => !p.classList.contains('pub-meta'));
+        entry.desc = (desc?.textContent || '').trim();
+        return entry;
+      }
+
+      if (type === 'asignatura') {
+        const parts = parseMetaChunks(card.querySelector('.pub-meta')?.textContent || '');
+        parts.forEach((part) => {
+          if (/^\d{4}/.test(part)) entry.extra.subjectCourse = part;
+          else if (part.startsWith('T:') || part.startsWith('P:')) {
+            const hours = parseMetaChunks(part);
+            hours.forEach((h) => {
+              if (h.startsWith('T:')) entry.extra.subjectHoursT = h.replace('T:', '').trim();
+              if (h.startsWith('P:')) entry.extra.subjectHoursP = h.replace('P:', '').trim();
+            });
+          } else entry.extra.subjectDegree = part;
+        });
+        return entry;
+      }
+
+      entry.extra.talkKind = (card.querySelector('.pill')?.textContent || '').trim();
+      const talkMeta = parseMetaChunks(card.querySelector('p')?.textContent || '');
+      entry.extra.event = talkMeta[0] || '';
+      entry.extra.location = talkMeta[1] || '';
+      entry.extra.talkDate = talkMeta[2] || '';
+      const category = (talkMeta.find((p) => p.startsWith('(') && p.endsWith(')')) || '').replace(/[()]/g, '');
+      entry.extra.talkCategory = category || '';
+      return entry;
     };
 
-    const openQuickEditModal = (card) => {
-      currentEditingCard = card;
-      const refs = getCardEditRefs(card);
-      quickEditLabelInput.value = refs.labelEl ? refs.labelEl.textContent.trim() : '';
-      quickEditTitleInput.value = refs.titleEl ? refs.titleEl.textContent.trim() : '';
-      quickEditMetaInput.value = refs.metaEl ? refs.metaEl.textContent.trim() : '';
-      quickEditDescInput.value = refs.descEl ? refs.descEl.textContent.trim() : '';
-      quickEditModal.removeAttribute('hidden');
-      quickEditTitleInput.focus();
-    };
-
-    const closeQuickEditModal = () => {
-      quickEditModal.setAttribute('hidden', '');
-      quickEditForm.reset();
-      currentEditingCard = null;
+    const fillQuickFormFromEntry = (entry) => {
+      quickType.value = entry.type || 'proyecto';
+      setQuickFormMode();
+      quickTitle.value = entry.title || '';
+      quickWorkKind.value = entry.extra?.workKind || 'tfg';
+      quickStudent.value = entry.extra?.student || '';
+      quickRole.value = entry.extra?.role || 'Director';
+      quickDegree.value = entry.extra?.degree || '';
+      quickDefense.value = entry.extra?.defense || '';
+      quickCourse.value = entry.extra?.course || '';
+      quickGrade.value = entry.extra?.grade || '';
+      quickAuthors.value = entry.extra?.authors || '';
+      quickJournal.value = entry.extra?.journal || '';
+      quickYear.value = entry.extra?.year || '';
+      quickDoi.value = entry.extra?.doi || '';
+      quickQuartile.value = entry.extra?.quartile || 'q2';
+      quickProjectCat.value = entry.extra?.projectCategory || 'investigacion';
+      quickPeriod.value = entry.extra?.period || '';
+      quickFunding.value = entry.extra?.funding || '';
+      quickEntity.value = entry.extra?.entity || '';
+      quickTalkKind.value = entry.extra?.talkKind || 'Oral';
+      quickEvent.value = entry.extra?.event || '';
+      quickLocation.value = entry.extra?.location || '';
+      quickTalkDate.value = entry.extra?.talkDate || '';
+      quickTalkCat.value = entry.extra?.talkCategory || 'Internacional';
+      quickSubjectDegree.value = entry.extra?.subjectDegree || '';
+      quickSubjectHoursT.value = entry.extra?.subjectHoursT || '';
+      quickSubjectHoursP.value = entry.extra?.subjectHoursP || '';
+      quickSubjectCourse.value = entry.extra?.subjectCourse || '';
+      quickDesc.value = entry.desc || '';
     };
 
     const ensureInlineEditButton = (card) => {
@@ -3210,7 +3246,15 @@
       btn.type = 'button';
       btn.className = 'inline-edit-btn';
       btn.textContent = 'Editar';
-      btn.addEventListener('click', () => openQuickEditModal(card));
+      btn.addEventListener('click', () => {
+        currentEditingCard = card;
+        currentEditingCardId = card.dataset.editId || null;
+        const entry = readEntryFromCard(card);
+        fillQuickFormFromEntry(entry);
+        document.getElementById('quick-add-title').textContent = 'Editar entrada';
+        quickAddForm.querySelector('button[type="submit"]').textContent = 'Guardar cambios';
+        openQuickModal();
+      });
       card.appendChild(btn);
     };
 
@@ -3261,8 +3305,11 @@
           card.remove();
           return;
         }
-        if (!editId || !edits[editId]) return;
-        applyEditToCard(card, edits[editId]);
+        if (!editId || !edits[editId] || !edits[editId].type) return;
+        const rendered = createCardNode(edits[editId]);
+        card.innerHTML = rendered.innerHTML;
+        ensureInlineEditButton(card);
+        ensureInlineDeleteButton(card);
       });
 
       const subjectStack = document.getElementById('quick-subjects-stack');
@@ -3296,6 +3343,10 @@
       quickAddModal.setAttribute('hidden', '');
       quickAddForm.reset();
       setQuickFormMode();
+      currentEditingCard = null;
+      currentEditingCardId = null;
+      document.getElementById('quick-add-title').textContent = 'Añadir nueva entrada';
+      quickAddForm.querySelector('button[type="submit"]').textContent = 'Guardar';
     };
 
     quickType?.addEventListener('change', setQuickFormMode);
@@ -3319,6 +3370,11 @@
 
     quickSettingsAdd?.addEventListener('click', () => {
       quickSettingsMenu?.setAttribute('hidden', '');
+      currentEditingCard = null;
+      currentEditingCardId = null;
+      quickAddForm.reset();
+      document.getElementById('quick-add-title').textContent = 'Añadir nueva entrada';
+      quickAddForm.querySelector('button[type="submit"]').textContent = 'Guardar';
       openQuickModal();
     });
 
@@ -3338,31 +3394,8 @@
 
     quickAddClose?.addEventListener('click', closeQuickModal);
     quickAddCancel?.addEventListener('click', closeQuickModal);
-    quickEditClose?.addEventListener('click', closeQuickEditModal);
-    quickEditCancel?.addEventListener('click', closeQuickEditModal);
     quickAddModal?.addEventListener('click', (e) => {
       if (e.target === quickAddModal) closeQuickModal();
-    });
-    quickEditModal?.addEventListener('click', (e) => {
-      if (e.target === quickEditModal) closeQuickEditModal();
-    });
-
-    quickEditForm?.addEventListener('submit', (e) => {
-      e.preventDefault();
-      if (!currentEditingCard) return;
-      const editId = currentEditingCard.dataset.editId;
-      if (!editId) return;
-      const data = {
-        label: (quickEditLabelInput.value || '').trim(),
-        title: (quickEditTitleInput.value || '').trim(),
-        meta: (quickEditMetaInput.value || '').trim(),
-        desc: (quickEditDescInput.value || '').trim()
-      };
-      applyEditToCard(currentEditingCard, data);
-      const edits = getCardEdits();
-      edits[editId] = data;
-      saveCardEdits(edits);
-      closeQuickEditModal();
     });
 
     quickAddForm?.addEventListener('submit', (e) => {
@@ -3411,6 +3444,33 @@
         desc: type === 'proyecto' ? (quickDesc.value || '').trim() : '',
         extra
       };
+      if (currentEditingCard) {
+        const rendered = createCardNode(entry);
+        currentEditingCard.innerHTML = rendered.innerHTML;
+        const editId = currentEditingCardId || currentEditingCard.dataset.editId;
+        if (editId) {
+          currentEditingCard.dataset.editId = editId;
+          const edits = getCardEdits();
+          edits[editId] = entry;
+          saveCardEdits(edits);
+        }
+
+        if (currentEditingCard.dataset.quickAdded === 'true' && currentEditingCard.dataset.quickEntryId) {
+          const entryId = String(currentEditingCard.dataset.quickEntryId);
+          const entries = getQuickEntries();
+          const idx = entries.findIndex((item) => String(item.id) === entryId);
+          if (idx >= 0) {
+            entries[idx] = { ...entry, id: entries[idx].id };
+            saveQuickEntries(entries);
+          }
+        }
+
+        ensureInlineEditButton(currentEditingCard);
+        ensureInlineDeleteButton(currentEditingCard);
+        closeQuickModal();
+        return;
+      }
+
       const entries = getQuickEntries();
       entries.push(entry);
       saveQuickEntries(entries);
