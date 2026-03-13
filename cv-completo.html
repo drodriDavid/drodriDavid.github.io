@@ -2661,6 +2661,7 @@
           <label for="quick-type">Tipo</label>
           <select id="quick-type" required>
             <option value="trabajo">TFG / TFM</option>
+            <option value="tribunal">Tribunal</option>
             <option value="articulo">Artículo</option>
             <option value="proyecto">Proyecto</option>
             <option value="ponencia">Ponencia</option>
@@ -2679,12 +2680,12 @@
           </select>
         </div>
 
-        <div class="quick-field" data-types="trabajo">
-          <label for="quick-student">Estudiante</label>
+        <div class="quick-field" data-types="trabajo,tribunal">
+          <label id="quick-student-label" for="quick-student">Estudiante</label>
           <input id="quick-student" type="text" maxlength="120" />
         </div>
 
-        <div class="quick-field" data-types="trabajo">
+        <div class="quick-field" data-types="trabajo,tribunal">
           <label for="quick-role">Rol</label>
           <select id="quick-role">
             <option value="Director">Director</option>
@@ -2692,22 +2693,22 @@
           </select>
         </div>
 
-        <div class="quick-field" data-types="trabajo">
+        <div class="quick-field" data-types="trabajo,tribunal">
           <label for="quick-degree">Titulación</label>
           <input id="quick-degree" type="text" maxlength="160" placeholder="Grado en Ingeniería Informática" />
         </div>
 
-        <div class="quick-field" data-types="trabajo">
+        <div class="quick-field" data-types="trabajo,tribunal">
           <label for="quick-defense">Defensa</label>
           <input id="quick-defense" type="text" maxlength="40" placeholder="14-JUL-2026" />
         </div>
 
-        <div class="quick-field" data-types="trabajo">
+        <div class="quick-field" data-types="trabajo,tribunal">
           <label for="quick-course">Curso académico</label>
           <input id="quick-course" type="text" maxlength="20" placeholder="2025-26" />
         </div>
 
-        <div class="quick-field" data-types="trabajo">
+        <div class="quick-field" data-types="trabajo,tribunal">
           <label for="quick-grade">Calificación</label>
           <input id="quick-grade" type="text" maxlength="60" placeholder="Sobresaliente (9,5)" />
         </div>
@@ -2904,6 +2905,7 @@
     const quickFields = Array.from(document.querySelectorAll('.quick-field'));
     const quickWorkKind = document.getElementById('quick-work-kind');
     const quickStudent = document.getElementById('quick-student');
+    const quickStudentLabel = document.getElementById('quick-student-label');
     const quickRole = document.getElementById('quick-role');
     const quickDegree = document.getElementById('quick-degree');
     const quickDefense = document.getElementById('quick-defense');
@@ -3001,8 +3003,24 @@
         const show = accepted.includes(currentType);
         group.hidden = !show;
       });
+
+      const setRoleOptions = (type) => {
+        if (!quickRole) return;
+        const currentValue = quickRole.value;
+        const options = type === 'tribunal'
+          ? ['Presidente', 'Secretario', 'Vocal']
+          : ['Director', 'Codirector'];
+        quickRole.innerHTML = options.map((opt) => `<option value="${opt}">${opt}</option>`).join('');
+        quickRole.value = options.includes(currentValue) ? currentValue : options[0];
+      };
+
+      setRoleOptions(currentType);
+
       if (quickTitleLabel) {
         quickTitleLabel.textContent = currentType === 'asignatura' ? 'Asignatura' : 'Título';
+      }
+      if (quickStudentLabel) {
+        quickStudentLabel.textContent = currentType === 'tribunal' ? 'Alumno/a' : 'Estudiante';
       }
     };
 
@@ -3061,6 +3079,24 @@
         return card;
       }
 
+      if (type === 'tribunal') {
+        const card = document.createElement('article');
+        card.className = 'card';
+        const metaChunks = [
+          extra.degree || '',
+          extra.defense ? `Defensa: ${extra.defense}` : '',
+          extra.course || '',
+          extra.grade || ''
+        ].filter(Boolean);
+        card.innerHTML = `
+          <span class="pill acc">${escapeHtml(extra.role || 'Vocal')}</span>
+          <h3>${escapeHtml(title)}</h3>
+          <p class="pub-authors"><strong>Alumno:</strong> ${escapeHtml(extra.student || 'Pendiente')}</p>
+          ${metaChunks.length ? `<p class="pub-meta">${escapeHtml(metaChunks.join(' · '))}</p>` : ''}
+        `;
+        return card;
+      }
+
       if (type === 'proyecto') {
         const card = document.createElement('div');
         card.className = 'card';
@@ -3114,6 +3150,7 @@
         const workKind = (entry.extra?.workKind || entry.type || 'tfg').toLowerCase();
         return workKind === 'tfm' ? document.getElementById('tfm-stack') : document.getElementById('tfg-stack');
       }
+      if (type === 'tribunal') return document.getElementById('trib-stack');
       if (type === 'articulo') return document.querySelector('#publicaciones .stack-1');
       if (type === 'proyecto') {
         const stacks = getProjectStacks();
@@ -3143,6 +3180,7 @@
       if (card.closest('#publicaciones')) return 'articulo';
       if (card.closest('#congresos')) return 'ponencia';
       if (card.closest('#proyectos')) return 'proyecto';
+      if (card.closest('#trib-stack')) return 'tribunal';
       if (card.closest('#quick-subjects-stack')) return 'asignatura';
       if (card.closest('#tfg-stack') || card.closest('#tfm-stack')) return 'trabajo';
       return 'proyecto';
@@ -3162,6 +3200,23 @@
         const roleRaw = (tagTextRaw.split('·')[1] || '').trim().toLowerCase();
         entry.extra.role = roleRaw.includes('codirect') ? 'Codirector' : 'Director';
         const studentText = (card.querySelector('.pub-authors')?.textContent || '').replace('Estudiante:', '').trim();
+        entry.extra.student = studentText;
+        const parts = parseMetaChunks(card.querySelector('.pub-meta')?.textContent || '');
+        parts.forEach((part) => {
+          if (part.startsWith('Defensa:')) entry.extra.defense = part.replace('Defensa:', '').trim();
+          else if (/^\d{4}/.test(part)) entry.extra.course = part;
+          else if (!entry.extra.degree) entry.extra.degree = part;
+          else entry.extra.grade = part;
+        });
+        return entry;
+      }
+
+      if (type === 'tribunal') {
+        entry.extra.role = (card.querySelector('.pill')?.textContent || 'Vocal').trim();
+        const studentText = (card.querySelector('.pub-authors')?.textContent || '')
+          .replace('Alumno:', '')
+          .replace('Alumna:', '')
+          .trim();
         entry.extra.student = studentText;
         const parts = parseMetaChunks(card.querySelector('.pub-meta')?.textContent || '');
         parts.forEach((part) => {
@@ -3438,6 +3493,13 @@
 
       if (type === 'trabajo') {
         extra.workKind = (quickWorkKind.value || 'tfg').trim();
+        extra.student = (quickStudent.value || '').trim();
+        extra.role = (quickRole.value || '').trim();
+        extra.degree = (quickDegree.value || '').trim();
+        extra.defense = (quickDefense.value || '').trim();
+        extra.course = (quickCourse.value || '').trim();
+        extra.grade = (quickGrade.value || '').trim();
+      } else if (type === 'tribunal') {
         extra.student = (quickStudent.value || '').trim();
         extra.role = (quickRole.value || '').trim();
         extra.degree = (quickDegree.value || '').trim();
