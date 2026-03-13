@@ -2704,8 +2704,13 @@
         </div>
 
         <div class="quick-field" data-types="asignatura">
-          <label for="quick-subject-hours">Horas</label>
-          <input id="quick-subject-hours" type="text" maxlength="40" placeholder="T: 20 · P: 30" />
+          <label for="quick-subject-hours-t">Horas de teoría</label>
+          <input id="quick-subject-hours-t" type="text" maxlength="10" placeholder="20" />
+        </div>
+
+        <div class="quick-field" data-types="asignatura">
+          <label for="quick-subject-hours-p">Horas de prácticas</label>
+          <input id="quick-subject-hours-p" type="text" maxlength="10" placeholder="30" />
         </div>
 
         <div class="quick-field" data-types="asignatura">
@@ -2812,7 +2817,8 @@
     const quickTalkDate = document.getElementById('quick-talk-date');
     const quickTalkCat = document.getElementById('quick-talk-cat');
     const quickSubjectDegree = document.getElementById('quick-subject-degree');
-    const quickSubjectHours = document.getElementById('quick-subject-hours');
+    const quickSubjectHoursT = document.getElementById('quick-subject-hours-t');
+    const quickSubjectHoursP = document.getElementById('quick-subject-hours-p');
     const quickSubjectCourse = document.getElementById('quick-subject-course');
     const quickSubjectsBlock = document.getElementById('quick-subjects-block');
 
@@ -2928,7 +2934,11 @@
       if (type === 'asignatura') {
         const card = document.createElement('article');
         card.className = 'card';
-        const metaBits = [extra.subjectCourse || '', extra.subjectDegree || '', extra.subjectHours || ''].filter(Boolean);
+        const legacyHours = extra.subjectHours || '';
+        const subjectHours = legacyHours || [extra.subjectHoursT ? `T: ${extra.subjectHoursT}` : '', extra.subjectHoursP ? `P: ${extra.subjectHoursP}` : '']
+          .filter(Boolean)
+          .join(' · ');
+        const metaBits = [extra.subjectCourse || '', extra.subjectDegree || '', subjectHours].filter(Boolean);
         card.innerHTML = `
           <h3>${escapeHtml(title)}</h3>
           ${metaBits.length ? `<p class="pub-meta">${escapeHtml(metaBits.join(' · '))}</p>` : ''}
@@ -3028,7 +3038,8 @@
         extra.entity = (quickEntity.value || '').trim();
       } else if (type === 'asignatura') {
         extra.subjectDegree = (quickSubjectDegree.value || '').trim();
-        extra.subjectHours = (quickSubjectHours.value || '').trim();
+        extra.subjectHoursT = (quickSubjectHoursT.value || '').trim();
+        extra.subjectHoursP = (quickSubjectHoursP.value || '').trim();
         extra.subjectCourse = (quickSubjectCourse.value || '').trim();
       } else {
         extra.talkKind = (quickTalkKind.value || '').trim();
