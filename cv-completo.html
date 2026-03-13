@@ -1464,6 +1464,28 @@
       cursor: pointer;
     }
 
+    .quick-edit-mode-btn {
+      position: fixed;
+      right: 18px;
+      bottom: 64px;
+      z-index: 1200;
+      border: 1px solid #c9d9ea;
+      border-radius: 999px;
+      padding: .56rem .82rem;
+      font-weight: 700;
+      font-size: .8rem;
+      color: #1f4a74;
+      background: #f7fbff;
+      box-shadow: 0 8px 14px rgba(19, 47, 76, .14);
+      cursor: pointer;
+    }
+
+    .quick-edit-mode-btn.is-active {
+      color: #fff;
+      background: linear-gradient(180deg, #245a89 0%, #173b60 100%);
+      border-color: #173b60;
+    }
+
     .quick-add-modal {
       position: fixed;
       inset: 0;
@@ -1574,8 +1596,35 @@
       color: #56708b;
     }
 
+    .card {
+      position: relative;
+    }
+
+    .inline-edit-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      z-index: 2;
+      border: 1px solid #c3d5e7;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .96);
+      color: #20486f;
+      font-size: .74rem;
+      font-weight: 700;
+      padding: .2rem .42rem;
+      cursor: pointer;
+      display: none;
+    }
+
+    body.edit-mode .inline-edit-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .2rem;
+    }
+
     body.gated .quick-add-btn,
-    body.gated .quick-add-modal {
+    body.gated .quick-add-modal,
+    body.gated .quick-edit-mode-btn {
       display: none !important;
     }
   </style>
@@ -2550,6 +2599,8 @@
   </div>
 
   <button id="quick-add-btn" class="quick-add-btn" type="button" title="Añadir nueva entrada">+ Añadir</button>
+  <button id="quick-edit-mode-btn" class="quick-edit-mode-btn" type="button" title="Activar modo edición">✎ Modo
+    edición</button>
 
   <div id="quick-add-modal" class="quick-add-modal" role="dialog" aria-modal="true" aria-labelledby="quick-add-title"
     hidden>
@@ -2732,6 +2783,34 @@
     </div>
   </div>
 
+  <div id="quick-edit-modal" class="quick-add-modal" role="dialog" aria-modal="true" aria-labelledby="quick-edit-title"
+    hidden>
+    <div class="quick-add-card">
+      <div class="quick-add-head">
+        <h3 id="quick-edit-title">Editar entrada</h3>
+        <button id="quick-edit-close" class="quick-add-close" type="button" aria-label="Cerrar">×</button>
+      </div>
+      <form id="quick-edit-form" class="quick-add-form">
+        <label for="quick-edit-label">Etiqueta (opcional)</label>
+        <input id="quick-edit-label" type="text" maxlength="80" />
+
+        <label for="quick-edit-title-input">Título</label>
+        <input id="quick-edit-title-input" type="text" maxlength="220" />
+
+        <label for="quick-edit-meta">Línea principal</label>
+        <input id="quick-edit-meta" type="text" maxlength="260" />
+
+        <label for="quick-edit-desc">Descripción</label>
+        <textarea id="quick-edit-desc" maxlength="900"></textarea>
+
+        <div class="quick-add-actions">
+          <button type="button" id="quick-edit-cancel">Cancelar</button>
+          <button type="submit">Guardar cambios</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script>
     // Bloqueo visual por contraseña (protección básica en frontend)
     const AUTH_PASSWORD = 'drodrigu040417';
@@ -2785,7 +2864,9 @@
     });
 
     const QUICK_STORAGE_KEY = 'cvQuickEntriesV1';
+    const QUICK_EDITS_STORAGE_KEY = 'cvCardEditsV1';
     const quickAddBtn = document.getElementById('quick-add-btn');
+    const quickEditModeBtn = document.getElementById('quick-edit-mode-btn');
     const quickAddModal = document.getElementById('quick-add-modal');
     const quickAddClose = document.getElementById('quick-add-close');
     const quickAddCancel = document.getElementById('quick-add-cancel');
@@ -2821,6 +2902,14 @@
     const quickSubjectHoursP = document.getElementById('quick-subject-hours-p');
     const quickSubjectCourse = document.getElementById('quick-subject-course');
     const quickSubjectsBlock = document.getElementById('quick-subjects-block');
+    const quickEditModal = document.getElementById('quick-edit-modal');
+    const quickEditClose = document.getElementById('quick-edit-close');
+    const quickEditCancel = document.getElementById('quick-edit-cancel');
+    const quickEditForm = document.getElementById('quick-edit-form');
+    const quickEditLabelInput = document.getElementById('quick-edit-label');
+    const quickEditTitleInput = document.getElementById('quick-edit-title-input');
+    const quickEditMetaInput = document.getElementById('quick-edit-meta');
+    const quickEditDescInput = document.getElementById('quick-edit-desc');
 
     const getQuickEntries = () => {
       try {
@@ -2835,6 +2924,24 @@
     const saveQuickEntries = (entries) => {
       try {
         localStorage.setItem(QUICK_STORAGE_KEY, JSON.stringify(entries));
+      } catch (_) {
+        // ignore storage errors
+      }
+    };
+
+    const getCardEdits = () => {
+      try {
+        const raw = localStorage.getItem(QUICK_EDITS_STORAGE_KEY);
+        const parsed = raw ? JSON.parse(raw) : {};
+        return parsed && typeof parsed === 'object' ? parsed : {};
+      } catch (_) {
+        return {};
+      }
+    };
+
+    const saveCardEdits = (edits) => {
+      try {
+        localStorage.setItem(QUICK_EDITS_STORAGE_KEY, JSON.stringify(edits));
       } catch (_) {
         // ignore storage errors
       }
@@ -2977,6 +3084,88 @@
       return document.querySelector('#congresos .stack-1');
     };
 
+    const editableCardSelector = [
+      '#sobre-mi .card',
+      '#publicaciones .card',
+      '#congresos .card',
+      '#proyectos .card',
+      '#docencia .card',
+      '#tfg-tfm .card'
+    ].join(', ');
+
+    let currentEditingCard = null;
+
+    const getCardEditRefs = (card) => {
+      const labelEl = card.querySelector('.tag, .pill');
+      const titleEl = card.querySelector('h3, h4');
+      const metaEl = card.querySelector('p.pub-meta') || card.querySelector('p');
+      const paragraphs = Array.from(card.querySelectorAll('p'));
+      let descEl = null;
+      if (paragraphs.length > 1) {
+        descEl = paragraphs.find((p) => p !== metaEl) || paragraphs[1];
+      }
+      return { labelEl, titleEl, metaEl, descEl };
+    };
+
+    const applyEditToCard = (card, data) => {
+      if (!card || !data) return;
+      const refs = getCardEditRefs(card);
+      if (refs.labelEl) refs.labelEl.textContent = data.label || '';
+      if (refs.titleEl) refs.titleEl.textContent = data.title || '';
+      if (refs.metaEl) refs.metaEl.textContent = data.meta || '';
+      if (refs.descEl) refs.descEl.textContent = data.desc || '';
+      if (!refs.descEl && data.desc) {
+        const p = document.createElement('p');
+        p.textContent = data.desc;
+        card.appendChild(p);
+      }
+    };
+
+    const openQuickEditModal = (card) => {
+      currentEditingCard = card;
+      const refs = getCardEditRefs(card);
+      quickEditLabelInput.value = refs.labelEl ? refs.labelEl.textContent.trim() : '';
+      quickEditTitleInput.value = refs.titleEl ? refs.titleEl.textContent.trim() : '';
+      quickEditMetaInput.value = refs.metaEl ? refs.metaEl.textContent.trim() : '';
+      quickEditDescInput.value = refs.descEl ? refs.descEl.textContent.trim() : '';
+      quickEditModal.removeAttribute('hidden');
+      quickEditTitleInput.focus();
+    };
+
+    const closeQuickEditModal = () => {
+      quickEditModal.setAttribute('hidden', '');
+      quickEditForm.reset();
+      currentEditingCard = null;
+    };
+
+    const ensureInlineEditButton = (card) => {
+      if (!card || card.querySelector(':scope > .inline-edit-btn')) return;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'inline-edit-btn';
+      btn.textContent = 'Editar';
+      btn.addEventListener('click', () => openQuickEditModal(card));
+      card.appendChild(btn);
+    };
+
+    const refreshEditableCards = () => {
+      const cards = Array.from(document.querySelectorAll(editableCardSelector));
+      cards.forEach((card, idx) => {
+        if (!card.dataset.editId) {
+          const section = card.closest('section')?.id || 'section';
+          card.dataset.editId = `${section}-${idx + 1}`;
+        }
+        ensureInlineEditButton(card);
+      });
+
+      const edits = getCardEdits();
+      cards.forEach((card) => {
+        const editId = card.dataset.editId;
+        if (!editId || !edits[editId]) return;
+        applyEditToCard(card, edits[editId]);
+      });
+    };
+
     const appendQuickEntry = (entry) => {
       const target = getInsertTarget(entry);
       if (!target) return;
@@ -2987,6 +3176,7 @@
       if (type === 'asignatura' && quickSubjectsBlock) {
         quickSubjectsBlock.classList.remove('is-hidden');
       }
+      refreshEditableCards();
     };
 
     const openQuickModal = () => {
@@ -3006,8 +3196,35 @@
     quickAddBtn?.addEventListener('click', openQuickModal);
     quickAddClose?.addEventListener('click', closeQuickModal);
     quickAddCancel?.addEventListener('click', closeQuickModal);
+    quickEditModeBtn?.addEventListener('click', () => {
+      document.body.classList.toggle('edit-mode');
+      quickEditModeBtn.classList.toggle('is-active', document.body.classList.contains('edit-mode'));
+    });
+    quickEditClose?.addEventListener('click', closeQuickEditModal);
+    quickEditCancel?.addEventListener('click', closeQuickEditModal);
     quickAddModal?.addEventListener('click', (e) => {
       if (e.target === quickAddModal) closeQuickModal();
+    });
+    quickEditModal?.addEventListener('click', (e) => {
+      if (e.target === quickEditModal) closeQuickEditModal();
+    });
+
+    quickEditForm?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (!currentEditingCard) return;
+      const editId = currentEditingCard.dataset.editId;
+      if (!editId) return;
+      const data = {
+        label: (quickEditLabelInput.value || '').trim(),
+        title: (quickEditTitleInput.value || '').trim(),
+        meta: (quickEditMetaInput.value || '').trim(),
+        desc: (quickEditDescInput.value || '').trim()
+      };
+      applyEditToCard(currentEditingCard, data);
+      const edits = getCardEdits();
+      edits[editId] = data;
+      saveCardEdits(edits);
+      closeQuickEditModal();
     });
 
     quickAddForm?.addEventListener('submit', (e) => {
@@ -3065,6 +3282,7 @@
 
     setQuickFormMode();
     getQuickEntries().forEach(appendQuickEntry);
+    refreshEditableCards();
 
     const withCachedCategory = (item, key, resolver) => {
       if (!item.dataset[key]) item.dataset[key] = resolver(item);
