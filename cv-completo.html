@@ -3358,7 +3358,10 @@
       btn.addEventListener('click', () => {
         currentEditingCard = card;
         currentEditingCardId = card.dataset.editId || null;
-        const entry = readEntryFromCard(card);
+        const savedEdits = getCardEdits();
+        const entry = (currentEditingCardId && savedEdits[currentEditingCardId] && savedEdits[currentEditingCardId].type)
+          ? savedEdits[currentEditingCardId]
+          : readEntryFromCard(card);
         fillQuickFormFromEntry(entry);
         document.getElementById('quick-add-title').textContent = 'Editar entrada';
         quickAddForm.querySelector('button[type="submit"]').textContent = 'Guardar cambios';
@@ -3578,15 +3581,20 @@
       currentEditingCard = null;
       currentEditingCardId = null;
 
-      quickType.value = 'asignatura';
-      setQuickFormMode();
-      quickTitle.value = (cells[0].textContent || '').trim();
-      quickSubjectDegree.value = (cells[1].textContent || '').trim();
-      quickSubjectHoursT.value = hours.t;
-      quickSubjectHoursP.value = hours.p;
-      quickSubjectCourse.value = (row.closest('.year-card')?.querySelector('.year-head h4')?.textContent || '')
-        .replace('Curso', '')
-        .trim();
+      const savedEdits = getCardEdits();
+      if (currentEditingSubjectId && savedEdits[currentEditingSubjectId] && savedEdits[currentEditingSubjectId].type === 'asignatura') {
+        fillQuickFormFromEntry(savedEdits[currentEditingSubjectId]);
+      } else {
+        quickType.value = 'asignatura';
+        setQuickFormMode();
+        quickTitle.value = (cells[0].textContent || '').trim();
+        quickSubjectDegree.value = (cells[1].textContent || '').trim();
+        quickSubjectHoursT.value = hours.t;
+        quickSubjectHoursP.value = hours.p;
+        quickSubjectCourse.value = (row.closest('.year-card')?.querySelector('.year-head h4')?.textContent || '')
+          .replace('Curso', '')
+          .trim();
+      }
       document.getElementById('quick-add-title').textContent = 'Editar asignatura';
       quickAddForm.querySelector('button[type="submit"]').textContent = 'Guardar cambios';
       openQuickModal();
