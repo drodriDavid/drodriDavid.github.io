@@ -3284,9 +3284,21 @@
         entry.extra.projectYear = (card.querySelector('p strong')?.textContent || '').trim();
         const parts = parseMetaChunks(card.querySelector('.pub-meta')?.textContent || '');
         parts.forEach((part) => {
-          if (/^\d{4}/.test(part)) entry.extra.period = part;
-          else if (part.toLowerCase().includes('financi')) entry.extra.funding = part.replace(/financiaci[oó]n:\s*/i, '').trim();
-          else entry.extra.entity = part;
+          const lower = part.toLowerCase();
+          if (/^\d{4}/.test(part)) {
+            entry.extra.period = part;
+            return;
+          }
+          if (lower.includes('financi') || lower.includes('importe') || lower.includes('funding') || lower.includes('budget')) {
+            entry.extra.funding = part
+              .replace(/financiaci[oó]n:\s*/i, '')
+              .replace(/importe:\s*/i, '')
+              .replace(/funding:\s*/i, '')
+              .replace(/budget:\s*/i, '')
+              .trim();
+            return;
+          }
+          if (!entry.extra.entity) entry.extra.entity = part;
         });
         return entry;
       }
