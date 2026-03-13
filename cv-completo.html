@@ -2794,6 +2794,11 @@
         </div>
 
         <div class="quick-field" data-types="proyecto">
+          <label for="quick-project-year">Año</label>
+          <input id="quick-project-year" type="text" maxlength="20" placeholder="2026" />
+        </div>
+
+        <div class="quick-field" data-types="proyecto">
           <label for="quick-funding">Financiación</label>
           <input id="quick-funding" type="text" maxlength="50" placeholder="120.000 €" />
         </div>
@@ -2854,11 +2859,6 @@
         <div class="quick-field" data-types="asignatura">
           <label for="quick-subject-course">Curso académico</label>
           <input id="quick-subject-course" type="text" maxlength="20" placeholder="2025-26" />
-        </div>
-
-        <div class="quick-field" data-types="proyecto">
-          <label for="quick-desc">Descripción</label>
-          <textarea id="quick-desc" maxlength="600"></textarea>
         </div>
 
         <div class="quick-add-actions">
@@ -2938,7 +2938,6 @@
     const quickType = document.getElementById('quick-type');
     const quickTitleLabel = document.getElementById('quick-title-label');
     const quickTitle = document.getElementById('quick-title');
-    const quickDesc = document.getElementById('quick-desc');
     const quickFields = Array.from(document.querySelectorAll('.quick-field'));
     const quickWorkKind = document.getElementById('quick-work-kind');
     const quickStudent = document.getElementById('quick-student');
@@ -2955,6 +2954,7 @@
     const quickQuartile = document.getElementById('quick-quartile');
     const quickProjectCat = document.getElementById('quick-project-cat');
     const quickPeriod = document.getElementById('quick-period');
+    const quickProjectYear = document.getElementById('quick-project-year');
     const quickFunding = document.getElementById('quick-funding');
     const quickEntity = document.getElementById('quick-entity');
     const quickTalkKind = document.getElementById('quick-talk-kind');
@@ -3144,8 +3144,8 @@
         card.innerHTML = `
           <span class="tag ${tagClass}">${tagLabel}</span>
           <h3>${escapeHtml(title)}</h3>
+          ${extra.projectYear ? `<p><strong>${escapeHtml(extra.projectYear)}</strong></p>` : ''}
           ${(metaBits.length || legacyMeta) ? `<p class="pub-meta">${escapeHtml(metaBits.length ? metaBits.join(' · ') : legacyMeta)}</p>` : ''}
-          ${desc ? `<p>${escapeHtml(desc)}</p>` : ''}
         `;
         return card;
       }
@@ -3281,14 +3281,13 @@
       if (type === 'proyecto') {
         const tag = (card.querySelector('.tag')?.textContent || '').toLowerCase();
         entry.extra.projectCategory = tag.includes('transfer') ? 'transferencia' : (tag.includes('innov') ? 'innovación' : 'investigacion');
+        entry.extra.projectYear = (card.querySelector('p strong')?.textContent || '').trim();
         const parts = parseMetaChunks(card.querySelector('.pub-meta')?.textContent || '');
         parts.forEach((part) => {
           if (/^\d{4}/.test(part)) entry.extra.period = part;
           else if (part.toLowerCase().includes('financi')) entry.extra.funding = part.replace(/financiaci[oó]n:\s*/i, '').trim();
           else entry.extra.entity = part;
         });
-        const desc = Array.from(card.querySelectorAll('p')).find((p) => !p.classList.contains('pub-meta'));
-        entry.desc = (desc?.textContent || '').trim();
         return entry;
       }
 
@@ -3335,6 +3334,7 @@
       quickQuartile.value = entry.extra?.quartile || 'q2';
       quickProjectCat.value = entry.extra?.projectCategory || 'investigacion';
       quickPeriod.value = entry.extra?.period || '';
+      quickProjectYear.value = entry.extra?.projectYear || '';
       quickFunding.value = entry.extra?.funding || '';
       quickEntity.value = entry.extra?.entity || '';
       quickTalkKind.value = entry.extra?.talkKind || 'Oral';
@@ -3347,7 +3347,6 @@
       quickSubjectHoursT.value = normalizedHours.t;
       quickSubjectHoursP.value = normalizedHours.p;
       quickSubjectCourse.value = entry.extra?.subjectCourse || '';
-      quickDesc.value = entry.desc || '';
     };
 
     const ensureInlineEditButton = (card) => {
@@ -3689,6 +3688,7 @@
       } else if (type === 'proyecto') {
         extra.projectCategory = (quickProjectCat.value || 'investigacion').trim();
         extra.period = (quickPeriod.value || '').trim();
+        extra.projectYear = (quickProjectYear.value || '').trim();
         extra.funding = (quickFunding.value || '').trim();
         extra.entity = (quickEntity.value || '').trim();
       } else if (type === 'asignatura') {
@@ -3708,7 +3708,7 @@
         id: Date.now(),
         type,
         title,
-        desc: type === 'proyecto' ? (quickDesc.value || '').trim() : '',
+        desc: '',
         extra
       };
       if (currentEditingSubjectRow) {
