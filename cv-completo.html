@@ -3343,8 +3343,9 @@
       quickTalkDate.value = entry.extra?.talkDate || '';
       quickTalkCat.value = entry.extra?.talkCategory || 'Internacional';
       quickSubjectDegree.value = entry.extra?.subjectDegree || '';
-      quickSubjectHoursT.value = entry.extra?.subjectHoursT || '';
-      quickSubjectHoursP.value = entry.extra?.subjectHoursP || '';
+      const normalizedHours = normalizeSubjectHoursForForm(entry.extra?.subjectHoursT || '', entry.extra?.subjectHoursP || '');
+      quickSubjectHoursT.value = normalizedHours.t;
+      quickSubjectHoursP.value = normalizedHours.p;
       quickSubjectCourse.value = entry.extra?.subjectCourse || '';
       quickDesc.value = entry.desc || '';
     };
@@ -3445,6 +3446,14 @@
       if (t) parts.push(`T: ${t}`);
       if (p) parts.push(`P: ${p}`);
       return parts.join(' · ');
+    };
+
+    const normalizeSubjectHoursForForm = (t, p) => {
+      const tVal = String(t || '').trim();
+      const pVal = String(p || '').trim();
+      if (tVal && !pVal) return { t: tVal, p: '0' };
+      if (!tVal && pVal) return { t: '0', p: pVal };
+      return { t: tVal, p: pVal };
     };
 
     const ensureSubjectRowControls = () => {
@@ -3576,6 +3585,7 @@
       if (cells.length < 3) return;
       const hoursText = (cells[2].querySelector('.subject-hours-value')?.textContent || '').trim();
       const hours = parseHours(hoursText);
+      const normalizedHours = normalizeSubjectHoursForForm(hours.t, hours.p);
       currentEditingSubjectRow = row;
       currentEditingSubjectId = row.dataset.subjectRowId || null;
       currentEditingCard = null;
@@ -3589,8 +3599,8 @@
         setQuickFormMode();
         quickTitle.value = (cells[0].textContent || '').trim();
         quickSubjectDegree.value = (cells[1].textContent || '').trim();
-        quickSubjectHoursT.value = hours.t;
-        quickSubjectHoursP.value = hours.p;
+        quickSubjectHoursT.value = normalizedHours.t;
+        quickSubjectHoursP.value = normalizedHours.p;
         quickSubjectCourse.value = (row.closest('.year-card')?.querySelector('.year-head h4')?.textContent || '')
           .replace('Curso', '')
           .trim();
