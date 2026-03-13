@@ -1584,6 +1584,10 @@
       display: none !important;
     }
 
+    .quick-type-wrap[hidden] {
+      display: none !important;
+    }
+
     .quick-add-actions {
       display: flex;
       justify-content: flex-end;
@@ -2653,14 +2657,16 @@
         <button id="quick-add-close" class="quick-add-close" type="button" aria-label="Cerrar">×</button>
       </div>
       <form id="quick-add-form" class="quick-add-form">
-        <label for="quick-type">Tipo</label>
-        <select id="quick-type" required>
-          <option value="trabajo">TFG / TFM</option>
-          <option value="articulo">Artículo</option>
-          <option value="proyecto">Proyecto</option>
-          <option value="ponencia">Ponencia</option>
-          <option value="asignatura">Asignatura</option>
-        </select>
+        <div id="quick-type-wrap" class="quick-type-wrap">
+          <label for="quick-type">Tipo</label>
+          <select id="quick-type" required>
+            <option value="trabajo">TFG / TFM</option>
+            <option value="articulo">Artículo</option>
+            <option value="proyecto">Proyecto</option>
+            <option value="ponencia">Ponencia</option>
+            <option value="asignatura">Asignatura</option>
+          </select>
+        </div>
 
         <label id="quick-title-label" for="quick-title">Título</label>
         <input id="quick-title" type="text" maxlength="180" required />
@@ -2890,6 +2896,7 @@
     const quickAddClose = document.getElementById('quick-add-close');
     const quickAddCancel = document.getElementById('quick-add-cancel');
     const quickAddForm = document.getElementById('quick-add-form');
+    const quickTypeWrap = document.getElementById('quick-type-wrap');
     const quickType = document.getElementById('quick-type');
     const quickTitleLabel = document.getElementById('quick-title-label');
     const quickTitle = document.getElementById('quick-title');
@@ -3343,6 +3350,9 @@
     };
 
     const openQuickModal = () => {
+      const isEditing = Boolean(currentEditingCard);
+      if (quickTypeWrap) quickTypeWrap.hidden = isEditing;
+      if (quickType) quickType.disabled = isEditing;
       quickAddModal.removeAttribute('hidden');
       setQuickFormMode();
       quickTitle.focus();
@@ -3351,6 +3361,8 @@
     const closeQuickModal = () => {
       quickAddModal.setAttribute('hidden', '');
       quickAddForm.reset();
+      if (quickTypeWrap) quickTypeWrap.hidden = false;
+      if (quickType) quickType.disabled = false;
       setQuickFormMode();
       currentEditingCard = null;
       currentEditingCardId = null;
