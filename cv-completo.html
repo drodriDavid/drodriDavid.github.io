@@ -1645,11 +1645,13 @@
             <button class="filter-btn is-active" type="button" data-filter="all">Todas</button>
             <button class="filter-btn" type="button" data-filter="q1">Q1</button>
             <button class="filter-btn" type="button" data-filter="q2">Q2</button>
+            <button class="filter-btn" type="button" data-filter="q3">Q3</button>
           </div>
           <p>
             9 artículos en revistas indexadas ·
             <span class="pill q1">Q1</span> 5 ·
             <span class="pill q2">Q2</span> 4 ·
+            Q3 0 ·
           </p>
 
         </div>
@@ -2555,8 +2557,7 @@
       <form id="quick-add-form" class="quick-add-form">
         <label for="quick-type">Tipo</label>
         <select id="quick-type" required>
-          <option value="tfg">TFG</option>
-          <option value="tfm">TFM</option>
+          <option value="trabajo">TFG / TFM</option>
           <option value="articulo">Artículo</option>
           <option value="proyecto">Proyecto</option>
           <option value="ponencia">Ponencia</option>
@@ -2565,12 +2566,20 @@
         <label for="quick-title">Título</label>
         <input id="quick-title" type="text" maxlength="180" required />
 
-        <div class="quick-field" data-types="tfg,tfm">
+        <div class="quick-field" data-types="trabajo">
+          <label for="quick-work-kind">Modalidad</label>
+          <select id="quick-work-kind">
+            <option value="tfg">TFG</option>
+            <option value="tfm">TFM</option>
+          </select>
+        </div>
+
+        <div class="quick-field" data-types="trabajo">
           <label for="quick-student">Estudiante</label>
           <input id="quick-student" type="text" maxlength="120" />
         </div>
 
-        <div class="quick-field" data-types="tfg,tfm">
+        <div class="quick-field" data-types="trabajo">
           <label for="quick-role">Rol</label>
           <select id="quick-role">
             <option value="Director">Director</option>
@@ -2578,22 +2587,22 @@
           </select>
         </div>
 
-        <div class="quick-field" data-types="tfg,tfm">
+        <div class="quick-field" data-types="trabajo">
           <label for="quick-degree">Titulación</label>
           <input id="quick-degree" type="text" maxlength="160" placeholder="Grado en Ingeniería Informática" />
         </div>
 
-        <div class="quick-field" data-types="tfg,tfm">
+        <div class="quick-field" data-types="trabajo">
           <label for="quick-defense">Defensa</label>
           <input id="quick-defense" type="text" maxlength="40" placeholder="14-JUL-2026" />
         </div>
 
-        <div class="quick-field" data-types="tfg,tfm">
+        <div class="quick-field" data-types="trabajo">
           <label for="quick-course">Curso académico</label>
           <input id="quick-course" type="text" maxlength="20" placeholder="2025-26" />
         </div>
 
-        <div class="quick-field" data-types="tfg,tfm">
+        <div class="quick-field" data-types="trabajo">
           <label for="quick-grade">Calificación</label>
           <input id="quick-grade" type="text" maxlength="60" placeholder="Sobresaliente (9,5)" />
         </div>
@@ -2623,6 +2632,7 @@
           <select id="quick-quartile">
             <option value="q1">Q1</option>
             <option value="q2">Q2</option>
+            <option value="q3">Q3</option>
           </select>
         </div>
 
@@ -2665,8 +2675,13 @@
         </div>
 
         <div class="quick-field" data-types="ponencia">
-          <label for="quick-location-date">Lugar y fecha</label>
-          <input id="quick-location-date" type="text" maxlength="180" placeholder="Jaén · 12/05/2026" />
+          <label for="quick-location">Lugar</label>
+          <input id="quick-location" type="text" maxlength="120" placeholder="Jaén" />
+        </div>
+
+        <div class="quick-field" data-types="ponencia">
+          <label for="quick-talk-date">Fecha</label>
+          <input id="quick-talk-date" type="text" maxlength="50" placeholder="12/05/2026" />
         </div>
 
         <div class="quick-field" data-types="ponencia">
@@ -2678,8 +2693,10 @@
           </select>
         </div>
 
-        <label for="quick-desc">Descripción</label>
-        <textarea id="quick-desc" maxlength="600"></textarea>
+        <div class="quick-field" data-types="proyecto">
+          <label for="quick-desc">Descripción</label>
+          <textarea id="quick-desc" maxlength="600"></textarea>
+        </div>
 
         <div class="quick-add-actions">
           <button type="button" id="quick-add-cancel">Cancelar</button>
@@ -2752,6 +2769,7 @@
     const quickTitle = document.getElementById('quick-title');
     const quickDesc = document.getElementById('quick-desc');
     const quickFields = Array.from(document.querySelectorAll('.quick-field'));
+    const quickWorkKind = document.getElementById('quick-work-kind');
     const quickStudent = document.getElementById('quick-student');
     const quickRole = document.getElementById('quick-role');
     const quickDegree = document.getElementById('quick-degree');
@@ -2769,7 +2787,8 @@
     const quickEntity = document.getElementById('quick-entity');
     const quickTalkKind = document.getElementById('quick-talk-kind');
     const quickEvent = document.getElementById('quick-event');
-    const quickLocationDate = document.getElementById('quick-location-date');
+    const quickLocation = document.getElementById('quick-location');
+    const quickTalkDate = document.getElementById('quick-talk-date');
     const quickTalkCat = document.getElementById('quick-talk-cat');
 
     const getQuickEntries = () => {
@@ -2821,10 +2840,11 @@
     const createCardNode = (entry) => {
       const { type, title, desc, extra = {} } = entry;
       const legacyMeta = entry.meta || '';
-      if (type === 'tfg' || type === 'tfm') {
+      if (type === 'trabajo') {
         const card = document.createElement('article');
         card.className = 'card';
-        const tagClass = type === 'tfg' ? 'tfg' : 'tfm';
+        const workKind = (extra.workKind || 'tfg').toLowerCase() === 'tfm' ? 'tfm' : 'tfg';
+        const tagClass = workKind;
         const roleLabel = escapeHtml(extra.role || 'Director');
         const student = escapeHtml(extra.student || 'Pendiente');
         const metaChunks = [
@@ -2834,20 +2854,19 @@
           extra.grade || ''
         ].filter(Boolean);
         card.innerHTML = `
-          <span class="tag ${tagClass}">${type.toUpperCase()} · ${roleLabel}</span>
+          <span class="tag ${tagClass}">${workKind.toUpperCase()} · ${roleLabel}</span>
           <h3>${escapeHtml(title)}</h3>
           <p class="pub-authors"><strong>Estudiante:</strong> ${student}</p>
           ${(metaChunks.length || legacyMeta) ? `<p class="pub-meta">${escapeHtml(metaChunks.length ? metaChunks.join(' · ') : legacyMeta)}</p>` : ''}
-          ${desc ? `<p>${escapeHtml(desc)}</p>` : ''}
         `;
         return card;
       }
 
       if (type === 'articulo') {
-        const quartile = extra.quartile === 'q1' ? 'q1' : 'q2';
+        const quartile = ['q1', 'q2', 'q3'].includes(extra.quartile) ? extra.quartile : 'q2';
         const card = document.createElement('article');
         card.className = 'card';
-        card.style.borderLeftColor = quartile === 'q1' ? 'var(--q1)' : 'var(--q2)';
+        card.style.borderLeftColor = quartile === 'q1' ? 'var(--q1)' : (quartile === 'q2' ? 'var(--q2)' : '#a855f7');
         const meta = [extra.journal || '', extra.year || '', extra.doi ? `doi:${extra.doi}` : '']
           .filter(Boolean)
           .join(' · ');
@@ -2879,7 +2898,7 @@
       const row = document.createElement('div');
       row.className = 'card row';
       row.style.borderLeftColor = 'var(--pri)';
-      const metaLine = [extra.event || '', extra.locationDate || '', extra.talkCategory ? `(${extra.talkCategory})` : '']
+      const metaLine = [extra.event || '', extra.location || '', extra.talkDate || '', extra.talkCategory ? `(${extra.talkCategory})` : '']
         .filter(Boolean)
         .join(' · ');
       row.innerHTML = `
@@ -2887,15 +2906,16 @@
         <div>
           <h3>${escapeHtml(title)}</h3>
           <p>${escapeHtml(metaLine || legacyMeta || 'Entrada añadida manualmente')}</p>
-          ${desc ? `<p>${escapeHtml(desc)}</p>` : ''}
         </div>
       `;
       return row;
     };
 
     const getInsertTarget = (entry) => {
-      if (entry.type === 'tfg') return document.getElementById('tfg-stack');
-      if (entry.type === 'tfm') return document.getElementById('tfm-stack');
+      if (entry.type === 'trabajo') {
+        const workKind = (entry.extra?.workKind || 'tfg').toLowerCase();
+        return workKind === 'tfm' ? document.getElementById('tfm-stack') : document.getElementById('tfg-stack');
+      }
       if (entry.type === 'articulo') return document.querySelector('#publicaciones .stack-1');
       if (entry.type === 'proyecto') {
         const stacks = getProjectStacks();
@@ -2940,7 +2960,8 @@
       const type = quickType.value;
       const extra = {};
 
-      if (type === 'tfg' || type === 'tfm') {
+      if (type === 'trabajo') {
+        extra.workKind = (quickWorkKind.value || 'tfg').trim();
         extra.student = (quickStudent.value || '').trim();
         extra.role = (quickRole.value || '').trim();
         extra.degree = (quickDegree.value || '').trim();
@@ -2961,7 +2982,8 @@
       } else {
         extra.talkKind = (quickTalkKind.value || '').trim();
         extra.event = (quickEvent.value || '').trim();
-        extra.locationDate = (quickLocationDate.value || '').trim();
+        extra.location = (quickLocation.value || '').trim();
+        extra.talkDate = (quickTalkDate.value || '').trim();
         extra.talkCategory = (quickTalkCat.value || '').trim();
       }
 
@@ -2969,7 +2991,7 @@
         id: Date.now(),
         type,
         title,
-        desc: (quickDesc.value || '').trim(),
+        desc: type === 'proyecto' ? (quickDesc.value || '').trim() : '',
         extra
       };
       const entries = getQuickEntries();
@@ -3018,7 +3040,12 @@
       'pub-filters',
       '#publicaciones .stack-1 > article.card',
       'pub',
-      (item) => item.getAttribute('style')?.includes('var(--q1)') ? 'q1' : 'q2'
+      (item) => {
+        const style = item.getAttribute('style') || '';
+        if (style.includes('var(--q1)')) return 'q1';
+        if (style.includes('#a855f7')) return 'q3';
+        return 'q2';
+      }
     );
 
     setupFilterGroup(
