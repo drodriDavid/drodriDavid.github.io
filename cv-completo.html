@@ -3634,7 +3634,7 @@
         host: () => getAcademicTrainingColumn(),
         anchor: () => getAcademicTrainingColumn()?.querySelector(':scope > h3'),
         title: () => getTextContent(':scope > h3', getAcademicTrainingColumn()) || 'Formacion Academica',
-        subtitle: () => 'Titulaciones y meritos academicos acreditados.',
+        subtitle: () => '',
         countLabel: (count) => `${count} ${count === 1 ? 'merito academico' : 'meritos academicos'}`,
         items: () => Array.from(getAcademicTrainingColumn()?.querySelectorAll(':scope > .card') || [])
           .filter(isElementVisibleForExport),
@@ -3890,15 +3890,17 @@
       });
 
       let coverY = pageHeight - 320;
-      coverY = drawWrappedPdfText(cover, subtitle || 'Resumen exportado desde la web curricular.', {
-        x: margin,
-        y: coverY,
-        maxWidth: contentWidth,
-        font: regularFont,
-        size: 13,
-        lineHeight: 19,
-        color: rgb(0.21, 0.3, 0.39)
-      }) - 18;
+      if (subtitle) {
+        coverY = drawWrappedPdfText(cover, subtitle, {
+          x: margin,
+          y: coverY,
+          maxWidth: contentWidth,
+          font: regularFont,
+          size: 13,
+          lineHeight: 19,
+          color: rgb(0.21, 0.3, 0.39)
+        }) - 18;
+      }
       coverY = drawWrappedPdfText(
         cover,
         proofCount > 0
@@ -3906,7 +3908,7 @@
           : 'No hay justificantes PDF anexos en esta seccion.',
         {
           x: margin,
-          y: coverY,
+          y: coverY + 18,
           maxWidth: contentWidth,
           font: regularFont,
           size: 13,
@@ -3931,14 +3933,6 @@
       const blocks = buildSectionExportBlocks(items);
       let page = cover;
       let currentY = coverY - 44;
-      page.drawText('Detalle de meritos', {
-        x: margin,
-        y: currentY,
-        size: 22,
-        font: boldFont,
-        color: rgb(0.1, 0.23, 0.38)
-      });
-      currentY -= 34;
 
       for (const block of blocks) {
         const preparedLines = block.lines.flatMap((line) => wrapPdfText(line, regularFont, 11.5, contentWidth - 28));
