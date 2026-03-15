@@ -1503,6 +1503,33 @@
       border-color: #173b60;
     }
 
+    .quick-settings-item.publish-action {
+      background: #eef8f1;
+      border-color: #c7e2cf;
+      color: #1e6a3a;
+    }
+
+    .quick-settings-item.publish-action[disabled] {
+      opacity: .7;
+      cursor: progress;
+    }
+
+    .quick-publish-status {
+      max-width: 220px;
+      padding: .45rem .58rem;
+      border: 1px solid #d0deec;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, .98);
+      color: #32536f;
+      font-size: .76rem;
+      line-height: 1.35;
+      box-shadow: 0 10px 18px rgba(19, 47, 76, .12);
+    }
+
+    .quick-publish-status[hidden] {
+      display: none;
+    }
+
     .quick-add-modal {
       position: fixed;
       inset: 0;
@@ -2957,10 +2984,12 @@
   </div>
 
   <div id="quick-settings" class="quick-settings">
+    <div id="quick-publish-status" class="quick-publish-status" hidden aria-live="polite"></div>
     <div id="quick-settings-menu" class="quick-settings-menu" hidden>
       <button id="quick-settings-add" class="quick-settings-item" type="button">+ AÃ±adir</button>
       <button id="quick-settings-edit" class="quick-settings-item" type="button">âœŽ Modo ediciÃ³n</button>
       <button id="quick-settings-delete" class="quick-settings-item" type="button">ðŸ—‘ Modo eliminar</button>
+      <button id="quick-settings-publish" class="quick-settings-item publish-action" type="button">Publicar cambios</button>
     </div>
     <button id="quick-settings-main" class="quick-settings-main" type="button" title="Ajustes">âš™ Ajustes</button>
   </div>
@@ -3271,6 +3300,8 @@
     const quickSettingsAdd = document.getElementById('quick-settings-add');
     const quickSettingsEdit = document.getElementById('quick-settings-edit');
     const quickSettingsDelete = document.getElementById('quick-settings-delete');
+    const quickSettingsPublish = document.getElementById('quick-settings-publish');
+    const quickPublishStatus = document.getElementById('quick-publish-status');
     const quickAddModal = document.getElementById('quick-add-modal');
     const quickAddClose = document.getElementById('quick-add-close');
     const quickAddCancel = document.getElementById('quick-add-cancel');
@@ -3377,11 +3408,41 @@
       }, 2200);
     };
 
+    const showPublishStatus = (message, persist = false) => {
+      if (!quickPublishStatus) return;
+      quickPublishStatus.textContent = message;
+      quickPublishStatus.hidden = false;
+      if (!persist) {
+        window.setTimeout(() => {
+          if (quickPublishStatus.textContent === message) quickPublishStatus.hidden = true;
+        }, 2800);
+      }
+    };
+
     const isLocalProofHost = () => Boolean(PROOFS_API_BASE);
     const getLocalProofUploadMessage = () =>
       'La subida de justificantes solo funciona en local. Sube el PDF en local y luego haz git push.';
     const showLocalProofUploadMessage = () => {
       showProofToast(getLocalProofUploadMessage());
+    };
+
+    const publishLocalChanges = async () => {
+      if (!isLocalProofHost()) {
+        showPublishStatus('Publicar cambios solo funciona en la web local.');
+        return;
+      }
+      if (!quickSettingsPublish) return;
+      quickSettingsPublish.disabled = true;
+      showPublishStatus('Publicando cambios...', true);
+      try {
+        const response = await fetch('/api/publish', { method: 'POST' });
+        const payload = await response.json().catch(() => ({}));
+        showPublishStatus(payload?.message || 'No se pudo publicar los cambios.');
+      } catch (_) {
+        showPublishStatus('No se pudo conectar con el publicador local.');
+      } finally {
+        quickSettingsPublish.disabled = false;
+      }
     };
     let proofIndexCache = null;
 
@@ -4753,6 +4814,11 @@
       document.body.classList.remove('edit-mode');
       updateSettingsActiveStates();
       quickSettingsMenu?.setAttribute('hidden', '');
+    });
+
+    quickSettingsPublish?.addEventListener('click', async () => {
+      quickSettingsMenu?.setAttribute('hidden', '');
+      await publishLocalChanges();
     });
 
     quickAddClose?.addEventListener('click', closeQuickModal);

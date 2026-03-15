@@ -6,7 +6,9 @@ import os
 import posixpath
 import re
 import shutil
+import subprocess
 import urllib.parse
+from datetime import datetime
 from http import HTTPStatus
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -130,6 +132,9 @@ class ProofHandler(SimpleHTTPRequestHandler):
         parsed = urllib.parse.urlparse(self.path)
         if parsed.path == "/api/proofs/upload":
             self.handle_upload()
+            return
+        if parsed.path == "/api/publish":
+            self.handle_publish()
             return
         self.send_error(HTTPStatus.NOT_FOUND)
 
@@ -260,6 +265,73 @@ class ProofHandler(SimpleHTTPRequestHandler):
 
         save_index(index_data)
         self.send_json({"deleted": True})
+
+    def handle_publish(self) -> None:
+        status_result = subprocess.run(
+            ["git", "status", "--short"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
+        if status_result.returncode != 0:
+            self.send_json(
+                {"published": False, "message": "No se pudo comprobar el estado de Git."},
+                status=500,
+            )
+            return
+
+        if not status_result.stdout.strip():
+            self.send_json(
+                {"published": False, "message": "No hay cambios pendientes para publicar."}
+            )
+            return
+
+        commands = [
+            ["git", "add", "-A"],
+            [
+                "git",
+                "commit",
+                "-m",
+                f"Publica cambios desde la web local ({datetime.now().strftime('%Y-%m-%d %H:%M:%S')})",
+            ],
+            ["git", "push", "origin", "main"],
+        ]
+
+        for command in commands:
+            result = subprocess.run(
+                command,
+                cwd=ROOT,
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                errors="replace",
+            )
+            if result.returncode != 0:
+                output = (result.stderr or result.stdout or "").strip()
+                self.send_json(
+                    {
+                        "published": False,
+                        "message": output or "No se pudo publicar los cambios.",
+                    },
+                    status=500,
+                )
+                return
+
+        commit_result = subprocess.run(
+            ["git", "rev-parse", "--short", "HEAD"],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+            encoding="utf-8",
+            errors="replace",
+        )
+        commit_hash = commit_result.stdout.strip() if commit_result.returncode == 0 else ""
+        message = "Cambios publicados correctamente."
+        if commit_hash:
+            message = f"Cambios publicados en {commit_hash}."
+        self.send_json({"published": True, "message": message, "commit": commit_hash})
 
 
 def main() -> None:
