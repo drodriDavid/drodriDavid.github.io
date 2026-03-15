@@ -40,7 +40,7 @@ def save_index(data: dict[str, dict]) -> None:
 
 def safe_name(value: str, fallback: str) -> str:
     cleaned = Path(value or "").name.strip()
-    cleaned = re.sub(r"[<>:\"/\\\\|?*\\x00-\\x1f]", "-", cleaned)
+    cleaned = re.sub('[<>:"/\\\\|?*\x00-\x1f]', "-", cleaned)
     cleaned = cleaned.rstrip(". ")
     return cleaned or fallback
 
@@ -49,27 +49,6 @@ def safe_section(value: str) -> str:
     cleaned = re.sub(r"[^a-z0-9-]+", "-", (value or "").strip().lower())
     cleaned = re.sub(r"-{2,}", "-", cleaned).strip("-")
     return cleaned or "general"
-
-
-def unique_path(directory: Path, filename: str, current_proof_id: str, index_data: dict[str, dict]) -> Path:
-    base = Path(filename).stem
-    ext = Path(filename).suffix
-    candidate = directory / filename
-    if not candidate.exists():
-        return candidate
-
-    current = index_data.get(current_proof_id)
-    if current:
-        current_path = ROOT / current.get("stored_path", "")
-        if current_path == candidate:
-            return candidate
-
-    counter = 2
-    while True:
-        candidate = directory / f"{base}-{counter}{ext}"
-        if not candidate.exists():
-            return candidate
-        counter += 1
 
 
 class ProofHandler(SimpleHTTPRequestHandler):
@@ -155,7 +134,15 @@ class ProofHandler(SimpleHTTPRequestHandler):
             self.send_json({"error": "Invalid content type"}, status=400)
             return
 
-        form = cgi.FieldStorage(fp=self.rfile, headers=self.headers, environ={"REQUEST_METHOD": "POST"})
+        form = cgi.FieldStorage(
+            fp=self.rfile,
+            headers=self.headers,
+            environ={
+                "REQUEST_METHOD": "POST",
+                "CONTENT_TYPE": self.headers.get("Content-Type", ""),
+                "CONTENT_LENGTH": self.headers.get("Content-Length", "0"),
+            },
+        )
         proof_id = safe_name(form.getfirst("proofId", ""), "proof")
         section = safe_section(form.getfirst("section", "general"))
         uploaded = form["file"] if "file" in form else None
@@ -171,7 +158,7 @@ class ProofHandler(SimpleHTTPRequestHandler):
         index_data = load_index()
         previous = index_data.get(proof_id)
         previous_path = ROOT / previous["stored_path"] if previous and previous.get("stored_path") else None
-        target_path = unique_path(target_dir, original_name, proof_id, index_data)
+        target_path = target_dir / original_name
 
         with target_path.open("wb") as output:
             shutil.copyfileobj(uploaded.file, output)
