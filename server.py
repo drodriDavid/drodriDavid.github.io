@@ -36,19 +36,25 @@ def ensure_storage() -> None:
 def load_index() -> dict[str, dict]:
     ensure_storage()
     try:
-        return json.loads(INDEX_PATH.read_text(encoding="utf-8"))
+        data = json.loads(INDEX_PATH.read_text(encoding="utf-8-sig"))
     except (json.JSONDecodeError, OSError):
         return {}
+
+    normalized, changed = normalize_index_data(data)
+    if changed:
+        save_index(normalized)
+    return normalized
 
 
 def save_index(data: dict[str, dict]) -> None:
     ensure_storage()
-    INDEX_PATH.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+    normalized, _ = normalize_index_data(data)
+    INDEX_PATH.write_text(json.dumps(normalized, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
 def maybe_fix_mojibake(value: str) -> str:
     text = str(value or "")
-    suspicious_chars = ("Ã", "â", "€", "™", "œ", "š")
+    suspicious_chars = ("\u00c3", "\u00e2", "\u20ac", "\u2122", "\u0153", "\u0161")
     if not any(char in text for char in suspicious_chars):
         return text
 
@@ -68,7 +74,7 @@ def maybe_fix_mojibake(value: str) -> str:
 
 def safe_name(value: str, fallback: str) -> str:
     cleaned = Path(maybe_fix_mojibake(value or "")).name.strip()
-    cleaned = re.sub('[<>:"/\\\\|?*\x00-\x1f]', "-", cleaned)
+    cleaned = re.sub(r'[<>:"/\\|?*\x00-\x1f]', "-", cleaned)
     cleaned = cleaned.rstrip(". ")
     return cleaned or fallback
 
@@ -79,6 +85,14 @@ def safe_section(value: str) -> str:
     return cleaned or "general"
 
 
+def build_published_file_url(stored_path: str) -> str:
+    normalized = str(stored_path or "").replace("\\", "/").lstrip("/")
+    if normalized.startswith("justificantes/"):
+        normalized = normalized[len("justificantes/") :]
+    encoded = "/".join(urllib.parse.quote(part) for part in normalized.split("/") if part)
+    return f"/justificantes/{encoded}" if encoded else ""
+
+
 def resolve_record_path(stored_path: str) -> Path:
     candidate = Path(stored_path or "")
     if candidate.is_absolute():
@@ -87,6 +101,39 @@ def resolve_record_path(stored_path: str) -> Path:
     if stored_path and legacy_path.exists():
         return legacy_path
     return PROOFS_ROOT / candidate
+
+
+def normalize_index_data(data: dict[str, dict]) -> tuple[dict[str, dict], bool]:
+    normalized: dict[str, dict] = {}
+    changed = False
+
+    for proof_id, record in data.items():
+        current = dict(record or {})
+        section = safe_section(current.get("section", "general"))
+        name = safe_name(current.get("name", ""), "documento")
+        stored_path = maybe_fix_mojibake(current.get("stored_path", "")).replace("\\", "/").lstrip("/")
+        if stored_path.startswith("justificantes/"):
+            stored_path = stored_path[len("justificantes/") :]
+
+        candidate_path = resolve_record_path(stored_path)
+        expected_path = PROOFS_ROOT / section / name
+        if not candidate_path.exists() and expected_path.exists():
+            candidate_path = expected_path
+            stored_path = candidate_path.relative_to(PROOFS_ROOT).as_posix()
+
+        normalized_record = {
+            "id": proof_id,
+            "section": section,
+            "name": name,
+            "type": current.get("type") or "application/octet-stream",
+            "stored_path": stored_path,
+            "url": build_published_file_url(stored_path),
+        }
+        normalized[proof_id] = normalized_record
+        if normalized_record != record:
+            changed = True
+
+    return normalized, changed
 
 
 class ProofHandler(SimpleHTTPRequestHandler):
@@ -253,14 +300,13 @@ class ProofHandler(SimpleHTTPRequestHandler):
             previous_path.unlink()
 
         rel_path = target_path.relative_to(PROOFS_ROOT).as_posix()
-        public_api_base = self.get_public_api_base()
         record = {
             "id": proof_id,
             "section": section,
             "name": original_name,
             "type": uploaded.type or "application/octet-stream",
             "stored_path": rel_path,
-            "url": f"{public_api_base}/{urllib.parse.quote(proof_id)}/file",
+            "url": build_published_file_url(rel_path),
         }
         index_data[proof_id] = record
         save_index(index_data)
@@ -287,6 +333,9 @@ class ProofHandler(SimpleHTTPRequestHandler):
         self.send_json({"deleted": True})
 
     def handle_publish(self) -> None:
+        index_data = load_index()
+        save_index(index_data)
+
         status_result = subprocess.run(
             ["git", "status", "--short"],
             cwd=ROOT,

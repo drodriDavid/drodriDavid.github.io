@@ -3446,8 +3446,15 @@
     const getPublishedProofUrl = (record) => {
       const normalizedPath = normalizeProofStoredPath(record?.stored_path);
       if (!normalizedPath) return '';
-      if (normalizedPath.startsWith('justificantes/')) return `/${normalizedPath}`;
-      return `${PROOFS_STATIC_BASE}/${normalizedPath}`;
+      const cleanPath = normalizedPath.startsWith('justificantes/')
+        ? normalizedPath.replace(/^justificantes\//, '')
+        : normalizedPath;
+      const encodedPath = cleanPath
+        .split('/')
+        .filter(Boolean)
+        .map((part) => encodeURIComponent(part))
+        .join('/');
+      return `${PROOFS_STATIC_BASE}/${encodedPath}`;
     };
 
     const loadPublishedProofIndex = async () => {
