@@ -265,7 +265,8 @@ class ProofHandler(SimpleHTTPRequestHandler):
 def main() -> None:
     ensure_storage()
     server = ThreadingHTTPServer((HOST, PORT), ProofHandler)
-    print(f"Serving on http://{HOST}:{PORT}")
+    display_host = "127.0.0.1" if HOST == "0.0.0.0" else HOST
+    print(f"Serving on http://{display_host}:{PORT}")
     try:
         server.serve_forever()
     except KeyboardInterrupt:
