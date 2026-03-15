@@ -3614,17 +3614,10 @@
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/^-+|-+$/g, '') || 'seccion';
 
-    const isExportLibraryReady = () => typeof window.html2pdf === 'function';
     const isPdfMergeLibraryReady = () => Boolean(window.PDFLib?.PDFDocument);
 
     const isElementVisibleForExport = (node) =>
       Boolean(node && !node.hidden && !node.classList.contains('is-hidden'));
-
-    const waitForNextPaint = () => new Promise((resolve) => {
-      window.requestAnimationFrame(() => {
-        window.requestAnimationFrame(resolve);
-      });
-    });
 
     const getTextContent = (selector, scope = document) =>
       (scope?.querySelector(selector)?.textContent || '').replace(/\s+/g, ' ').trim();
@@ -3717,59 +3710,122 @@
       }
     ];
 
+    const normalizeExportLine = (text) =>
+      String(text || '').replace(/\s+/g, ' ').replace(/[‐‑‒–—]/g, '-').trim();
+
     const sanitizeExportClone = (node) => {
       const clone = node.cloneNode(true);
       clone.querySelectorAll('.inline-edit-btn, .inline-delete-btn, .inline-proof-wrap, .subject-edit-btn, .subject-delete-btn').forEach((el) => el.remove());
       clone.querySelectorAll('details').forEach((details) => {
         details.open = true;
       });
-      clone.querySelectorAll('summary').forEach((summary) => {
-        summary.textContent = summary.textContent.replace(/\s+/g, ' ').trim();
-      });
       clone.querySelectorAll('a').forEach((link) => {
-        const text = link.textContent.replace(/\s+/g, ' ').trim();
+        const text = normalizeExportLine(link.textContent);
         const href = link.getAttribute('href') || '';
         link.textContent = text || href;
       });
       return clone;
     };
 
-    const buildSectionExportRoot = ({ title, subtitle, items, countLabel, proofCount = 0 }) => {
-      const root = document.createElement('div');
-      root.className = 'export-pdf-root';
-      const today = new Date().toLocaleDateString('es-ES', {
-        day: '2-digit',
-        month: 'long',
-        year: 'numeric'
+    const extractTableLines = (table) => {
+      const lines = [];
+      const rows = Array.from(table?.querySelectorAll('tbody tr') || []);
+      rows.forEach((row) => {
+        const cells = Array.from(row.querySelectorAll('td, th'))
+          .map((cell) => normalizeExportLine(cell.textContent))
+          .filter(Boolean);
+        if (cells.length) lines.push(`- ${cells.join(' | ')}`);
+      });
+      return lines;
+    };
+
+    const extractItemLines = (node) => {
+      const clone = sanitizeExportClone(node);
+      const lines = [];
+      const push = (value, prefix = '') => {
+        const text = normalizeExportLine(value);
+        if (!text) return;
+        const full = prefix ? `${prefix}${text}` : text;
+        if (!lines.includes(full)) lines.push(full);
+      };
+
+      if (clone.classList.contains('year-card')) {
+        push(clone.querySelector('.year-head h4')?.textContent);
+        push(clone.querySelector('.year-badge')?.textContent);
+        push(clone.querySelector('summary')?.textContent);
+        extractTableLines(clone.querySelector('table')).forEach((line) => push(line));
+        return lines;
+      }
+
+      push(clone.querySelector('.tag, .pill')?.textContent);
+      push(clone.querySelector('h3, h4')?.textContent);
+      Array.from(clone.querySelectorAll('p')).forEach((paragraph) => push(paragraph.textContent));
+      Array.from(clone.querySelectorAll('table')).forEach((table) => {
+        extractTableLines(table).forEach((line) => push(line));
       });
 
-      const sheet = document.createElement('div');
-      sheet.className = 'export-pdf-sheet';
-      sheet.innerHTML = `
-        <section class="export-pdf-cover">
-          <p class="export-pdf-kicker">Curriculum de meritos</p>
-          <h1>${title}</h1>
-          <div class="export-pdf-badge">${countLabel}</div>
-          <p class="export-pdf-subtitle">${subtitle || 'Resumen exportado desde la web curricular.'}</p>
-          <p class="export-pdf-subtitle">${proofCount > 0 ? `Incluye ${proofCount} ${proofCount === 1 ? 'justificante PDF anexo' : 'justificantes PDF anexos'}.` : 'No hay justificantes PDF anexos en esta seccion.'}</p>
-          <p class="export-pdf-date">Documento generado el ${today}.</p>
-        </section>
-        <section class="export-pdf-content">
-          <h2>Detalle de meritos</h2>
-          <div class="export-pdf-list"></div>
-        </section>
-      `;
+      if (!lines.length) push(clone.textContent);
+      return lines;
+    };
 
-      const list = sheet.querySelector('.export-pdf-list');
-      items.forEach((item) => {
-        const wrapper = document.createElement('article');
-        wrapper.className = 'export-pdf-item';
-        wrapper.appendChild(sanitizeExportClone(item));
-        list?.appendChild(wrapper);
+    const buildSectionExportBlocks = (items) =>
+      items.map((item, index) => ({
+        label: `Merito ${index + 1}`,
+        lines: extractItemLines(item)
+      }));
+
+    const wrapPdfText = (text, font, size, maxWidth) => {
+      const words = normalizeExportLine(text).split(' ').filter(Boolean);
+      if (!words.length) return [''];
+      const lines = [];
+      let current = words[0];
+      for (let i = 1; i < words.length; i += 1) {
+        const candidate = `${current} ${words[i]}`;
+        if (font.widthOfTextAtSize(candidate, size) <= maxWidth) {
+          current = candidate;
+        } else {
+          lines.push(current);
+          current = words[i];
+        }
+      }
+      lines.push(current);
+      return lines;
+    };
+
+    const drawWrappedPdfText = (page, text, options) => {
+      const {
+        x,
+        y,
+        maxWidth,
+        font,
+        size,
+        lineHeight,
+        color
+      } = options;
+      const lines = wrapPdfText(text, font, size, maxWidth);
+      lines.forEach((line, index) => {
+        page.drawText(line, {
+          x,
+          y: y - (index * lineHeight),
+          size,
+          font,
+          color
+        });
       });
+      return y - (lines.length * lineHeight);
+    };
 
-      root.appendChild(sheet);
-      return root;
+    const drawPdfBox = (page, x, y, width, height, options = {}) => {
+      page.drawRectangle({
+        x,
+        y,
+        width,
+        height,
+        color: options.fill,
+        borderColor: options.border,
+        borderWidth: options.borderWidth ?? 1,
+        opacity: options.opacity ?? 1
+      });
     };
 
     const getSectionProofRecords = async (config) => {
@@ -3784,28 +3840,144 @@
       return records;
     };
 
-    const renderSectionSummaryPdf = async (exportRoot, title) => {
-      await waitForNextPaint();
-      const worker = window.html2pdf()
-        .set({
-          margin: [10, 10, 10, 10],
-          filename: `${slugifyFileName(title)}.pdf`,
-          pagebreak: { mode: ['css', 'legacy'] },
-          html2canvas: {
-            scale: 2,
-            useCORS: true,
-            backgroundColor: '#ffffff'
-          },
-          jsPDF: {
-            unit: 'mm',
-            format: 'a4',
-            orientation: 'portrait'
-          }
-        })
-        .from(exportRoot)
-        .toPdf();
-      const pdf = await worker.get('pdf');
-      return pdf.output('arraybuffer');
+    const renderSectionSummaryPdf = async ({ title, subtitle, countLabel, proofCount, items }) => {
+      const { PDFDocument, StandardFonts, rgb } = window.PDFLib;
+      const pdfDoc = await PDFDocument.create();
+      const regularFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+      const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+      const pageWidth = 595.28;
+      const pageHeight = 841.89;
+      const margin = 48;
+      const contentWidth = pageWidth - (margin * 2);
+      const cover = pdfDoc.addPage([pageWidth, pageHeight]);
+
+      drawPdfBox(cover, 0, 0, pageWidth, pageHeight, {
+        fill: rgb(0.98, 0.99, 1),
+        borderWidth: 0
+      });
+      drawPdfBox(cover, 0, pageHeight - 220, pageWidth, 220, {
+        fill: rgb(0.1, 0.23, 0.38),
+        borderWidth: 0
+      });
+
+      cover.drawText('CURRICULUM DE MERITOS', {
+        x: margin,
+        y: pageHeight - 86,
+        size: 12,
+        font: boldFont,
+        color: rgb(0.84, 0.9, 0.97)
+      });
+      drawWrappedPdfText(cover, title, {
+        x: margin,
+        y: pageHeight - 138,
+        maxWidth: contentWidth,
+        font: boldFont,
+        size: 28,
+        lineHeight: 34,
+        color: rgb(1, 1, 1)
+      });
+
+      drawPdfBox(cover, margin, pageHeight - 248, 220, 32, {
+        fill: rgb(0.87, 0.92, 0.99),
+        borderWidth: 0
+      });
+      cover.drawText(countLabel, {
+        x: margin + 14,
+        y: pageHeight - 236,
+        size: 14,
+        font: boldFont,
+        color: rgb(0.1, 0.23, 0.38)
+      });
+
+      let coverY = pageHeight - 320;
+      coverY = drawWrappedPdfText(cover, subtitle || 'Resumen exportado desde la web curricular.', {
+        x: margin,
+        y: coverY,
+        maxWidth: contentWidth,
+        font: regularFont,
+        size: 13,
+        lineHeight: 19,
+        color: rgb(0.21, 0.3, 0.39)
+      }) - 18;
+      coverY = drawWrappedPdfText(
+        cover,
+        proofCount > 0
+          ? `Incluye ${proofCount} ${proofCount === 1 ? 'justificante PDF anexo' : 'justificantes PDF anexos'}.`
+          : 'No hay justificantes PDF anexos en esta seccion.',
+        {
+          x: margin,
+          y: coverY,
+          maxWidth: contentWidth,
+          font: regularFont,
+          size: 13,
+          lineHeight: 19,
+          color: rgb(0.21, 0.3, 0.39)
+        }
+      ) - 18;
+      drawWrappedPdfText(
+        cover,
+        `Documento generado el ${new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' })}.`,
+        {
+          x: margin,
+          y: coverY,
+          maxWidth: contentWidth,
+          font: regularFont,
+          size: 12,
+          lineHeight: 18,
+          color: rgb(0.33, 0.4, 0.5)
+        }
+      );
+
+      const blocks = buildSectionExportBlocks(items);
+      let page = pdfDoc.addPage([pageWidth, pageHeight]);
+      let currentY = pageHeight - margin;
+      page.drawText('Detalle de meritos', {
+        x: margin,
+        y: currentY,
+        size: 22,
+        font: boldFont,
+        color: rgb(0.1, 0.23, 0.38)
+      });
+      currentY -= 34;
+
+      for (const block of blocks) {
+        const preparedLines = block.lines.flatMap((line) => wrapPdfText(line, regularFont, 11.5, contentWidth - 28));
+        const estimatedHeight = 24 + 18 + (preparedLines.length * 15) + 12;
+        if (currentY - estimatedHeight < margin) {
+          page = pdfDoc.addPage([pageWidth, pageHeight]);
+          currentY = pageHeight - margin;
+        }
+
+        drawPdfBox(page, margin, currentY - estimatedHeight + 6, contentWidth, estimatedHeight, {
+          fill: rgb(1, 1, 1),
+          border: rgb(0.82, 0.88, 0.94),
+          borderWidth: 1
+        });
+        page.drawText(block.label, {
+          x: margin + 14,
+          y: currentY - 18,
+          size: 11,
+          font: boldFont,
+          color: rgb(0.26, 0.39, 0.53)
+        });
+
+        let lineY = currentY - 40;
+        preparedLines.forEach((line, idx) => {
+          const isFirst = idx === 0;
+          page.drawText(line, {
+            x: margin + 14,
+            y: lineY,
+            size: isFirst ? 13 : 11.5,
+            font: isFirst ? boldFont : regularFont,
+            color: rgb(0.14, 0.21, 0.29)
+          });
+          lineY -= isFirst ? 18 : 15;
+        });
+
+        currentY -= estimatedHeight + 12;
+      }
+
+      return pdfDoc.save();
     };
 
     const mergePdfBuffers = async (baseBuffer, proofRecords) => {
@@ -3854,7 +4026,7 @@
         showProofToast(`No hay meritos visibles en ${title}.`);
         return;
       }
-      if (!isExportLibraryReady() || !isPdfMergeLibraryReady()) {
+      if (!isPdfMergeLibraryReady()) {
         showProofToast('La descarga PDF no esta disponible ahora mismo.');
         return;
       }
@@ -3865,12 +4037,15 @@
       if (button) button.disabled = true;
       showProofToast(`Generando PDF de ${title}...`);
 
-      let exportRoot = null;
       try {
         const proofRecords = await getSectionProofRecords(config);
-        exportRoot = buildSectionExportRoot({ title, subtitle, items, countLabel, proofCount: proofRecords.length });
-        document.body.appendChild(exportRoot);
-        const baseBuffer = await renderSectionSummaryPdf(exportRoot, title);
+        const baseBuffer = await renderSectionSummaryPdf({
+          title,
+          subtitle,
+          countLabel,
+          proofCount: proofRecords.length,
+          items
+        });
         const { bytes, mergedProofs } = await mergePdfBuffers(baseBuffer, proofRecords);
         downloadPdfBytes(bytes, `${slugifyFileName(title)}.pdf`);
         if (mergedProofs > 0) {
@@ -3881,7 +4056,6 @@
       } catch (_) {
         showProofToast(`No se pudo generar el PDF de ${title}.`);
       } finally {
-        exportRoot?.remove();
         if (button) button.disabled = false;
       }
     };
