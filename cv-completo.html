@@ -1963,7 +1963,7 @@
       display: none;
     }
 
-    body.delete-mode .inline-delete-btn {
+    body.edit-mode .inline-delete-btn {
       display: inline-flex;
       align-items: center;
       gap: .2rem;
@@ -2001,7 +2001,7 @@
       align-items: center;
     }
 
-    body.delete-mode .subject-delete-btn {
+    body.edit-mode .subject-delete-btn {
       display: inline-flex;
       align-items: center;
     }
@@ -2988,7 +2988,6 @@
     <div id="quick-settings-menu" class="quick-settings-menu" hidden>
       <button id="quick-settings-add" class="quick-settings-item" type="button">+ Añadir</button>
       <button id="quick-settings-edit" class="quick-settings-item" type="button">✎ Modo edición</button>
-      <button id="quick-settings-delete" class="quick-settings-item" type="button">🗑 Modo eliminar</button>
       <button id="quick-settings-publish" class="quick-settings-item publish-action" type="button">Publicar cambios</button>
     </div>
     <button id="quick-settings-main" class="quick-settings-main" type="button" title="Ajustes">⚙ Ajustes</button>
@@ -3294,7 +3293,6 @@
     const quickSettingsMenu = document.getElementById('quick-settings-menu');
     const quickSettingsAdd = document.getElementById('quick-settings-add');
     const quickSettingsEdit = document.getElementById('quick-settings-edit');
-    const quickSettingsDelete = document.getElementById('quick-settings-delete');
     const quickSettingsPublish = document.getElementById('quick-settings-publish');
     const quickPublishStatus = document.getElementById('quick-publish-status');
     const quickAddModal = document.getElementById('quick-add-modal');
@@ -4668,7 +4666,6 @@
 
     const updateSettingsActiveStates = () => {
       quickSettingsEdit?.classList.toggle('is-active', document.body.classList.contains('edit-mode'));
-      quickSettingsDelete?.classList.toggle('is-active', document.body.classList.contains('delete-mode'));
     };
 
     quickSettingsMain?.addEventListener('click', () => {
@@ -4758,14 +4755,6 @@
 
     quickSettingsEdit?.addEventListener('click', () => {
       document.body.classList.toggle('edit-mode');
-      document.body.classList.remove('delete-mode');
-      updateSettingsActiveStates();
-      quickSettingsMenu?.setAttribute('hidden', '');
-    });
-
-    quickSettingsDelete?.addEventListener('click', () => {
-      document.body.classList.toggle('delete-mode');
-      document.body.classList.remove('edit-mode');
       updateSettingsActiveStates();
       quickSettingsMenu?.setAttribute('hidden', '');
     });
