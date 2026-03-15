@@ -1,10 +1,10 @@
-﻿{
+{
   "sobre-mi-1": {
     "id": "sobre-mi-1",
     "section": "formacion-academica",
     "name": "Título Universitario MAES.pdf",
     "type": "application/pdf",
     "stored_path": "formacion-academica/Título Universitario MAES.pdf",
-    "url": "/justificantes/formacion-academica/Título%20Universitario%20MAES.pdf"
+    "url": "http://127.0.0.1:8081/api/proofs/sobre-mi-1/file"
   }
 }
