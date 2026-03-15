@@ -3938,8 +3938,14 @@
       let currentY = coverY - 44;
 
       for (const block of blocks) {
-        const preparedLines = block.lines.flatMap((line) => wrapPdfText(line, regularFont, 11.5, contentWidth - 28));
-        const estimatedHeight = 24 + 18 + (preparedLines.length * 15) + 12;
+        const titleLines = wrapPdfText(block.lines[0] || '', boldFont, 13, contentWidth - 28);
+        const detailLines = block.lines.slice(1).flatMap((line) => wrapPdfText(line, regularFont, 11.5, contentWidth - 28));
+        const preparedLines = [
+          ...titleLines.map((line) => ({ text: line, font: boldFont, size: 13, lineHeight: 18 })),
+          ...detailLines.map((line) => ({ text: line, font: regularFont, size: 11.5, lineHeight: 15 }))
+        ];
+        const textHeight = preparedLines.reduce((sum, line) => sum + line.lineHeight, 0);
+        const estimatedHeight = 24 + 18 + textHeight + 12;
         if (currentY - estimatedHeight < margin) {
           page = pdfDoc.addPage([pageWidth, pageHeight]);
           currentY = pageHeight - margin;
@@ -3959,16 +3965,15 @@
         });
 
         let lineY = currentY - 40;
-        preparedLines.forEach((line, idx) => {
-          const isFirst = idx === 0;
-          page.drawText(line, {
+        preparedLines.forEach((line) => {
+          page.drawText(line.text, {
             x: margin + 14,
             y: lineY,
-            size: isFirst ? 13 : 11.5,
-            font: isFirst ? boldFont : regularFont,
+            size: line.size,
+            font: line.font,
             color: rgb(0.14, 0.21, 0.29)
           });
-          lineY -= isFirst ? 18 : 15;
+          lineY -= line.lineHeight;
         });
 
         currentY -= estimatedHeight + 12;

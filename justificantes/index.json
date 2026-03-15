@@ -46,5 +46,21 @@
     "type": "application/pdf",
     "stored_path": "publicaciones/Automated.pdf",
     "url": "http://127.0.0.1:8081/api/proofs/publicaciones-6/file"
+  },
+  "publicaciones-8": {
+    "id": "publicaciones-8",
+    "section": "publicaciones",
+    "name": "3D models.pdf",
+    "type": "application/pdf",
+    "stored_path": "publicaciones/3D models.pdf",
+    "url": "http://127.0.0.1:8081/api/proofs/publicaciones-8/file"
+  },
+  "publicaciones-9": {
+    "id": "publicaciones-9",
+    "section": "publicaciones",
+    "name": "Planar.pdf",
+    "type": "application/pdf",
+    "stored_path": "publicaciones/Planar.pdf",
+    "url": "http://127.0.0.1:8081/api/proofs/publicaciones-9/file"
   }
 }
