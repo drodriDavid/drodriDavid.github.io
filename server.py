@@ -46,8 +46,28 @@ def save_index(data: dict[str, dict]) -> None:
     INDEX_PATH.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
+def maybe_fix_mojibake(value: str) -> str:
+    text = str(value or "")
+    suspicious_chars = ("Ã", "â", "€", "™", "œ", "š")
+    if not any(char in text for char in suspicious_chars):
+        return text
+
+    best = text
+    best_score = sum(best.count(char) for char in suspicious_chars)
+    for source_encoding in ("latin-1", "cp1252"):
+        try:
+            candidate = text.encode(source_encoding).decode("utf-8")
+        except UnicodeError:
+            continue
+        candidate_score = sum(candidate.count(char) for char in suspicious_chars)
+        if candidate_score < best_score:
+            best = candidate
+            best_score = candidate_score
+    return best
+
+
 def safe_name(value: str, fallback: str) -> str:
-    cleaned = Path(value or "").name.strip()
+    cleaned = Path(maybe_fix_mojibake(value or "")).name.strip()
     cleaned = re.sub('[<>:"/\\\\|?*\x00-\x1f]', "-", cleaned)
     cleaned = cleaned.rstrip(". ")
     return cleaned or fallback
