@@ -13,10 +13,16 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parent
-PROOFS_ROOT = ROOT / "justificantes"
+PROOFS_ROOT = Path(os.environ.get("PROOFS_STORAGE_ROOT", ROOT / "justificantes")).resolve()
 INDEX_PATH = PROOFS_ROOT / "index.json"
-HOST = "127.0.0.1"
-PORT = 8081
+HOST = os.environ.get("HOST", "0.0.0.0")
+PORT = int(os.environ.get("PORT", "8081"))
+PUBLIC_API_BASE_URL = os.environ.get("PUBLIC_API_BASE_URL", "").rstrip("/")
+ALLOWED_ORIGINS = [
+    origin.strip()
+    for origin in os.environ.get("ALLOWED_ORIGINS", "*").split(",")
+    if origin.strip()
+]
 
 
 def ensure_storage() -> None:
@@ -51,7 +57,44 @@ def safe_section(value: str) -> str:
     return cleaned or "general"
 
 
+def resolve_record_path(stored_path: str) -> Path:
+    candidate = Path(stored_path or "")
+    if candidate.is_absolute():
+        return candidate
+    legacy_path = ROOT / candidate
+    if stored_path and legacy_path.exists():
+        return legacy_path
+    return PROOFS_ROOT / candidate
+
+
 class ProofHandler(SimpleHTTPRequestHandler):
+    def get_public_api_base(self) -> str:
+        if PUBLIC_API_BASE_URL:
+            return PUBLIC_API_BASE_URL
+        scheme = self.headers.get("X-Forwarded-Proto", "http")
+        host = self.headers.get("X-Forwarded-Host") or self.headers.get("Host", "")
+        if host:
+            return f"{scheme}://{host}/api/proofs"
+        return "/api/proofs"
+
+    def get_cors_origin(self) -> str:
+        if not ALLOWED_ORIGINS:
+            return "*"
+        if "*" in ALLOWED_ORIGINS:
+            return "*"
+        request_origin = self.headers.get("Origin", "")
+        if request_origin in ALLOWED_ORIGINS:
+            return request_origin
+        return ""
+
+    def send_cors_headers(self) -> None:
+        cors_origin = self.get_cors_origin()
+        if cors_origin:
+            self.send_header("Access-Control-Allow-Origin", cors_origin)
+            self.send_header("Vary", "Origin")
+        self.send_header("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+
     def translate_path(self, path: str) -> str:
         path = path.split("?", 1)[0].split("#", 1)[0]
         trailing_slash = path.rstrip().endswith("/")
@@ -71,6 +114,13 @@ class ProofHandler(SimpleHTTPRequestHandler):
 
     def do_GET(self) -> None:
         parsed = urllib.parse.urlparse(self.path)
+        if parsed.path == "/healthz":
+            self.send_response(HTTPStatus.OK)
+            self.send_header("Content-Type", "text/plain; charset=utf-8")
+            self.send_cors_headers()
+            self.end_headers()
+            self.wfile.write(b"ok")
+            return
         if parsed.path.startswith("/api/proofs/"):
             self.handle_get_proof(parsed.path)
             return
@@ -90,11 +140,17 @@ class ProofHandler(SimpleHTTPRequestHandler):
             return
         self.send_error(HTTPStatus.NOT_FOUND)
 
+    def do_OPTIONS(self) -> None:
+        self.send_response(HTTPStatus.NO_CONTENT)
+        self.send_cors_headers()
+        self.end_headers()
+
     def send_json(self, payload: dict, status: int = 200) -> None:
         data = json.dumps(payload, ensure_ascii=False).encode("utf-8")
         self.send_response(status)
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Content-Length", str(len(data)))
+        self.send_cors_headers()
         self.end_headers()
         self.wfile.write(data)
 
@@ -112,7 +168,7 @@ class ProofHandler(SimpleHTTPRequestHandler):
             return
 
         if len(parts) == 4 and parts[3] == "file":
-            file_path = ROOT / record["stored_path"]
+            file_path = resolve_record_path(record["stored_path"])
             if not file_path.exists():
                 self.send_error(HTTPStatus.NOT_FOUND)
                 return
@@ -121,6 +177,7 @@ class ProofHandler(SimpleHTTPRequestHandler):
             self.send_header("Content-Length", str(file_path.stat().st_size))
             quoted = urllib.parse.quote(record["name"])
             self.send_header("Content-Disposition", f"inline; filename*=UTF-8''{quoted}")
+            self.send_cors_headers()
             self.end_headers()
             with file_path.open("rb") as fh:
                 shutil.copyfileobj(fh, self.wfile)
@@ -157,7 +214,11 @@ class ProofHandler(SimpleHTTPRequestHandler):
 
         index_data = load_index()
         previous = index_data.get(proof_id)
-        previous_path = ROOT / previous["stored_path"] if previous and previous.get("stored_path") else None
+        previous_path = (
+            resolve_record_path(previous["stored_path"])
+            if previous and previous.get("stored_path")
+            else None
+        )
         target_path = target_dir / original_name
 
         with target_path.open("wb") as output:
@@ -166,14 +227,15 @@ class ProofHandler(SimpleHTTPRequestHandler):
         if previous_path and previous_path.exists() and previous_path != target_path:
             previous_path.unlink()
 
-        rel_path = target_path.relative_to(ROOT).as_posix()
+        rel_path = target_path.relative_to(PROOFS_ROOT).as_posix()
+        public_api_base = self.get_public_api_base()
         record = {
             "id": proof_id,
             "section": section,
             "name": original_name,
             "type": uploaded.type or "application/octet-stream",
             "stored_path": rel_path,
-            "url": f"/api/proofs/{urllib.parse.quote(proof_id)}/file",
+            "url": f"{public_api_base}/{urllib.parse.quote(proof_id)}/file",
         }
         index_data[proof_id] = record
         save_index(index_data)
@@ -192,7 +254,7 @@ class ProofHandler(SimpleHTTPRequestHandler):
             self.send_json({"deleted": False}, status=404)
             return
 
-        file_path = ROOT / record.get("stored_path", "")
+        file_path = resolve_record_path(record.get("stored_path", ""))
         if file_path.exists():
             file_path.unlink()
 

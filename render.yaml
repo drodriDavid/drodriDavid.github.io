@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: drodridavid-proofs-api
+    runtime: python
+    plan: starter
+    buildCommand: "true"
+    startCommand: python server.py
+    healthCheckPath: /healthz
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.8
+      - key: ALLOWED_ORIGINS
+        value: https://drodridavid.github.io,http://127.0.0.1:8081,http://localhost:8081
+      - key: PROOFS_STORAGE_ROOT
+        value: /opt/render/project/src/justificantes-data
+    disk:
+      name: proofs-data
+      mountPath: /opt/render/project/src/justificantes-data
+      sizeGB: 1
