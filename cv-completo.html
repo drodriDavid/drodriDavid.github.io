@@ -1947,6 +1947,184 @@
       transform: translateY(0);
     }
 
+    .section-export-slot {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: .85rem;
+    }
+
+    .section-export-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .45rem;
+      border: 1px solid rgba(28, 61, 99, .16);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .92);
+      color: var(--pri);
+      padding: .55rem .95rem;
+      font-weight: 700;
+      font-size: .92rem;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(28, 61, 99, .08);
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+
+    .section-export-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 28px rgba(28, 61, 99, .12);
+      border-color: rgba(28, 61, 99, .24);
+    }
+
+    .section-export-btn:disabled {
+      opacity: .7;
+      cursor: wait;
+      transform: none;
+      box-shadow: 0 8px 18px rgba(28, 61, 99, .08);
+    }
+
+    .section-export-btn svg {
+      flex: 0 0 auto;
+    }
+
+    .export-pdf-root {
+      position: fixed;
+      left: -10000px;
+      top: 0;
+      width: 920px;
+      background: #fff;
+      color: #17324c;
+      z-index: -1;
+    }
+
+    .export-pdf-sheet {
+      background:
+        radial-gradient(circle at top right, rgba(207, 227, 255, .55), transparent 28rem),
+        linear-gradient(180deg, rgba(244, 248, 255, .96), rgba(255, 255, 255, .98));
+    }
+
+    .export-pdf-cover {
+      min-height: 1120px;
+      padding: 70px 64px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 1.2rem;
+      page-break-after: always;
+    }
+
+    .export-pdf-kicker {
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      font-size: .8rem;
+      color: rgba(23, 50, 76, .72);
+    }
+
+    .export-pdf-cover h1 {
+      margin: 0;
+      font-size: 2.25rem;
+      line-height: 1.12;
+      color: #163454;
+    }
+
+    .export-pdf-badge {
+      display: inline-flex;
+      width: fit-content;
+      align-items: center;
+      border-radius: 999px;
+      padding: .5rem 1rem;
+      background: rgba(28, 61, 99, .1);
+      color: #163454;
+      font-weight: 700;
+    }
+
+    .export-pdf-subtitle,
+    .export-pdf-date {
+      margin: 0;
+      font-size: 1rem;
+      line-height: 1.7;
+      color: rgba(23, 50, 76, .82);
+    }
+
+    .export-pdf-content {
+      padding: 54px 52px 64px;
+    }
+
+    .export-pdf-content h2 {
+      margin: 0 0 1rem;
+      color: #163454;
+      font-size: 1.55rem;
+    }
+
+    .export-pdf-list {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .export-pdf-item {
+      padding: 1rem 1.1rem;
+      border: 1px solid rgba(28, 61, 99, .12);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, .96);
+      box-shadow: 0 10px 24px rgba(28, 61, 99, .06);
+      break-inside: avoid;
+    }
+
+    .export-pdf-item .inline-edit-btn,
+    .export-pdf-item .inline-delete-btn,
+    .export-pdf-item .inline-proof-wrap,
+    .export-pdf-item .subject-edit-btn,
+    .export-pdf-item .subject-delete-btn {
+      display: none !important;
+    }
+
+    .export-pdf-item details {
+      display: block;
+    }
+
+    .export-pdf-item summary {
+      list-style: none;
+      cursor: default;
+      font-weight: 700;
+      color: #163454;
+      margin-bottom: .8rem;
+    }
+
+    .export-pdf-item summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .export-pdf-item table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: .55rem;
+      font-size: .92rem;
+    }
+
+    .export-pdf-item th,
+    .export-pdf-item td {
+      border-bottom: 1px solid rgba(28, 61, 99, .1);
+      padding: .5rem .35rem;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .export-pdf-item a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    @media (max-width: 900px) {
+      .section-export-slot {
+        justify-content: flex-start;
+      }
+
+      .section-export-btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
     .inline-delete-btn {
       position: absolute;
       top: 8px;
@@ -3226,6 +3404,7 @@
     </div>
   </div>
 
+  <script src="./assets/vendor/html2pdf.bundle.min.js"></script>
   <script src="proofs-config.js"></script>
   <script>
     // Bloqueo visual por contraseña (protección básica en frontend)
@@ -3350,6 +3529,13 @@
     const pubQ3Btn = document.getElementById('pub-q3-btn');
     const pubQ3Summary = document.getElementById('pub-q3-summary');
     const pubAllBtn = document.querySelector('#pub-filters button[data-filter="all"]');
+    const EXPORT_BUTTON_ICON = `
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 3v12"></path>
+        <path d="m7 10 5 5 5-5"></path>
+        <path d="M5 21h14"></path>
+      </svg>
+    `;
 
     const getQuickEntries = () => {
       try {
@@ -3415,6 +3601,214 @@
       'La subida de justificantes solo funciona en local. Sube el PDF en local y luego haz git push.';
     const showLocalProofUploadMessage = () => {
       showProofToast(getLocalProofUploadMessage());
+    };
+
+    const slugifyFileName = (text) =>
+      String(text || 'seccion')
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '') || 'seccion';
+
+    const isExportLibraryReady = () => typeof window.html2pdf === 'function';
+
+    const isElementVisibleForExport = (node) =>
+      Boolean(node && !node.hidden && !node.classList.contains('is-hidden'));
+
+    const getTextContent = (selector, scope = document) =>
+      (scope?.querySelector(selector)?.textContent || '').replace(/\s+/g, ' ').trim();
+
+    const getAcademicSectionTitleBlock = () =>
+      document.querySelector('#tfg-tfm > .container.stack-2 > .title');
+
+    const getAcademicTrainingColumn = () =>
+      document.querySelector('#sobre-mi .grid-2 > .stack-1:last-child');
+
+    const getSectionExportConfigs = () => [
+      {
+        key: 'formacion-academica',
+        host: () => getAcademicTrainingColumn(),
+        anchor: () => getAcademicTrainingColumn()?.querySelector(':scope > h3'),
+        title: () => getTextContent(':scope > h3', getAcademicTrainingColumn()) || 'Formacion Academica',
+        subtitle: () => `${Array.from(getAcademicTrainingColumn()?.querySelectorAll(':scope > .card') || []).filter(isElementVisibleForExport).length} meritos academicos recopilados en la seccion.`,
+        countLabel: (count) => `${count} ${count === 1 ? 'merito academico' : 'meritos academicos'}`,
+        items: () => Array.from(getAcademicTrainingColumn()?.querySelectorAll(':scope > .card') || [])
+          .filter(isElementVisibleForExport)
+      },
+      {
+        key: 'publicaciones',
+        host: () => document.getElementById('acad-title-block'),
+        title: () => getTextContent('h2', document.getElementById('acad-title-block')) || 'Publicaciones',
+        subtitle: () => getTextContent('p', document.getElementById('acad-title-block')),
+        countLabel: (count) => `${count} ${count === 1 ? 'publicacion' : 'publicaciones'}`,
+        items: () => Array.from(document.querySelectorAll('#publicaciones .stack-1 > article.card'))
+          .filter(isElementVisibleForExport)
+      },
+      {
+        key: 'congresos',
+        host: () => document.querySelector('#congresos .title'),
+        title: () => getTextContent('#congresos .title h2') || 'Congresos y Conferencias',
+        subtitle: () => getTextContent('#congresos .title p'),
+        countLabel: (count) => `${count} ${count === 1 ? 'contribucion' : 'contribuciones'}`,
+        items: () => Array.from(document.querySelectorAll('#congresos .stack-1 > .card'))
+          .filter(isElementVisibleForExport)
+      },
+      {
+        key: 'proyectos',
+        host: () => document.querySelector('#proyectos .title'),
+        title: () => getTextContent('#projects-main-title') || 'Proyectos',
+        subtitle: () => getTextContent('#projects-main-subtitle'),
+        countLabel: (count) => `${count} ${count === 1 ? 'proyecto' : 'proyectos'}`,
+        items: () => Array.from(document.querySelectorAll('#proyectos > .container.stack-2 > .stack-1 > .card, #proyectos > .container.stack-2 > .card'))
+          .filter(isElementVisibleForExport)
+      },
+      {
+        key: 'docencia',
+        host: () => document.getElementById('docencia-title-block'),
+        title: () => getTextContent('#docencia-title-block h2') || 'Docencia',
+        subtitle: () => getTextContent('#docencia-title-block p'),
+        countLabel: (count) => `${count} ${count === 1 ? 'bloque docente' : 'bloques docentes'}`,
+        items: () => Array.from(document.querySelectorAll('#docencia .year-card, #quick-subjects-stack > .card'))
+          .filter(isElementVisibleForExport)
+      },
+      {
+        key: 'direccion-academica',
+        host: () => getAcademicSectionTitleBlock(),
+        title: () => getTextContent('#acad-main-title') || 'Dirección académica',
+        subtitle: () => getTextContent('#acad-main-subtitle'),
+        countLabel: (count) => `${count} ${count === 1 ? 'merito academico' : 'meritos academicos'}`,
+        items: () => Array.from(document.querySelectorAll('#tfg-stack .card, #tfm-stack .card, #trib-stack .card'))
+          .filter(isElementVisibleForExport)
+      }
+    ];
+
+    const sanitizeExportClone = (node) => {
+      const clone = node.cloneNode(true);
+      clone.querySelectorAll('.inline-edit-btn, .inline-delete-btn, .inline-proof-wrap, .subject-edit-btn, .subject-delete-btn').forEach((el) => el.remove());
+      clone.querySelectorAll('details').forEach((details) => {
+        details.open = true;
+      });
+      clone.querySelectorAll('summary').forEach((summary) => {
+        summary.textContent = summary.textContent.replace(/\s+/g, ' ').trim();
+      });
+      clone.querySelectorAll('a').forEach((link) => {
+        const text = link.textContent.replace(/\s+/g, ' ').trim();
+        const href = link.getAttribute('href') || '';
+        link.textContent = text || href;
+      });
+      return clone;
+    };
+
+    const buildSectionExportRoot = ({ title, subtitle, items, countLabel }) => {
+      const root = document.createElement('div');
+      root.className = 'export-pdf-root';
+      const today = new Date().toLocaleDateString('es-ES', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric'
+      });
+
+      const sheet = document.createElement('div');
+      sheet.className = 'export-pdf-sheet';
+      sheet.innerHTML = `
+        <section class="export-pdf-cover">
+          <p class="export-pdf-kicker">Curriculum de meritos</p>
+          <h1>${title}</h1>
+          <div class="export-pdf-badge">${countLabel}</div>
+          <p class="export-pdf-subtitle">${subtitle || 'Resumen exportado desde la web curricular.'}</p>
+          <p class="export-pdf-date">Documento generado el ${today}.</p>
+        </section>
+        <section class="export-pdf-content">
+          <h2>Detalle de meritos</h2>
+          <div class="export-pdf-list"></div>
+        </section>
+      `;
+
+      const list = sheet.querySelector('.export-pdf-list');
+      items.forEach((item) => {
+        const wrapper = document.createElement('article');
+        wrapper.className = 'export-pdf-item';
+        wrapper.appendChild(sanitizeExportClone(item));
+        list?.appendChild(wrapper);
+      });
+
+      root.appendChild(sheet);
+      return root;
+    };
+
+    const exportSectionToPdf = async (config, button) => {
+      const items = config.items();
+      const title = config.title();
+      const subtitle = config.subtitle();
+      if (!items.length) {
+        showProofToast(`No hay meritos visibles en ${title}.`);
+        return;
+      }
+      if (!isExportLibraryReady()) {
+        showProofToast('La descarga PDF no esta disponible ahora mismo.');
+        return;
+      }
+
+      const countLabel = typeof config.countLabel === 'function'
+        ? config.countLabel(items.length)
+        : `${items.length} ${items.length === 1 ? 'merito' : 'meritos'}`;
+      const exportRoot = buildSectionExportRoot({ title, subtitle, items, countLabel });
+      document.body.appendChild(exportRoot);
+
+      if (button) button.disabled = true;
+      showProofToast(`Generando PDF de ${title}...`);
+
+      try {
+        await window.html2pdf()
+          .set({
+            margin: [10, 10, 10, 10],
+            filename: `${slugifyFileName(title)}.pdf`,
+            pagebreak: { mode: ['css', 'legacy'] },
+            html2canvas: {
+              scale: 2,
+              useCORS: true,
+              backgroundColor: '#ffffff'
+            },
+            jsPDF: {
+              unit: 'mm',
+              format: 'a4',
+              orientation: 'portrait'
+            }
+          })
+          .from(exportRoot)
+          .save();
+        showProofToast(`PDF preparado: ${title}`);
+      } catch (_) {
+        showProofToast(`No se pudo generar el PDF de ${title}.`);
+      } finally {
+        exportRoot.remove();
+        if (button) button.disabled = false;
+      }
+    };
+
+    const ensureSectionExportButtons = () => {
+      getSectionExportConfigs().forEach((config) => {
+        const host = config.host();
+        if (!host || host.querySelector(`:scope > .section-export-slot[data-export-key="${config.key}"]`)) return;
+        const anchor = config.anchor?.();
+        const slot = document.createElement('div');
+        slot.className = 'section-export-slot';
+        slot.dataset.exportKey = config.key;
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'section-export-btn';
+        button.innerHTML = `${EXPORT_BUTTON_ICON}<span>Descargar PDF</span>`;
+        button.addEventListener('click', () => {
+          exportSectionToPdf(config, button);
+        });
+        slot.appendChild(button);
+        if (anchor?.parentNode === host) {
+          anchor.insertAdjacentElement('afterend', slot);
+          return;
+        }
+        host.appendChild(slot);
+      });
     };
 
     const publishLocalChanges = async () => {
@@ -3570,8 +3964,6 @@
     };
 
     const getProofHostId = (node) => node?.dataset.editId || node?.dataset.proofId || '';
-
-    const getAcademicTrainingColumn = () => document.querySelector('#sobre-mi .grid-2 > .stack-1:last-child');
 
     const getProofSection = (node) => {
       if (!node) return 'general';
@@ -4903,6 +5295,7 @@
     refreshEditableCards();
     ensureSubjectRowControls();
     updateSettingsActiveStates();
+    ensureSectionExportButtons();
 
     const withCachedCategory = (item, key, resolver) => {
       if (!item.dataset[key]) item.dataset[key] = resolver(item);
