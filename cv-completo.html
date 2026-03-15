@@ -3367,6 +3367,13 @@
       return host.endsWith('github.io');
     };
 
+    const getHostedProofUploadMessage = () =>
+      'En https://drodridavid.github.io no se pueden subir justificantes. Usa http://127.0.0.1:8081/cv-completo.html';
+
+    const showHostedProofUploadMessage = () => {
+      showProofToast(getHostedProofUploadMessage());
+    };
+
     const getProofRecord = async (id) => {
       if (!id) return null;
       try {
@@ -3380,9 +3387,7 @@
 
     const saveProofRecord = async (record) => {
       if (!record?.id || !record?.file) return null;
-      if (isHostedProofUploadBlocked()) {
-        return { error: 'hosted-upload-disabled' };
-      }
+      if (isHostedProofUploadBlocked()) return { error: 'hosted-upload-disabled' };
       const formData = new FormData();
       formData.append('proofId', record.id);
       formData.append('section', record.section || 'general');
@@ -4005,9 +4010,9 @@
       if (card.querySelector(':scope > .inline-proof-wrap')) return;
       card.classList.add('has-inline-proof');
       const wrap = document.createElement('div');
-      wrap.className = 'inline-proof-wrap';
+      wrap.className = 'inline-proof-wrap has-visible-empty';
       wrap.innerHTML = `
-        <div class="inline-proof-main">
+        <div class="inline-proof-main no-file">
           <button type="button" class="inline-proof-btn" title="Subir justificante" aria-label="Subir justificante">
             <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M12 16V4"></path>
@@ -4042,6 +4047,10 @@
       const removeBtn = wrap.querySelector('.inline-proof-remove');
 
       uploadBtn?.addEventListener('click', () => {
+        if (isHostedProofUploadBlocked()) {
+          showHostedProofUploadMessage();
+          return;
+        }
         input?.click();
       });
 
@@ -4063,7 +4072,7 @@
           file
         });
         if (savedRecord?.error === 'hosted-upload-disabled') {
-          showProofToast('Las subidas solo funcionan en http://127.0.0.1:8081/cv-completo.html');
+          showHostedProofUploadMessage();
           input.value = '';
           return;
         }
@@ -4103,9 +4112,9 @@
         if (!block || block.querySelector(':scope > .inline-proof-wrap')) return;
         block.dataset.proofId = proofId;
         const wrap = document.createElement('div');
-        wrap.className = 'inline-proof-wrap is-group-control';
+        wrap.className = 'inline-proof-wrap is-group-control has-visible-empty';
         wrap.innerHTML = `
-          <div class="inline-proof-main">
+          <div class="inline-proof-main no-file">
             <button type="button" class="inline-proof-btn" title="Subir justificante" aria-label="Subir justificante">
               <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 16V4"></path>
@@ -4140,6 +4149,10 @@
         const removeBtn = wrap.querySelector('.inline-proof-remove');
 
         uploadBtn?.addEventListener('click', () => {
+          if (isHostedProofUploadBlocked()) {
+            showHostedProofUploadMessage();
+            return;
+          }
           input?.click();
         });
 
@@ -4160,7 +4173,7 @@
             file
           });
           if (savedRecord?.error === 'hosted-upload-disabled') {
-            showProofToast('Las subidas solo funcionan en http://127.0.0.1:8081/cv-completo.html');
+            showHostedProofUploadMessage();
             input.value = '';
             return;
           }
@@ -4190,10 +4203,10 @@
       const block = document.getElementById('acad-title-block');
       if (!block || block.querySelector(':scope > .inline-proof-wrap')) return;
       const wrap = document.createElement('div');
-      wrap.className = 'inline-proof-wrap is-group-control';
+      wrap.className = 'inline-proof-wrap is-group-control has-visible-empty';
       wrap.hidden = true;
       wrap.innerHTML = `
-        <div class="inline-proof-main">
+        <div class="inline-proof-main no-file">
           <button type="button" class="inline-proof-btn" title="Subir justificante" aria-label="Subir justificante">
             <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M12 16V4"></path>
@@ -4227,6 +4240,10 @@
       const removeBtn = wrap.querySelector('.inline-proof-remove');
 
       uploadBtn?.addEventListener('click', () => {
+        if (isHostedProofUploadBlocked()) {
+          showHostedProofUploadMessage();
+          return;
+        }
         input?.click();
       });
 
@@ -4247,7 +4264,7 @@
           file
         });
         if (savedRecord?.error === 'hosted-upload-disabled') {
-          showProofToast('Las subidas solo funcionan en http://127.0.0.1:8081/cv-completo.html');
+          showHostedProofUploadMessage();
           input.value = '';
           return;
         }
@@ -4362,6 +4379,7 @@
       }
       ensureGroupProofControls();
       syncAcademicProofControls('all');
+      ensurePublicationProofControls();
       refreshPublicationQ3Visibility();
     };
 
@@ -4490,6 +4508,10 @@
     quickType?.addEventListener('change', setQuickFormMode);
 
     quickProofUpload?.addEventListener('click', () => {
+      if (isHostedProofUploadBlocked()) {
+        showHostedProofUploadMessage();
+        return;
+      }
       quickProofInput?.click();
     });
 
@@ -4511,7 +4533,7 @@
         file
       });
       if (savedRecord?.error === 'hosted-upload-disabled') {
-        showProofToast('Las subidas solo funcionan en http://127.0.0.1:8081/cv-completo.html');
+        showHostedProofUploadMessage();
         quickProofInput.value = '';
         return;
       }
@@ -4803,6 +4825,12 @@
 
       apply('all');
     };
+
+    function ensurePublicationProofControls() {
+      document.querySelectorAll('#publicaciones .stack-1 > article.card').forEach((card) => {
+        ensureInlineProofControls(card);
+      });
+    }
 
     function refreshPublicationQ3Visibility() {
       const pubCards = Array.from(document.querySelectorAll('#publicaciones .stack-1 > article.card'));
