@@ -1987,15 +1987,15 @@
     }
 
     .export-pdf-root {
-      position: absolute;
-      left: 0;
+      position: fixed;
+      left: -200vw;
       top: 0;
       width: 920px;
       background: #fff;
       color: #17324c;
-      opacity: 0;
+      opacity: 1;
       pointer-events: none;
-      z-index: -1;
+      z-index: 0;
     }
 
     .export-pdf-sheet {
@@ -3734,7 +3734,7 @@
       return clone;
     };
 
-    const buildSectionExportRoot = ({ title, subtitle, items, countLabel }) => {
+    const buildSectionExportRoot = ({ title, subtitle, items, countLabel, proofCount = 0 }) => {
       const root = document.createElement('div');
       root.className = 'export-pdf-root';
       const today = new Date().toLocaleDateString('es-ES', {
@@ -3751,6 +3751,7 @@
           <h1>${title}</h1>
           <div class="export-pdf-badge">${countLabel}</div>
           <p class="export-pdf-subtitle">${subtitle || 'Resumen exportado desde la web curricular.'}</p>
+          <p class="export-pdf-subtitle">${proofCount > 0 ? `Incluye ${proofCount} ${proofCount === 1 ? 'justificante PDF anexo' : 'justificantes PDF anexos'}.` : 'No hay justificantes PDF anexos en esta seccion.'}</p>
           <p class="export-pdf-date">Documento generado el ${today}.</p>
         </section>
         <section class="export-pdf-content">
@@ -3861,15 +3862,15 @@
       const countLabel = typeof config.countLabel === 'function'
         ? config.countLabel(items.length)
         : `${items.length} ${items.length === 1 ? 'merito' : 'meritos'}`;
-      const exportRoot = buildSectionExportRoot({ title, subtitle, items, countLabel });
-      document.body.appendChild(exportRoot);
-
       if (button) button.disabled = true;
       showProofToast(`Generando PDF de ${title}...`);
 
+      let exportRoot = null;
       try {
-        const baseBuffer = await renderSectionSummaryPdf(exportRoot, title);
         const proofRecords = await getSectionProofRecords(config);
+        exportRoot = buildSectionExportRoot({ title, subtitle, items, countLabel, proofCount: proofRecords.length });
+        document.body.appendChild(exportRoot);
+        const baseBuffer = await renderSectionSummaryPdf(exportRoot, title);
         const { bytes, mergedProofs } = await mergePdfBuffers(baseBuffer, proofRecords);
         downloadPdfBytes(bytes, `${slugifyFileName(title)}.pdf`);
         if (mergedProofs > 0) {
@@ -3880,7 +3881,7 @@
       } catch (_) {
         showProofToast(`No se pudo generar el PDF de ${title}.`);
       } finally {
-        exportRoot.remove();
+        exportRoot?.remove();
         if (button) button.disabled = false;
       }
     };
@@ -3936,6 +3937,10 @@
         .replace(/^\.\/+/, '');
 
     const getPublishedProofUrl = (record) => {
+      if (record?.url) {
+        const directUrl = String(record.url).trim();
+        if (/^(https?:)?\/\//i.test(directUrl) || directUrl.startsWith('/')) return directUrl;
+      }
       const normalizedPath = normalizeProofStoredPath(record?.stored_path);
       if (!normalizedPath) return '';
       const cleanPath = normalizedPath.startsWith('justificantes/')
