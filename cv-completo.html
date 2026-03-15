@@ -1671,6 +1671,12 @@
       border-color: #b9cfe5;
     }
 
+    .quick-proof-upload.has-file {
+      background: #dff7e8;
+      border-color: #2e9d5b;
+      color: #146c3a;
+    }
+
     .quick-proof-remove {
       border-color: #f0b4b4;
       background: #fff5f5;
@@ -1699,6 +1705,14 @@
       position: relative;
     }
 
+    .card.has-inline-edit {
+      padding-right: 120px;
+    }
+
+    .card.has-inline-proof {
+      padding-right: 120px;
+    }
+
     .inline-edit-btn {
       position: absolute;
       top: 8px;
@@ -1723,47 +1737,142 @@
 
     .inline-proof-wrap {
       display: none;
-      margin-top: .8rem;
-      padding-top: .7rem;
-      border-top: 1px dashed #d8e3ef;
-      align-items: center;
-      justify-content: space-between;
-      gap: .75rem;
-      flex-wrap: wrap;
+      position: absolute;
+      bottom: 8px;
+      right: 8px;
+      z-index: 2;
+      align-items: flex-end;
+      gap: .28rem;
+      flex-direction: column;
+      max-width: 40px;
+    }
+
+    .inline-proof-wrap.has-visible-open {
+      display: flex;
+    }
+
+    .inline-proof-wrap.has-visible-empty {
+      display: flex;
     }
 
     body.edit-mode .inline-proof-wrap {
       display: flex;
     }
 
+    .inline-proof-wrap.is-group-control {
+      position: static;
+      top: auto;
+      right: auto;
+      left: auto;
+      bottom: auto;
+      z-index: auto;
+      margin-top: .45rem;
+      align-items: flex-start;
+      max-width: 100%;
+    }
+
     .inline-proof-main {
       display: inline-flex;
       align-items: center;
-      gap: .5rem;
-      flex-wrap: wrap;
+      gap: .28rem;
+      flex-wrap: nowrap;
+      flex-direction: row;
+    }
+
+    .inline-proof-main.has-file .inline-proof-btn {
+      border-color: #2e9d5b;
+      background: #dff7e8;
+      color: #146c3a;
+      box-shadow: 0 0 0 2px rgba(46, 157, 91, .18), 0 8px 16px rgba(20, 108, 58, .18);
+    }
+
+    .inline-proof-main.has-file .inline-proof-btn svg {
+      stroke: #146c3a;
+    }
+
+    .inline-proof-main.no-file .inline-proof-btn {
+      border-color: #d3dce7;
+      background: #f6f8fb;
+      color: #63788f;
     }
 
     .inline-proof-btn,
     .inline-proof-link,
     .inline-proof-remove {
-      border-radius: 8px;
-      font-size: .74rem;
-      font-weight: 700;
-      padding: .34rem .55rem;
+      border-radius: 999px;
       text-decoration: none;
       cursor: pointer;
+      width: 24px;
+      height: 24px;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .inline-proof-btn,
+    .inline-proof-remove {
+      display: none;
+    }
+
+    body:not(.edit-mode) .inline-proof-wrap.has-visible-empty .inline-proof-btn {
+      display: inline-flex;
+      opacity: .28;
+      filter: grayscale(1);
+      pointer-events: none;
+    }
+
+    body.edit-mode .inline-proof-btn,
+    body.edit-mode .inline-proof-remove {
+      display: inline-flex;
+    }
+
+    body.edit-mode .inline-proof-wrap.has-visible-empty .inline-proof-btn {
+      opacity: 1;
+      filter: none;
+      pointer-events: auto;
     }
 
     .inline-proof-btn {
       border: 1px solid #b9cfe5;
       background: #f5faff;
       color: #20486f;
+      box-shadow: 0 6px 14px rgba(20, 52, 82, .14);
+      position: relative;
+    }
+
+    .inline-proof-status {
+      position: absolute;
+      right: -1px;
+      bottom: -1px;
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      border: 1.5px solid #fff;
+      background: #d0d7e2;
+      box-shadow: 0 1px 4px rgba(20, 52, 82, .18);
+    }
+
+    .inline-proof-main.has-file .inline-proof-status {
+      background: #1f9d55;
+    }
+
+    .inline-proof-main.no-file .inline-proof-status {
+      background: #c0392b;
     }
 
     .inline-proof-link {
       border: 1px solid #c5d7e8;
       background: #ffffff;
       color: #20486f;
+    }
+
+    .inline-proof-link[hidden] {
+      display: none !important;
+    }
+
+    .inline-proof-wrap.has-visible-open .inline-proof-link {
+      display: inline-flex;
     }
 
     .inline-proof-remove {
@@ -1773,9 +1882,35 @@
     }
 
     .inline-proof-name {
-      font-size: .76rem;
-      color: #56708b;
-      word-break: break-word;
+      display: none;
+    }
+
+    .inline-proof-wrap.is-group-control .inline-proof-name {
+      display: none;
+    }
+
+    .proof-toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 1400;
+      min-width: 220px;
+      max-width: min(420px, calc(100vw - 36px));
+      padding: .8rem .95rem;
+      border-radius: 12px;
+      border: 1px solid #cfe0ef;
+      background: rgba(255, 255, 255, .98);
+      color: #20486f;
+      box-shadow: 0 18px 35px rgba(14, 35, 55, .2);
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease;
+    }
+
+    .proof-toast.is-visible {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     .inline-delete-btn {
@@ -1902,7 +2037,7 @@
 
     <section id="publicaciones" style="background:var(--bg2)">
       <div class="container stack-2">
-        <div class="title">
+        <div id="acad-title-block" class="title">
           <h2>Publicaciones</h2>
           <div class="filters" id="pub-filters" aria-label="Filtros de publicaciones">
             <button class="filter-btn is-active" type="button" data-filter="all">Todas</button>
@@ -2160,7 +2295,7 @@
     <section id="proyectos" style="background:var(--bg2)">
       <div class="container stack-2">
 
-        <div class="title">
+        <div id="docencia-title-block" class="title">
           <h2 id="projects-main-title">Proyectos</h2>
           <div class="filters" id="proj-filters" aria-label="Filtros de proyectos">
             <button class="filter-btn is-active" type="button" data-filter="all">Todos</button>
@@ -2792,6 +2927,8 @@
     <div class="container">&copy; 2025 David Jurado Rodríguez</div>
   </footer>
 
+  <div id="proof-toast" class="proof-toast" aria-live="polite"></div>
+
   <div id="auth-gate" role="dialog" aria-modal="true" aria-labelledby="auth-title">
     <div class="auth-modal">
       <div class="auth-icon" aria-hidden="true">
@@ -3108,9 +3245,7 @@
 
     const QUICK_STORAGE_KEY = 'cvQuickEntriesV1';
     const QUICK_EDITS_STORAGE_KEY = 'cvCardEditsV1';
-    const QUICK_PROOFS_DB_NAME = 'cvProofsDb';
-    const QUICK_PROOFS_STORE = 'proofs';
-    const QUICK_PROOFS_DB_VERSION = 1;
+    const PROOFS_API_BASE = '/api/proofs';
     const quickSettings = document.getElementById('quick-settings');
     const quickSettingsMain = document.getElementById('quick-settings-main');
     const quickSettingsMenu = document.getElementById('quick-settings-menu');
@@ -3167,6 +3302,7 @@
     const quickProofRemove = document.getElementById('quick-proof-remove');
     const quickProofInput = document.getElementById('quick-proof-input');
     const quickProofName = document.getElementById('quick-proof-name');
+    const proofToast = document.getElementById('proof-toast');
     const quickSubjectsBlock = document.getElementById('quick-subjects-block');
     const pubQ3Btn = document.getElementById('pub-q3-btn');
     const pubQ3Summary = document.getElementById('pub-q3-summary');
@@ -3208,85 +3344,71 @@
       }
     };
 
-    let proofsDbPromise = null;
-    const proofUrlCache = new Map();
+    let proofToastTimer = null;
 
-    const openProofsDb = () => {
-      if (!('indexedDB' in window)) return Promise.resolve(null);
-      if (proofsDbPromise) return proofsDbPromise;
-      proofsDbPromise = new Promise((resolve) => {
-        const request = window.indexedDB.open(QUICK_PROOFS_DB_NAME, QUICK_PROOFS_DB_VERSION);
-        request.onupgradeneeded = () => {
-          const db = request.result;
-          if (!db.objectStoreNames.contains(QUICK_PROOFS_STORE)) {
-            db.createObjectStore(QUICK_PROOFS_STORE, { keyPath: 'id' });
-          }
-        };
-        request.onsuccess = () => resolve(request.result);
-        request.onerror = () => resolve(null);
-      });
-      return proofsDbPromise;
+    const showProofToast = (message) => {
+      if (!proofToast) return;
+      proofToast.textContent = message;
+      proofToast.classList.add('is-visible');
+      if (proofToastTimer) window.clearTimeout(proofToastTimer);
+      proofToastTimer = window.setTimeout(() => {
+        proofToast.classList.remove('is-visible');
+      }, 2200);
     };
 
     const getProofRecord = async (id) => {
       if (!id) return null;
-      const db = await openProofsDb();
-      if (!db) return null;
-      return new Promise((resolve) => {
-        const tx = db.transaction(QUICK_PROOFS_STORE, 'readonly');
-        const store = tx.objectStore(QUICK_PROOFS_STORE);
-        const request = store.get(id);
-        request.onsuccess = () => resolve(request.result || null);
-        request.onerror = () => resolve(null);
-      });
+      try {
+        const response = await fetch(`${PROOFS_API_BASE}/${encodeURIComponent(id)}`, { cache: 'no-store' });
+        if (!response.ok) return null;
+        return await response.json();
+      } catch (_) {
+        return null;
+      }
     };
 
     const saveProofRecord = async (record) => {
-      if (!record?.id) return false;
-      const db = await openProofsDb();
-      if (!db) return false;
-      return new Promise((resolve) => {
-        const tx = db.transaction(QUICK_PROOFS_STORE, 'readwrite');
-        tx.objectStore(QUICK_PROOFS_STORE).put(record);
-        tx.oncomplete = () => resolve(true);
-        tx.onerror = () => resolve(false);
-      });
+      if (!record?.id || !record?.file) return null;
+      const formData = new FormData();
+      formData.append('proofId', record.id);
+      formData.append('section', record.section || 'general');
+      formData.append('file', record.file, record.name || record.file.name || 'documento');
+      try {
+        const response = await fetch(`${PROOFS_API_BASE}/upload`, {
+          method: 'POST',
+          body: formData
+        });
+        if (!response.ok) return null;
+        return await response.json();
+      } catch (_) {
+        return null;
+      }
     };
 
     const deleteProofRecord = async (id) => {
       if (!id) return false;
-      const db = await openProofsDb();
-      if (!db) return false;
-      if (proofUrlCache.has(id)) {
-        URL.revokeObjectURL(proofUrlCache.get(id));
-        proofUrlCache.delete(id);
+      try {
+        const response = await fetch(`${PROOFS_API_BASE}/${encodeURIComponent(id)}`, { method: 'DELETE' });
+        return response.ok;
+      } catch (_) {
+        return false;
       }
-      return new Promise((resolve) => {
-        const tx = db.transaction(QUICK_PROOFS_STORE, 'readwrite');
-        tx.objectStore(QUICK_PROOFS_STORE).delete(id);
-        tx.oncomplete = () => resolve(true);
-        tx.onerror = () => resolve(false);
-      });
     };
 
-    const getProofUrl = (id, blob) => {
-      if (!id || !blob) return '';
-      if (proofUrlCache.has(id)) {
-        URL.revokeObjectURL(proofUrlCache.get(id));
-      }
-      const url = URL.createObjectURL(blob);
-      proofUrlCache.set(id, url);
-      return url;
-    };
+    const getProofUrl = (id) => id ? `${PROOFS_API_BASE}/${encodeURIComponent(id)}/file` : '';
 
     const getCurrentProofId = () => currentEditingCardId || currentEditingSubjectId || '';
 
     const syncQuickProofPanel = async () => {
       const proofId = getCurrentProofId();
-      const showPanel = Boolean(proofId);
+      const showPanel = false;
       if (quickProofPanel) quickProofPanel.hidden = !showPanel;
       if (!showPanel) {
         if (quickProofName) quickProofName.textContent = 'Sin justificante subido.';
+        if (quickProofUpload) {
+          quickProofUpload.textContent = 'Subir PDF o archivo';
+          quickProofUpload.classList.remove('has-file');
+        }
         if (quickProofOpen) {
           quickProofOpen.hidden = true;
           quickProofOpen.removeAttribute('href');
@@ -3297,8 +3419,12 @@
       }
 
       const record = await getProofRecord(proofId);
-      if (!record?.file) {
+      if (!record?.url) {
         if (quickProofName) quickProofName.textContent = 'Sin justificante subido.';
+        if (quickProofUpload) {
+          quickProofUpload.textContent = 'Subir PDF o archivo';
+          quickProofUpload.classList.remove('has-file');
+        }
         if (quickProofOpen) {
           quickProofOpen.hidden = true;
           quickProofOpen.removeAttribute('href');
@@ -3308,11 +3434,46 @@
       }
 
       if (quickProofName) quickProofName.textContent = record.name || 'Justificante adjunto';
+      if (quickProofUpload) {
+        quickProofUpload.textContent = 'Reemplazar justificante';
+        quickProofUpload.classList.add('has-file');
+      }
       if (quickProofOpen) {
-        quickProofOpen.href = getProofUrl(proofId, record.file);
+        quickProofOpen.href = getProofUrl(proofId);
         quickProofOpen.hidden = false;
       }
       if (quickProofRemove) quickProofRemove.hidden = false;
+    };
+
+    const getProofHostId = (node) => node?.dataset.editId || node?.dataset.proofId || '';
+
+    const getAcademicTrainingColumn = () => document.querySelector('#sobre-mi .grid-2 > .stack-1:last-child');
+
+    const getProofSection = (node) => {
+      if (!node) return 'general';
+      const proofId = getProofHostId(node);
+      if (proofId.startsWith('group-')) return proofId.replace('group-', '');
+      const academicColumn = getAcademicTrainingColumn();
+      if (academicColumn?.contains(node)) return 'formacion-academica';
+      if (node.closest('#publicaciones')) return 'publicaciones';
+      if (node.closest('#congresos')) return 'congresos';
+      if (node.closest('#proyectos')) return 'proyectos';
+      if (node.closest('#docencia')) return 'docencia';
+      if (node.closest('#tfg-stack')) return 'tfg';
+      if (node.closest('#tfm-stack')) return 'tfm';
+      if (node.closest('#trib-stack')) return 'tribunales';
+      return 'general';
+    };
+
+    const shouldRenderInlineProof = (card) => {
+      if (!card) return false;
+      const academicColumn = getAcademicTrainingColumn();
+      return Boolean(
+        card.closest('#publicaciones') ||
+        card.closest('#proyectos') ||
+        card.closest('#congresos') ||
+        academicColumn?.contains(card)
+      );
     };
 
     const QUICK_DELETES_STORAGE_KEY = 'cvCardDeletesV1';
@@ -3729,6 +3890,7 @@
 
     const ensureInlineEditButton = (card) => {
       if (!card || card.querySelector(':scope > .inline-edit-btn')) return;
+      card.classList.add('has-inline-edit');
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'inline-edit-btn';
@@ -3776,42 +3938,87 @@
       card.appendChild(btn);
     };
 
-    const updateProofControls = async (card) => {
-      if (!card) return;
-      const editId = card.dataset.editId || '';
-      const wrap = card.querySelector(':scope > .inline-proof-wrap');
+    const removeInlineProofControls = (host) => {
+      if (!host) return;
+      host.classList.remove('has-inline-proof');
+      host.querySelectorAll(':scope > .inline-proof-wrap').forEach((node) => node.remove());
+    };
+
+    const updateProofControls = async (host) => {
+      if (!host) return;
+      const proofId = getProofHostId(host);
+      const wrap = host.querySelector(':scope > .inline-proof-wrap');
       if (!wrap) return;
+      const main = wrap.querySelector('.inline-proof-main');
       const nameNode = wrap.querySelector('.inline-proof-name');
       const openLink = wrap.querySelector('.inline-proof-link');
       const removeBtn = wrap.querySelector('.inline-proof-remove');
-      const record = await getProofRecord(editId);
-      if (!record?.file) {
+      const uploadBtn = wrap.querySelector('.inline-proof-btn');
+      const record = await getProofRecord(proofId);
+      if (!record?.url) {
+        wrap.classList.remove('has-visible-open');
+        wrap.classList.add('has-visible-empty');
+        main?.classList.remove('has-file');
+        main?.classList.add('no-file');
         if (nameNode) nameNode.textContent = 'Sin justificante subido';
         if (openLink) {
           openLink.hidden = true;
           openLink.removeAttribute('href');
         }
         if (removeBtn) removeBtn.hidden = true;
+        if (uploadBtn) uploadBtn.title = 'Subir justificante';
         return;
       }
 
+      wrap.classList.add('has-visible-open');
+      wrap.classList.remove('has-visible-empty');
+      main?.classList.remove('no-file');
+      main?.classList.add('has-file');
       if (nameNode) nameNode.textContent = record.name || 'Justificante adjunto';
       if (openLink) {
-        openLink.href = getProofUrl(editId, record.file);
+        openLink.href = getProofUrl(proofId);
         openLink.hidden = false;
       }
       if (removeBtn) removeBtn.hidden = false;
+      if (uploadBtn) uploadBtn.title = 'Cambiar justificante';
     };
 
     const ensureInlineProofControls = (card) => {
-      if (!card || card.querySelector(':scope > .inline-proof-wrap')) return;
+      if (!card) return;
+      if (!shouldRenderInlineProof(card)) {
+        removeInlineProofControls(card);
+        return;
+      }
+      if (card.querySelector(':scope > .inline-proof-wrap')) return;
+      card.classList.add('has-inline-proof');
       const wrap = document.createElement('div');
       wrap.className = 'inline-proof-wrap';
       wrap.innerHTML = `
         <div class="inline-proof-main">
-          <button type="button" class="inline-proof-btn">Subir justificante</button>
-          <a class="inline-proof-link" href="#" target="_blank" rel="noopener" hidden>Abrir</a>
-          <button type="button" class="inline-proof-remove" hidden>Quitar</button>
+          <button type="button" class="inline-proof-btn" title="Subir justificante" aria-label="Subir justificante">
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 16V4"></path>
+              <path d="m7 9 5-5 5 5"></path>
+              <path d="M20 16v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3"></path>
+            </svg>
+            <span class="inline-proof-status" aria-hidden="true"></span>
+          </button>
+          <a class="inline-proof-link" href="#" target="_blank" rel="noopener" title="Abrir justificante" aria-label="Abrir justificante" hidden>
+            <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 3h7v7"></path>
+              <path d="M10 14 21 3"></path>
+              <path d="M21 14v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h6"></path>
+            </svg>
+          </a>
+          <button type="button" class="inline-proof-remove" title="Quitar justificante" aria-label="Quitar justificante" hidden>
+            <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 6h18"></path>
+              <path d="M8 6V4h8v2"></path>
+              <path d="m19 6-1 14H6L5 6"></path>
+              <path d="M10 11v6"></path>
+              <path d="M14 11v6"></path>
+            </svg>
+          </button>
           <input type="file" class="inline-proof-input" hidden />
         </div>
         <span class="inline-proof-name">Sin justificante subido</span>
@@ -3827,28 +4034,270 @@
 
       input?.addEventListener('change', async (event) => {
         const file = event.target?.files?.[0];
-        const editId = card.dataset.editId || '';
-        if (!file || !editId) return;
-        await saveProofRecord({
-          id: editId,
+        const proofId = getProofHostId(card);
+        if (!file || !proofId) return;
+        const currentRecord = await getProofRecord(proofId);
+        if (currentRecord?.url && !window.confirm('Este justificante ya existe. ¿Quieres reemplazarlo?')) {
+          input.value = '';
+          return;
+        }
+        const savedRecord = await saveProofRecord({
+          id: proofId,
+          section: getProofSection(card),
           name: file.name,
           type: file.type || '',
           updatedAt: Date.now(),
           file
         });
+        if (!savedRecord?.url) {
+          showProofToast('No se pudo guardar el justificante');
+          input.value = '';
+          return;
+        }
         await updateProofControls(card);
+        showProofToast(`Justificante subido: ${file.name}`);
         input.value = '';
       });
 
       removeBtn?.addEventListener('click', async () => {
-        const editId = card.dataset.editId || '';
-        if (!editId) return;
-        await deleteProofRecord(editId);
+        const proofId = getProofHostId(card);
+        if (!proofId) return;
+        if (!window.confirm('¿Quieres eliminar este justificante?')) return;
+        await deleteProofRecord(proofId);
         await updateProofControls(card);
+        showProofToast('Justificante eliminado');
       });
 
       card.appendChild(wrap);
       updateProofControls(card);
+    };
+
+    const ensureGroupProofControls = () => {
+      const groups = [
+        { selector: '#tfg-title-block', proofId: 'group-tfg' },
+        { selector: '#tfm-title-block', proofId: 'group-tfm' },
+        { selector: '#trib-title-block', proofId: 'group-tribunales' },
+        { selector: '#docencia-title-block', proofId: 'group-docencia' }
+      ];
+
+      groups.forEach(({ selector, proofId }) => {
+        const block = document.querySelector(selector);
+        if (!block || block.querySelector(':scope > .inline-proof-wrap')) return;
+        block.dataset.proofId = proofId;
+        const wrap = document.createElement('div');
+        wrap.className = 'inline-proof-wrap is-group-control';
+        wrap.innerHTML = `
+          <div class="inline-proof-main">
+            <button type="button" class="inline-proof-btn" title="Subir justificante" aria-label="Subir justificante">
+              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 16V4"></path>
+                <path d="m7 9 5-5 5 5"></path>
+                <path d="M20 16v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3"></path>
+              </svg>
+              <span class="inline-proof-status" aria-hidden="true"></span>
+            </button>
+            <a class="inline-proof-link" href="#" target="_blank" rel="noopener" title="Abrir justificante" aria-label="Abrir justificante" hidden>
+              <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 3h7v7"></path>
+                <path d="M10 14 21 3"></path>
+                <path d="M21 14v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h6"></path>
+              </svg>
+            </a>
+            <button type="button" class="inline-proof-remove" title="Quitar justificante" aria-label="Quitar justificante" hidden>
+              <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 6h18"></path>
+                <path d="M8 6V4h8v2"></path>
+                <path d="m19 6-1 14H6L5 6"></path>
+                <path d="M10 11v6"></path>
+                <path d="M14 11v6"></path>
+              </svg>
+            </button>
+            <input type="file" class="inline-proof-input" hidden />
+          </div>
+          <span class="inline-proof-name">Sin justificante subido</span>
+        `;
+
+        const input = wrap.querySelector('.inline-proof-input');
+        const uploadBtn = wrap.querySelector('.inline-proof-btn');
+        const removeBtn = wrap.querySelector('.inline-proof-remove');
+
+        uploadBtn?.addEventListener('click', () => {
+          input?.click();
+        });
+
+        input?.addEventListener('change', async (event) => {
+          const file = event.target?.files?.[0];
+          if (!file) return;
+          const currentRecord = await getProofRecord(proofId);
+          if (currentRecord?.url && !window.confirm('Este justificante ya existe. ¿Quieres reemplazarlo?')) {
+            input.value = '';
+            return;
+          }
+          const savedRecord = await saveProofRecord({
+            id: proofId,
+            section: getProofSection(block),
+            name: file.name,
+            type: file.type || '',
+            updatedAt: Date.now(),
+            file
+          });
+          if (!savedRecord?.url) {
+            showProofToast('No se pudo guardar el justificante');
+            input.value = '';
+            return;
+          }
+          await updateProofControls(block);
+          showProofToast(`Justificante subido: ${file.name}`);
+          input.value = '';
+        });
+
+        removeBtn?.addEventListener('click', async () => {
+          if (!window.confirm('¿Quieres eliminar este justificante?')) return;
+          await deleteProofRecord(proofId);
+          await updateProofControls(block);
+          showProofToast('Justificante eliminado');
+        });
+
+        block.appendChild(wrap);
+        updateProofControls(block);
+      });
+    };
+
+    const ensureAcademicMainProofControl = () => {
+      const block = document.getElementById('acad-title-block');
+      if (!block || block.querySelector(':scope > .inline-proof-wrap')) return;
+      const wrap = document.createElement('div');
+      wrap.className = 'inline-proof-wrap is-group-control';
+      wrap.hidden = true;
+      wrap.innerHTML = `
+        <div class="inline-proof-main">
+          <button type="button" class="inline-proof-btn" title="Subir justificante" aria-label="Subir justificante">
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 16V4"></path>
+              <path d="m7 9 5-5 5 5"></path>
+              <path d="M20 16v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3"></path>
+            </svg>
+            <span class="inline-proof-status" aria-hidden="true"></span>
+          </button>
+          <a class="inline-proof-link" href="#" target="_blank" rel="noopener" title="Abrir justificante" aria-label="Abrir justificante" hidden>
+            <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 3h7v7"></path>
+              <path d="M10 14 21 3"></path>
+              <path d="M21 14v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h6"></path>
+            </svg>
+          </a>
+          <button type="button" class="inline-proof-remove" title="Quitar justificante" aria-label="Quitar justificante" hidden>
+            <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 6h18"></path>
+              <path d="M8 6V4h8v2"></path>
+              <path d="m19 6-1 14H6L5 6"></path>
+              <path d="M10 11v6"></path>
+              <path d="M14 11v6"></path>
+            </svg>
+          </button>
+          <input type="file" class="inline-proof-input" hidden />
+        </div>
+      `;
+
+      const input = wrap.querySelector('.inline-proof-input');
+      const uploadBtn = wrap.querySelector('.inline-proof-btn');
+      const removeBtn = wrap.querySelector('.inline-proof-remove');
+
+      uploadBtn?.addEventListener('click', () => {
+        input?.click();
+      });
+
+      input?.addEventListener('change', async (event) => {
+        const file = event.target?.files?.[0];
+        const proofId = block.dataset.proofId || '';
+        if (!proofId || !file) return;
+        const currentRecord = await getProofRecord(proofId);
+        if (currentRecord?.url && !window.confirm('Este justificante ya existe. ¿Quieres reemplazarlo?')) {
+          input.value = '';
+          return;
+        }
+        const savedRecord = await saveProofRecord({
+          id: proofId,
+          name: file.name,
+          type: file.type || '',
+          updatedAt: Date.now(),
+          file
+        });
+        if (!savedRecord?.url) {
+          showProofToast('No se pudo guardar el justificante');
+          input.value = '';
+          return;
+        }
+        await updateProofControls(block);
+        showProofToast(`Justificante subido: ${file.name}`);
+        input.value = '';
+      });
+
+      removeBtn?.addEventListener('click', async () => {
+        const proofId = block.dataset.proofId || '';
+        if (!proofId) return;
+        if (!window.confirm('¿Quieres eliminar este justificante?')) return;
+        await deleteProofRecord(proofId);
+        await updateProofControls(block);
+        showProofToast('Justificante eliminado');
+      });
+
+      block.appendChild(wrap);
+    };
+
+    const syncAcademicProofControls = (filter) => {
+      const mainBlock = document.getElementById('acad-title-block');
+      const tfgBlock = document.getElementById('tfg-title-block');
+      const tfmBlock = document.getElementById('tfm-title-block');
+      const tribBlock = document.getElementById('trib-title-block');
+      ensureAcademicMainProofControl();
+
+      const mainWrap = mainBlock?.querySelector(':scope > .inline-proof-wrap');
+      const setWrapVisible = (host, visible) => {
+        const wrap = host?.querySelector(':scope > .inline-proof-wrap');
+        if (wrap) wrap.hidden = !visible;
+      };
+
+      if (filter === 'tfg') {
+        if (mainBlock) mainBlock.dataset.proofId = 'group-tfg';
+        if (mainWrap) {
+          mainWrap.hidden = false;
+          updateProofControls(mainBlock);
+        }
+        setWrapVisible(tfgBlock, false);
+        setWrapVisible(tfmBlock, false);
+        setWrapVisible(tribBlock, false);
+        return;
+      }
+
+      if (filter === 'tfm') {
+        if (mainBlock) mainBlock.dataset.proofId = 'group-tfm';
+        if (mainWrap) {
+          mainWrap.hidden = false;
+          updateProofControls(mainBlock);
+        }
+        setWrapVisible(tfgBlock, false);
+        setWrapVisible(tfmBlock, false);
+        setWrapVisible(tribBlock, false);
+        return;
+      }
+
+      if (filter === 'tribunales') {
+        if (mainBlock) mainBlock.dataset.proofId = 'group-tribunales';
+        if (mainWrap) {
+          mainWrap.hidden = false;
+          updateProofControls(mainBlock);
+        }
+        setWrapVisible(tfgBlock, false);
+        setWrapVisible(tfmBlock, false);
+        setWrapVisible(tribBlock, false);
+        return;
+      }
+
+      if (mainWrap) mainWrap.hidden = true;
+      setWrapVisible(tfgBlock, true);
+      setWrapVisible(tfmBlock, true);
+      setWrapVisible(tribBlock, true);
     };
 
     const refreshEditableCards = () => {
@@ -3883,6 +4332,8 @@
       if (quickSubjectsBlock && subjectStack && !subjectStack.querySelector('.card')) {
         quickSubjectsBlock.classList.add('is-hidden');
       }
+      ensureGroupProofControls();
+      syncAcademicProofControls('all');
       refreshPublicationQ3Visibility();
     };
 
@@ -4018,24 +4469,38 @@
       const proofId = getCurrentProofId();
       const file = event.target?.files?.[0];
       if (!proofId || !file) return;
-      await saveProofRecord({
+      const currentRecord = await getProofRecord(proofId);
+      if (currentRecord?.url && !window.confirm('Este justificante ya existe. ¿Quieres reemplazarlo?')) {
+        quickProofInput.value = '';
+        return;
+      }
+      const savedRecord = await saveProofRecord({
         id: proofId,
+        section: getProofSection(currentEditingCard || currentEditingSubjectRow),
         name: file.name,
         type: file.type || '',
         updatedAt: Date.now(),
         file
       });
+      if (!savedRecord?.url) {
+        showProofToast('No se pudo guardar el justificante');
+        quickProofInput.value = '';
+        return;
+      }
       await syncQuickProofPanel();
       await updateProofControls(currentEditingCard);
+      showProofToast(`Justificante subido: ${file.name}`);
       quickProofInput.value = '';
     });
 
     quickProofRemove?.addEventListener('click', async () => {
       const proofId = getCurrentProofId();
       if (!proofId) return;
+      if (!window.confirm('¿Quieres eliminar este justificante?')) return;
       await deleteProofRecord(proofId);
       await syncQuickProofPanel();
       await updateProofControls(currentEditingCard);
+      showProofToast('Justificante eliminado');
     });
 
     const updateSettingsActiveStates = () => {
