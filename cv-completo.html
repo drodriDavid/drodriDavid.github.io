@@ -1587,7 +1587,8 @@
     }
 
     .quick-add-form textarea {
-      min-height: 92px;
+      min-height: 46px;
+      line-height: 1.35;
       resize: vertical;
     }
 
@@ -1699,6 +1700,28 @@
         max-height: 94vh;
         padding: .8rem;
       }
+    }
+
+    .merit-doc-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.35rem;
+      height: 1.35rem;
+      margin-top: .35rem;
+      border-radius: 999px;
+      font-size: .95rem;
+      color: #58738e;
+      background: #f4f8fc;
+      border: 1px solid #d2dfeb;
+      text-decoration: none;
+      transition: color .2s ease, border-color .2s ease, background .2s ease;
+    }
+
+    .merit-doc-link:hover {
+      color: #1f4f7a;
+      border-color: #b4c8db;
+      background: #eef5fb;
     }
 
     .card {
@@ -1917,6 +1940,27 @@
     .proof-toast.is-visible {
       opacity: 1;
       transform: translateY(0);
+    }
+
+    .inline-doc-btn {
+      position: absolute;
+      top: 32px;
+      right: 8px;
+      z-index: 2;
+      border: 0;
+      background: transparent;
+      color: #5b7590;
+      font-size: .67rem;
+      font-weight: 600;
+      padding: .06rem .1rem;
+      cursor: pointer;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      display: none;
+    }
+
+    body.edit-mode .inline-doc-btn {
+      display: inline;
     }
 
     .inline-delete-btn {
@@ -2322,7 +2366,7 @@
             <p><strong>2024 – 2028</strong></p>
             <p>Creación y validación de Living Labs europeos para la monitorización, análisis y mejora de la salud del
               suelo en cultivos permanentes.</p>
-            <p class="pub-meta">Financiación total: <strong>1.081.352,50 €</strong> · Universidad de Jaén</p>
+            <p class="pub-meta">Financiación: <strong>1.081.352,50 €</strong> · Universidad de Jaén</p>
           </div>
 
           <!-- NACIONAL -->
@@ -2432,7 +2476,7 @@
             <p><strong>2026 – 2028</strong></p>
             <p> Desarrollo, mejora y validación del software PDental, orientado a la automatización de procesos en
               implantología.</p>
-            <p class="pub-meta">Laboratorios Pedro Perales S.L.P · Importe: 348.480,00 €</p>
+            <p class="pub-meta">Laboratorios Pedro Perales S.L.P · Financiación: 348.480,00 €</p>
           </div>
         </div>
 
@@ -2441,7 +2485,7 @@
           <h3>Short-term Training Courses (CEIA3)</h3>
           <p><strong>2025</strong></p>
           <p>Actividad de transferencia mediante formación especializada en el ámbito agroalimentario.</p>
-          <p class="pub-meta">CEIA3 · Importe: 800 €</p>
+          <p class="pub-meta">CEIA3 · Financiación: 800 €</p>
         </div>
 
         <div class="card">
@@ -2450,7 +2494,7 @@
           <p><strong>2025 – 2025</strong></p>
           <p>Proyecto de I+D+i colaborativa financiado por CDTI, centrado en análisis avanzado de datos geoespaciales.
           </p>
-          <p class="pub-meta">LABERIT SISTEMAS S.L. · Importe: 14.000 €</p>
+          <p class="pub-meta">LABERIT SISTEMAS S.L. · Financiación: 14.000 €</p>
         </div>
 
         <div class="card">
@@ -2458,7 +2502,7 @@
           <h3>Generación automática de prótesis dentales 3D</h3>
           <p><strong>2025 – 2026</strong></p>
           <p>Desarrollo de técnicas avanzadas de alineación y fusión de modelos 3D en implantología dental.</p>
-          <p class="pub-meta">Laboratorios Pedro Perales S.L.P · Importe: 12.000 €</p>
+          <p class="pub-meta">Laboratorios Pedro Perales S.L.P · Financiación: 12.000 €</p>
         </div>
       </div>
 
@@ -2987,7 +3031,7 @@
 
         <div id="quick-title-wrap" class="quick-title-wrap">
           <label id="quick-title-label" for="quick-title">Título</label>
-          <input id="quick-title" type="text" maxlength="180" required />
+          <textarea id="quick-title" maxlength="180" rows="2" required></textarea>
         </div>
 
         <div class="quick-field" data-types="trabajo">
@@ -3000,7 +3044,7 @@
 
         <div class="quick-field" data-types="trabajo,tribunal">
           <label id="quick-student-label" for="quick-student">Estudiante</label>
-          <input id="quick-student" type="text" maxlength="120" />
+          <textarea id="quick-student" maxlength="120" rows="2"></textarea>
         </div>
 
         <div class="quick-field" data-types="trabajo,tribunal">
@@ -3013,7 +3057,7 @@
 
         <div class="quick-field" data-types="trabajo,tribunal">
           <label for="quick-degree">Titulación</label>
-          <input id="quick-degree" type="text" maxlength="160" placeholder="Grado en Ingeniería Informática" />
+          <textarea id="quick-degree" maxlength="160" rows="2" placeholder="Grado en Ingeniería Informática"></textarea>
         </div>
 
         <div class="quick-field" data-types="trabajo,tribunal">
@@ -3028,17 +3072,17 @@
 
         <div class="quick-field" data-types="trabajo,tribunal">
           <label for="quick-grade">Calificación</label>
-          <input id="quick-grade" type="text" maxlength="60" placeholder="Sobresaliente (9,5)" />
+          <textarea id="quick-grade" maxlength="60" rows="2" placeholder="Sobresaliente (9,5)"></textarea>
         </div>
 
         <div class="quick-field" data-types="articulo">
           <label for="quick-authors">Autores</label>
-          <input id="quick-authors" type="text" maxlength="260" />
+          <textarea id="quick-authors" maxlength="260" rows="3"></textarea>
         </div>
 
         <div class="quick-field" data-types="articulo">
           <label for="quick-journal">Revista</label>
-          <input id="quick-journal" type="text" maxlength="160" />
+          <textarea id="quick-journal" maxlength="160" rows="2"></textarea>
         </div>
 
         <div class="quick-field" data-types="articulo">
@@ -3069,9 +3113,14 @@
           </select>
         </div>
 
-        <div class="quick-field" data-types="proyecto">
-          <label for="quick-period">Periodo</label>
-          <input id="quick-period" type="text" maxlength="30" placeholder="2026-2028" />
+        <div id="quick-project-scope-wrap" class="quick-field" data-types="proyecto">
+          <label for="quick-project-scope">Tipología</label>
+          <select id="quick-project-scope">
+            <option value="">Seleccionar</option>
+            <option value="Nacional">Nacional</option>
+            <option value="Internacional">Internacional</option>
+            <option value="Autonómico">Autonómico</option>
+          </select>
         </div>
 
         <div class="quick-field" data-types="proyecto">
@@ -3081,12 +3130,12 @@
 
         <div class="quick-field" data-types="proyecto">
           <label for="quick-funding">Financiación</label>
-          <input id="quick-funding" type="text" maxlength="50" placeholder="120.000 €" />
+          <textarea id="quick-funding" maxlength="50" rows="2" placeholder="120.000 €"></textarea>
         </div>
 
         <div class="quick-field" data-types="proyecto">
           <label for="quick-entity">Entidad</label>
-          <input id="quick-entity" type="text" maxlength="160" placeholder="Universidad de Jaén" />
+          <textarea id="quick-entity" maxlength="160" rows="2" placeholder="Universidad de Jaén"></textarea>
         </div>
 
         <div class="quick-field" data-types="ponencia">
@@ -3100,12 +3149,12 @@
 
         <div class="quick-field" data-types="ponencia">
           <label for="quick-event">Evento</label>
-          <input id="quick-event" type="text" maxlength="180" />
+          <textarea id="quick-event" maxlength="180" rows="2"></textarea>
         </div>
 
         <div class="quick-field" data-types="ponencia">
           <label for="quick-location">Lugar</label>
-          <input id="quick-location" type="text" maxlength="120" placeholder="Jaén" />
+          <textarea id="quick-location" maxlength="120" rows="2" placeholder="Jaén"></textarea>
         </div>
 
         <div class="quick-field" data-types="ponencia">
@@ -3124,7 +3173,7 @@
 
         <div class="quick-field" data-types="asignatura">
           <label for="quick-subject-degree">Titulación</label>
-          <input id="quick-subject-degree" type="text" maxlength="160" />
+          <textarea id="quick-subject-degree" maxlength="160" rows="2"></textarea>
         </div>
 
         <div class="quick-field" data-types="asignatura">
@@ -3144,7 +3193,7 @@
 
         <div class="quick-field" data-types="contacto">
           <label for="quick-contact-email-text">Email (texto)</label>
-          <input id="quick-contact-email-text" type="text" maxlength="120" />
+          <textarea id="quick-contact-email-text" maxlength="120" rows="2"></textarea>
         </div>
 
         <div class="quick-field" data-types="contacto">
@@ -3154,7 +3203,7 @@
 
         <div class="quick-field" data-types="contacto">
           <label for="quick-contact-institution">Institución (texto)</label>
-          <input id="quick-contact-institution" type="text" maxlength="220" />
+          <textarea id="quick-contact-institution" maxlength="220" rows="3"></textarea>
         </div>
 
         <div class="quick-field" data-types="contacto">
@@ -3259,6 +3308,7 @@
       if (host === '127.0.0.1' || host === 'localhost') return '/api/proofs';
       return '';
     })();
+    const MAX_DOC_SIZE_BYTES = 2.5 * 1024 * 1024;
     const quickSettings = document.getElementById('quick-settings');
     const quickSettingsMain = document.getElementById('quick-settings-main');
     const quickSettingsMenu = document.getElementById('quick-settings-menu');
@@ -3275,6 +3325,7 @@
     const quickTitleLabel = document.getElementById('quick-title-label');
     const quickTitle = document.getElementById('quick-title');
     const quickFields = Array.from(document.querySelectorAll('.quick-field'));
+    const quickTextareas = Array.from(document.querySelectorAll('#quick-add-form textarea'));
     const quickWorkKind = document.getElementById('quick-work-kind');
     const quickStudent = document.getElementById('quick-student');
     const quickStudentLabel = document.getElementById('quick-student-label');
@@ -3289,7 +3340,8 @@
     const quickDoi = document.getElementById('quick-doi');
     const quickQuartile = document.getElementById('quick-quartile');
     const quickProjectCat = document.getElementById('quick-project-cat');
-    const quickPeriod = document.getElementById('quick-period');
+    const quickProjectScopeWrap = document.getElementById('quick-project-scope-wrap');
+    const quickProjectScope = document.getElementById('quick-project-scope');
     const quickProjectYear = document.getElementById('quick-project-year');
     const quickFunding = document.getElementById('quick-funding');
     const quickEntity = document.getElementById('quick-entity');
@@ -3558,6 +3610,27 @@
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;');
 
+    const normalizeText = (text) => String(text || '').replace(/\s+/g, ' ').trim();
+    const readPdfAsDataUrl = (file) =>
+      new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result || ''));
+        reader.onerror = () => reject(new Error('No se pudo leer el PDF adjunto.'));
+        reader.readAsDataURL(file);
+      });
+
+    const renderDocLink = (extra = {}) => {
+      const url = extra.docUrl || '';
+      if (!url) return '';
+      const name = escapeHtml(extra.docName || 'documentacion.pdf');
+      return `<a class="merit-doc-link" href="${escapeHtml(url)}" download="${name}" target="_blank" rel="noopener" data-doc-name="${name}" title="Descargar documentación" aria-label="Descargar documentación">↓</a>`;
+    };
+    const autosizeTextarea = (el) => {
+      if (!el) return;
+      el.style.height = 'auto';
+      el.style.height = `${Math.max(el.scrollHeight, 46)}px`;
+    };
+
     const setQuickFormMode = () => {
       const currentType = quickType.value;
       quickFields.forEach((group) => {
@@ -3590,7 +3663,20 @@
       if (quickStudentLabel) {
         quickStudentLabel.textContent = currentType === 'tribunal' ? 'Alumno/a' : 'Estudiante';
       }
+      const isResearchProject = currentType === 'proyecto' && (quickProjectCat?.value || '') === 'investigacion';
+      if (quickProjectScopeWrap) {
+        quickProjectScopeWrap.hidden = !isResearchProject;
+      }
+      if (!isResearchProject && quickProjectScope) {
+        quickProjectScope.value = '';
+      }
+      quickTextareas.forEach(autosizeTextarea);
     };
+
+    quickTextareas.forEach((ta) => {
+      ta.addEventListener('input', () => autosizeTextarea(ta));
+    });
+    quickProjectCat?.addEventListener('change', setQuickFormMode);
 
     const getProjectStacks = () => {
       const container = document.querySelector('#proyectos > .container.stack-2');
@@ -3626,6 +3712,7 @@
           <h3>${escapeHtml(title)}</h3>
           <p class="pub-authors"><strong>Estudiante:</strong> ${student}</p>
           ${(metaChunks.length || legacyMeta) ? `<p class="pub-meta">${escapeHtml(metaChunks.length ? metaChunks.join(' · ') : legacyMeta)}</p>` : ''}
+          ${renderDocLink(extra)}
         `;
         return card;
       }
@@ -3643,6 +3730,7 @@
           <p class="pub-authors">${escapeHtml(extra.authors || 'Autores pendientes')}</p>
           <p class="pub-meta">${escapeHtml(meta || legacyMeta || 'Pendiente de completar metadatos.')}</p>
           ${desc ? `<p>${escapeHtml(desc)}</p>` : ''}
+          ${renderDocLink(extra)}
         `;
         return card;
       }
@@ -3661,6 +3749,7 @@
           <h3>${escapeHtml(title)}</h3>
           <p class="pub-authors"><strong>Alumno:</strong> ${escapeHtml(extra.student || 'Pendiente')}</p>
           ${metaChunks.length ? `<p class="pub-meta">${escapeHtml(metaChunks.join(' · '))}</p>` : ''}
+          ${renderDocLink(extra)}
         `;
         return card;
       }
@@ -3671,12 +3760,19 @@
         const cat = extra.projectCategory || 'investigacion';
         const tagClass = cat === 'transferencia' ? 'tra' : (cat === 'innovación' ? 'inn' : 'nat');
         const tagLabel = cat === 'transferencia' ? 'Transferencia' : (cat === 'innovación' ? 'Innovación' : 'Investigación');
-        const metaBits = [extra.period || '', extra.funding ? `Financiación: ${extra.funding}` : '', extra.entity || ''].filter(Boolean);
+        const projectYear = extra.projectYear || extra.period || '';
+        const scope = normalizeText(extra.projectScope || '');
+        const metaBits = [
+          (cat === 'investigacion' && scope) ? `Tipología: ${scope}` : '',
+          extra.funding ? `Financiación: ${extra.funding}` : '',
+          extra.entity || ''
+        ].filter(Boolean);
         card.innerHTML = `
           <span class="tag ${tagClass}">${tagLabel}</span>
           <h3>${escapeHtml(title)}</h3>
-          ${extra.projectYear ? `<p><strong>${escapeHtml(extra.projectYear)}</strong></p>` : ''}
+          ${projectYear ? `<p><strong>${escapeHtml(projectYear)}</strong></p>` : ''}
           ${(metaBits.length || legacyMeta) ? `<p class="pub-meta">${escapeHtml(metaBits.length ? metaBits.join(' · ') : legacyMeta)}</p>` : ''}
+          ${renderDocLink(extra)}
         `;
         return card;
       }
@@ -3692,6 +3788,7 @@
         card.innerHTML = `
           <h3>${escapeHtml(title)}</h3>
           ${metaBits.length ? `<p class="pub-meta">${escapeHtml(metaBits.join(' · '))}</p>` : ''}
+          ${renderDocLink(extra)}
         `;
         return card;
       }
@@ -3733,6 +3830,7 @@
         <div>
           <h3>${escapeHtml(title)}</h3>
           <p>${escapeHtml(metaLine || legacyMeta || 'Entrada añadida manualmente')}</p>
+          ${renderDocLink(extra)}
         </div>
       `;
       return row;
@@ -3788,8 +3886,13 @@
 
     const readEntryFromCard = (card) => {
       const type = inferTypeFromCard(card);
-      const title = (card.querySelector('h3, h4')?.textContent || '').trim();
+      const title = normalizeText(card.querySelector('h3, h4')?.textContent || '');
       const entry = { type, title, desc: '', extra: {} };
+      const docLink = card.querySelector('.merit-doc-link');
+      if (docLink) {
+        entry.extra.docUrl = (docLink.getAttribute('href') || '').trim();
+        entry.extra.docName = (docLink.dataset.docName || docLink.getAttribute('download') || '').trim();
+      }
 
       if (type === 'trabajo') {
         const tagTextRaw = (card.querySelector('.tag')?.textContent || '').trim();
@@ -3797,7 +3900,7 @@
         entry.extra.workKind = tagText.includes('TFM') ? 'tfm' : 'tfg';
         const roleRaw = (tagTextRaw.split('·')[1] || '').trim().toLowerCase();
         entry.extra.role = roleRaw.includes('codirect') ? 'Codirector' : 'Director';
-        const studentText = (card.querySelector('.pub-authors')?.textContent || '').replace('Estudiante:', '').trim();
+        const studentText = normalizeText((card.querySelector('.pub-authors')?.textContent || '').replace('Estudiante:', ''));
         entry.extra.student = studentText;
         const parts = parseMetaChunks(card.querySelector('.pub-meta')?.textContent || '');
         parts.forEach((part) => {
@@ -3810,11 +3913,11 @@
       }
 
       if (type === 'tribunal') {
-        entry.extra.role = (card.querySelector('.pill')?.textContent || 'Vocal').trim();
-        const studentText = (card.querySelector('.pub-authors')?.textContent || '')
+        entry.extra.role = normalizeText(card.querySelector('.pill')?.textContent || 'Vocal');
+        const studentText = normalizeText((card.querySelector('.pub-authors')?.textContent || '')
           .replace('Alumno:', '')
           .replace('Alumna:', '')
-          .trim();
+          );
         entry.extra.student = studentText;
         const parts = parseMetaChunks(card.querySelector('.pub-meta')?.textContent || '');
         parts.forEach((part) => {
@@ -3827,7 +3930,7 @@
       }
 
       if (type === 'articulo') {
-        entry.extra.authors = (card.querySelector('.pub-authors')?.textContent || '').trim();
+        entry.extra.authors = normalizeText(card.querySelector('.pub-authors')?.textContent || '');
         const meta = parseMetaChunks(card.querySelector('.pub-meta')?.textContent || '');
         entry.extra.journal = meta[0] || '';
         entry.extra.year = meta[1] || '';
@@ -3841,12 +3944,22 @@
       if (type === 'proyecto') {
         const tag = (card.querySelector('.tag')?.textContent || '').toLowerCase();
         entry.extra.projectCategory = tag.includes('transfer') ? 'transferencia' : (tag.includes('innov') ? 'innovación' : 'investigacion');
-        entry.extra.projectYear = (card.querySelector('p strong')?.textContent || '').trim();
+        entry.extra.projectYear = normalizeText(card.querySelector('p strong')?.textContent || '');
         const parts = parseMetaChunks(card.querySelector('.pub-meta')?.textContent || '');
         parts.forEach((part) => {
           const lower = part.toLowerCase();
-          if (/^\d{4}/.test(part)) {
-            entry.extra.period = part;
+          if (lower.includes('tipolog')) {
+            entry.extra.projectScope = part
+              .replace(/tipolog[ií]a:\s*/i, '')
+              .trim();
+            return;
+          }
+          if (['nacional', 'internacional', 'autonómico', 'autonomico'].includes(lower)) {
+            entry.extra.projectScope = part;
+            return;
+          }
+          if (/^\d{4}/.test(part) && !entry.extra.projectYear) {
+            entry.extra.projectYear = part;
             return;
           }
           if (lower.includes('financi') || lower.includes('importe') || lower.includes('funding') || lower.includes('budget')) {
@@ -3881,10 +3994,11 @@
       if (type === 'contacto') {
         const items = Array.from(card.querySelectorAll('.item'));
         const emailLink = items[0]?.querySelector('a');
-        entry.extra.contactEmailText = (emailLink?.textContent || '').trim();
+        entry.extra.contactEmailText = normalizeText(emailLink?.textContent || '');
         entry.extra.contactEmailLink = (emailLink?.getAttribute('href') || '').trim();
         entry.extra.contactInstitution = (items[1]?.textContent || '')
           .replace('Institución:', '')
+          .replace(/\s+/g, ' ')
           .trim();
         const links = Array.from(items[2]?.querySelectorAll('a') || []);
         entry.extra.contactOrcid = links[0]?.getAttribute('href') || '';
@@ -3894,7 +4008,7 @@
         return entry;
       }
 
-      entry.extra.talkKind = (card.querySelector('.pill')?.textContent || '').trim();
+      entry.extra.talkKind = normalizeText(card.querySelector('.pill')?.textContent || '');
       const talkMeta = parseMetaChunks(card.querySelector('p')?.textContent || '');
       entry.extra.event = talkMeta[0] || '';
       entry.extra.location = talkMeta[1] || '';
@@ -3907,41 +4021,43 @@
     const fillQuickFormFromEntry = (entry) => {
       quickType.value = entry.type || 'proyecto';
       setQuickFormMode();
-      quickTitle.value = entry.title || '';
+      quickTitle.value = normalizeText(entry.title || '');
       quickWorkKind.value = entry.extra?.workKind || 'tfg';
-      quickStudent.value = entry.extra?.student || '';
+      quickStudent.value = normalizeText(entry.extra?.student || '');
       quickRole.value = entry.extra?.role || 'Director';
-      quickDegree.value = entry.extra?.degree || '';
+      quickDegree.value = normalizeText(entry.extra?.degree || '');
       quickDefense.value = entry.extra?.defense || '';
       quickCourse.value = entry.extra?.course || '';
-      quickGrade.value = entry.extra?.grade || '';
-      quickAuthors.value = entry.extra?.authors || '';
-      quickJournal.value = entry.extra?.journal || '';
+      quickGrade.value = normalizeText(entry.extra?.grade || '');
+      quickAuthors.value = normalizeText(entry.extra?.authors || '');
+      quickJournal.value = normalizeText(entry.extra?.journal || '');
       quickYear.value = entry.extra?.year || '';
       quickDoi.value = entry.extra?.doi || '';
       quickQuartile.value = entry.extra?.quartile || 'q2';
       quickProjectCat.value = entry.extra?.projectCategory || 'investigacion';
-      quickPeriod.value = entry.extra?.period || '';
-      quickProjectYear.value = entry.extra?.projectYear || '';
-      quickFunding.value = entry.extra?.funding || '';
-      quickEntity.value = entry.extra?.entity || '';
+      quickProjectScope.value = entry.extra?.projectScope || '';
+      setQuickFormMode();
+      quickProjectYear.value = normalizeText(entry.extra?.projectYear || entry.extra?.period || '');
+      quickFunding.value = normalizeText(entry.extra?.funding || '');
+      quickEntity.value = normalizeText(entry.extra?.entity || '');
       quickTalkKind.value = entry.extra?.talkKind || 'Oral';
-      quickEvent.value = entry.extra?.event || '';
-      quickLocation.value = entry.extra?.location || '';
+      quickEvent.value = normalizeText(entry.extra?.event || '');
+      quickLocation.value = normalizeText(entry.extra?.location || '');
       quickTalkDate.value = entry.extra?.talkDate || '';
       quickTalkCat.value = entry.extra?.talkCategory || 'Internacional';
-      quickSubjectDegree.value = entry.extra?.subjectDegree || '';
+      quickSubjectDegree.value = normalizeText(entry.extra?.subjectDegree || '');
       const normalizedHours = normalizeSubjectHoursForForm(entry.extra?.subjectHoursT || '', entry.extra?.subjectHoursP || '');
       quickSubjectHoursT.value = normalizedHours.t;
       quickSubjectHoursP.value = normalizedHours.p;
-      quickSubjectCourse.value = entry.extra?.subjectCourse || '';
-      quickContactEmailText.value = entry.extra?.contactEmailText || '';
+      quickSubjectCourse.value = normalizeText(entry.extra?.subjectCourse || '');
+      quickContactEmailText.value = normalizeText(entry.extra?.contactEmailText || '');
       quickContactEmailLink.value = entry.extra?.contactEmailLink || '';
-      quickContactInstitution.value = entry.extra?.contactInstitution || '';
+      quickContactInstitution.value = normalizeText(entry.extra?.contactInstitution || '');
       quickContactOrcid.value = entry.extra?.contactOrcid || '';
       quickContactScholar.value = entry.extra?.contactScholar || '';
       quickContactRg.value = entry.extra?.contactRg || '';
       quickContactUja.value = entry.extra?.contactUja || '';
+      quickTextareas.forEach(autosizeTextarea);
     };
 
     const ensureInlineEditButton = (card) => {
@@ -3964,6 +4080,98 @@
         openQuickModal();
       });
       card.appendChild(btn);
+    };
+
+    const isDocumentableType = (type) => type && type !== 'contacto';
+
+    const persistEditedEntryForCard = (card, entry) => {
+      const editId = card.dataset.editId;
+      if (editId) {
+        const edits = getCardEdits();
+        edits[editId] = entry;
+        saveCardEdits(edits);
+      }
+      if (card.dataset.quickAdded === 'true' && card.dataset.quickEntryId) {
+        const entryId = String(card.dataset.quickEntryId);
+        const entries = getQuickEntries();
+        const idx = entries.findIndex((item) => String(item.id) === entryId);
+        if (idx >= 0) {
+          entries[idx] = { ...entry, id: entries[idx].id };
+          saveQuickEntries(entries);
+        }
+      }
+    };
+
+    const attachDocumentationToCard = async (card, file, btn) => {
+      if (!file) return;
+      const type = inferTypeFromCard(card);
+      if (!isDocumentableType(type)) return;
+
+      const isPdf = file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf');
+      if (!isPdf) {
+        btn.textContent = 'Solo PDF';
+        setTimeout(() => { btn.textContent = 'Adjuntar documentación'; }, 1400);
+        return;
+      }
+      if (file.size > MAX_DOC_SIZE_BYTES) {
+        btn.textContent = 'PDF > 2,5MB';
+        setTimeout(() => { btn.textContent = 'Adjuntar documentación'; }, 1600);
+        return;
+      }
+
+      const edits = getCardEdits();
+      const editId = card.dataset.editId || '';
+      const baseEntry = (editId && edits[editId] && edits[editId].type)
+        ? edits[editId]
+        : readEntryFromCard(card);
+
+      try {
+        const dataUrl = await readPdfAsDataUrl(file);
+        const entry = {
+          ...baseEntry,
+          extra: {
+            ...(baseEntry.extra || {}),
+            docUrl: dataUrl,
+            docName: normalizeText(file.name || 'documentacion.pdf')
+          }
+        };
+        const rendered = createCardNode(entry);
+        card.innerHTML = rendered.innerHTML;
+        persistEditedEntryForCard(card, entry);
+        ensureInlineEditButton(card);
+        ensureInlineDeleteButton(card);
+        ensureInlineDocButton(card);
+        refreshPublicationQ3Visibility();
+      } catch (_) {
+        btn.textContent = 'Error';
+        setTimeout(() => { btn.textContent = 'Adjuntar documentación'; }, 1500);
+      }
+    };
+
+    const ensureInlineDocButton = (card) => {
+      if (!card || card.querySelector(':scope > .inline-doc-btn')) return;
+      const type = inferTypeFromCard(card);
+      if (!isDocumentableType(type)) return;
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'inline-doc-btn';
+      btn.textContent = 'Adjuntar documentación';
+
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'application/pdf';
+      input.hidden = true;
+
+      btn.addEventListener('click', () => input.click());
+      input.addEventListener('change', async () => {
+        const file = input.files?.[0] || null;
+        await attachDocumentationToCard(card, file, btn);
+        input.value = '';
+      });
+
+      card.appendChild(btn);
+      card.appendChild(input);
     };
 
     const deleteCard = (card) => {
@@ -4401,6 +4609,7 @@
         ensureInlineEditButton(card);
         ensureInlineDeleteButton(card);
         ensureInlineProofControls(card);
+        ensureInlineDocButton(card);
       });
 
       const edits = getCardEdits();
@@ -4417,6 +4626,7 @@
         ensureInlineEditButton(card);
         ensureInlineDeleteButton(card);
         ensureInlineProofControls(card);
+        ensureInlineDocButton(card);
       });
 
       const subjectStack = document.getElementById('quick-subjects-stack');
@@ -4444,6 +4654,24 @@
       if (t) parts.push(`T: ${t}`);
       if (p) parts.push(`P: ${p}`);
       return parts.join(' · ');
+    };
+
+    const applySubjectDocLink = (hoursCell, entry) => {
+      if (!hoursCell) return;
+      const old = hoursCell.querySelector('.merit-doc-link');
+      if (old) old.remove();
+      const docUrl = entry?.extra?.docUrl || '';
+      if (!docUrl) return;
+      const docName = normalizeText(entry?.extra?.docName || 'documentacion.pdf');
+      const link = document.createElement('a');
+      link.className = 'merit-doc-link';
+      link.href = docUrl;
+      link.target = '_blank';
+      link.rel = 'noopener';
+      link.download = docName;
+      link.dataset.docName = docName;
+      link.textContent = 'Descargar documentación';
+      hoursCell.appendChild(link);
     };
 
     const normalizeSubjectHoursForForm = (t, p) => {
@@ -4503,6 +4731,7 @@
         const hoursValue = hoursCell.querySelector('.subject-hours-value');
         const merged = buildHours(saved.extra?.subjectHoursT || '', saved.extra?.subjectHoursP || '');
         if (hoursValue && merged) hoursValue.textContent = merged;
+        applySubjectDocLink(hoursCell, saved);
       });
     };
 
@@ -4533,7 +4762,9 @@
       quickAddModal.removeAttribute('hidden');
       setQuickFormMode();
       syncQuickProofPanel();
-      quickTitle.focus();
+      syncQuickProofPanel();
+      const focusTarget = (!quickTitleWrap?.hidden && quickTitle) ? quickTitle : quickType;
+      focusTarget?.focus();
     };
 
     const closeQuickModal = () => {
@@ -4714,57 +4945,59 @@
       if (e.target === quickAddModal) closeQuickModal();
     });
 
-    quickAddForm?.addEventListener('submit', (e) => {
+    quickAddForm?.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const title = (quickTitle.value || '').trim();
-      if (!title) return;
       const type = quickType.value;
+      const title = normalizeText(quickTitle.value || '');
+      if (type !== 'contacto' && !title) return;
       const extra = {};
 
       if (type === 'trabajo') {
         extra.workKind = (quickWorkKind.value || 'tfg').trim();
-        extra.student = (quickStudent.value || '').trim();
+        extra.student = normalizeText(quickStudent.value || '');
         extra.role = (quickRole.value || '').trim();
-        extra.degree = (quickDegree.value || '').trim();
+        extra.degree = normalizeText(quickDegree.value || '');
         extra.defense = (quickDefense.value || '').trim();
         extra.course = (quickCourse.value || '').trim();
-        extra.grade = (quickGrade.value || '').trim();
+        extra.grade = normalizeText(quickGrade.value || '');
       } else if (type === 'tribunal') {
-        extra.student = (quickStudent.value || '').trim();
+        extra.student = normalizeText(quickStudent.value || '');
         extra.role = (quickRole.value || '').trim();
-        extra.degree = (quickDegree.value || '').trim();
+        extra.degree = normalizeText(quickDegree.value || '');
         extra.defense = (quickDefense.value || '').trim();
         extra.course = (quickCourse.value || '').trim();
-        extra.grade = (quickGrade.value || '').trim();
+        extra.grade = normalizeText(quickGrade.value || '');
       } else if (type === 'articulo') {
-        extra.authors = (quickAuthors.value || '').trim();
-        extra.journal = (quickJournal.value || '').trim();
+        extra.authors = normalizeText(quickAuthors.value || '');
+        extra.journal = normalizeText(quickJournal.value || '');
         extra.year = (quickYear.value || '').trim();
         extra.doi = (quickDoi.value || '').trim();
         extra.quartile = (quickQuartile.value || 'q2').trim();
       } else if (type === 'proyecto') {
         extra.projectCategory = (quickProjectCat.value || 'investigacion').trim();
-        extra.period = (quickPeriod.value || '').trim();
-        extra.projectYear = (quickProjectYear.value || '').trim();
-        extra.funding = (quickFunding.value || '').trim();
-        extra.entity = (quickEntity.value || '').trim();
+        extra.projectScope = (quickProjectCat.value === 'investigacion')
+          ? normalizeText(quickProjectScope.value || '')
+          : '';
+        extra.projectYear = normalizeText(quickProjectYear.value || '');
+        extra.funding = normalizeText(quickFunding.value || '');
+        extra.entity = normalizeText(quickEntity.value || '');
       } else if (type === 'asignatura') {
-        extra.subjectDegree = (quickSubjectDegree.value || '').trim();
+        extra.subjectDegree = normalizeText(quickSubjectDegree.value || '');
         extra.subjectHoursT = (quickSubjectHoursT.value || '').trim();
         extra.subjectHoursP = (quickSubjectHoursP.value || '').trim();
         extra.subjectCourse = (quickSubjectCourse.value || '').trim();
       } else if (type === 'contacto') {
-        extra.contactEmailText = (quickContactEmailText.value || '').trim();
+        extra.contactEmailText = normalizeText(quickContactEmailText.value || '');
         extra.contactEmailLink = (quickContactEmailLink.value || '').trim();
-        extra.contactInstitution = (quickContactInstitution.value || '').trim();
+        extra.contactInstitution = normalizeText(quickContactInstitution.value || '');
         extra.contactOrcid = (quickContactOrcid.value || '').trim();
         extra.contactScholar = (quickContactScholar.value || '').trim();
         extra.contactRg = (quickContactRg.value || '').trim();
         extra.contactUja = (quickContactUja.value || '').trim();
       } else {
         extra.talkKind = (quickTalkKind.value || '').trim();
-        extra.event = (quickEvent.value || '').trim();
-        extra.location = (quickLocation.value || '').trim();
+        extra.event = normalizeText(quickEvent.value || '');
+        extra.location = normalizeText(quickLocation.value || '');
         extra.talkDate = (quickTalkDate.value || '').trim();
         extra.talkCategory = (quickTalkCat.value || '').trim();
       }
@@ -4772,7 +5005,7 @@
       const entry = {
         id: Date.now(),
         type,
-        title,
+        title: title || 'Contacto',
         desc: '',
         extra
       };
@@ -4785,6 +5018,7 @@
           const hoursValue = hoursCell.querySelector('.subject-hours-value');
           const mergedHours = buildHours(extra.subjectHoursT, extra.subjectHoursP);
           if (hoursValue) hoursValue.textContent = mergedHours;
+          applySubjectDocLink(hoursCell, entry);
         }
 
         if (currentEditingSubjectId) {
@@ -4822,6 +5056,7 @@
         ensureInlineEditButton(currentEditingCard);
         ensureInlineDeleteButton(currentEditingCard);
         ensureInlineProofControls(currentEditingCard);
+        ensureInlineDocButton(currentEditingCard);
         refreshPublicationQ3Visibility();
         closeQuickModal();
         return;
