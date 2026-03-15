@@ -1,11 +1,11 @@
-﻿{
+{
   "sobre-mi-1": {
     "id": "sobre-mi-1",
     "section": "formacion-academica",
     "name": "Título Universitario MAES.pdf",
     "type": "application/pdf",
     "stored_path": "formacion-academica/Título Universitario MAES.pdf",
-    "url": "/justificantes/formacion-academica/Título%20Universitario%20MAES.pdf"
+    "url": "http://127.0.0.1:8081/api/proofs/sobre-mi-1/file"
   },
   "sobre-mi-2": {
     "id": "sobre-mi-2",
@@ -13,22 +13,6 @@
     "name": "Doctor David Jurado.pdf",
     "type": "application/pdf",
     "stored_path": "formacion-academica/Doctor David Jurado.pdf",
-    "url": "/justificantes/formacion-academica/Doctor%20David%20Jurado.pdf"
-  },
-  "sobre-mi-3": {
-    "id": "sobre-mi-3",
-    "section": "formacion-academica",
-    "name": "Titulo Universitario Master Ingeniería Informática.pdf",
-    "type": "application/pdf",
-    "stored_path": "formacion-academica/Titulo Universitario Master Ingeniería Informática.pdf",
-    "url": "/justificantes/formacion-academica/Titulo%20Universitario%20Master%20Ingeniería%20Informática.pdf"
-  },
-  "sobre-mi-4": {
-    "id": "sobre-mi-4",
-    "section": "formacion-academica",
-    "name": "Título Universitario Ingeniería Informática David Jurado.pdf",
-    "type": "application/pdf",
-    "stored_path": "formacion-academica/Título Universitario Ingeniería Informática David Jurado.pdf",
-    "url": "/justificantes/formacion-academica/Título%20Universitario%20Ingeniería%20Informática%20David%20Jurado.pdf"
+    "url": "http://127.0.0.1:8081/api/proofs/sobre-mi-2/file"
   }
 }
