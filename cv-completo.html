@@ -3877,6 +3877,14 @@
         color: rgb(1, 1, 1)
       });
 
+      cover.drawText(`SECCION: ${title.toUpperCase()}`, {
+        x: margin,
+        y: pageHeight - 182,
+        size: 14,
+        font: boldFont,
+        color: rgb(0.9, 0.95, 1)
+      });
+
       drawPdfBox(cover, margin, pageHeight - 248, 220, 32, {
         fill: rgb(0.87, 0.92, 0.99),
         borderWidth: 0
@@ -3981,7 +3989,11 @@
     };
 
     const mergePdfBuffers = async (baseBuffer, proofRecords) => {
-      const mergedPdf = await window.PDFLib.PDFDocument.load(baseBuffer);
+      const { PDFDocument, rgb } = window.PDFLib;
+      const mergedPdf = await PDFDocument.load(baseBuffer);
+      const targetWidth = 595.28;
+      const targetHeight = 841.89;
+      const pageMargin = 20;
       let mergedProofs = 0;
 
       for (const { id, record } of proofRecords) {
@@ -3991,9 +4003,36 @@
           const contentType = (response.headers.get('content-type') || record.type || '').toLowerCase();
           if (!contentType.includes('pdf')) continue;
           const bytes = await response.arrayBuffer();
-          const proofPdf = await window.PDFLib.PDFDocument.load(bytes);
+          const proofPdf = await PDFDocument.load(bytes);
           const copiedPages = await mergedPdf.copyPages(proofPdf, proofPdf.getPageIndices());
-          copiedPages.forEach((page) => mergedPdf.addPage(page));
+          copiedPages.forEach((page) => {
+            const proofPage = mergedPdf.addPage([targetWidth, targetHeight]);
+            proofPage.drawRectangle({
+              x: 0,
+              y: 0,
+              width: targetWidth,
+              height: targetHeight,
+              color: rgb(1, 1, 1)
+            });
+
+            const sourceWidth = page.getWidth();
+            const sourceHeight = page.getHeight();
+            const scale = Math.min(
+              (targetWidth - (pageMargin * 2)) / sourceWidth,
+              (targetHeight - (pageMargin * 2)) / sourceHeight
+            );
+            const drawWidth = sourceWidth * scale;
+            const drawHeight = sourceHeight * scale;
+            const offsetX = (targetWidth - drawWidth) / 2;
+            const offsetY = (targetHeight - drawHeight) / 2;
+
+            proofPage.drawPage(page, {
+              x: offsetX,
+              y: offsetY,
+              xScale: scale,
+              yScale: scale
+            });
+          });
           mergedProofs += 1;
         } catch (_) {
           // ignore broken proof files during export
