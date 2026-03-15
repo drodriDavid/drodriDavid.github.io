@@ -3595,6 +3595,7 @@
       return Boolean(
         card.closest('#publicaciones') ||
         card.closest('#congresos') ||
+        card.closest('#proyectos') ||
         academicColumn?.contains(card)
       );
     };
