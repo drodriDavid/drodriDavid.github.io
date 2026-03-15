@@ -1647,6 +1647,63 @@
       gap: .2rem;
     }
 
+    .inline-proof-wrap {
+      display: none;
+      margin-top: .8rem;
+      padding-top: .7rem;
+      border-top: 1px dashed #d8e3ef;
+      align-items: center;
+      justify-content: space-between;
+      gap: .75rem;
+      flex-wrap: wrap;
+    }
+
+    body.edit-mode .inline-proof-wrap {
+      display: flex;
+    }
+
+    .inline-proof-main {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      flex-wrap: wrap;
+    }
+
+    .inline-proof-btn,
+    .inline-proof-link,
+    .inline-proof-remove {
+      border-radius: 8px;
+      font-size: .74rem;
+      font-weight: 700;
+      padding: .34rem .55rem;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .inline-proof-btn {
+      border: 1px solid #b9cfe5;
+      background: #f5faff;
+      color: #20486f;
+    }
+
+    .inline-proof-link {
+      border: 1px solid #c5d7e8;
+      background: #ffffff;
+      color: #20486f;
+    }
+
+    .inline-proof-remove {
+      border: 1px solid #f0b4b4;
+      background: #fff5f5;
+      color: #9b1c1c;
+    }
+
+    .inline-proof-name {
+      font-size: .76rem;
+      color: #56708b;
+      word-break: break-word;
+    }
+
     .inline-delete-btn {
       position: absolute;
       top: 8px;
@@ -2966,6 +3023,9 @@
 
     const QUICK_STORAGE_KEY = 'cvQuickEntriesV1';
     const QUICK_EDITS_STORAGE_KEY = 'cvCardEditsV1';
+    const QUICK_PROOFS_DB_NAME = 'cvProofsDb';
+    const QUICK_PROOFS_STORE = 'proofs';
+    const QUICK_PROOFS_DB_VERSION = 1;
     const quickSettings = document.getElementById('quick-settings');
     const quickSettingsMain = document.getElementById('quick-settings-main');
     const quickSettingsMenu = document.getElementById('quick-settings-menu');
@@ -3055,6 +3115,77 @@
       } catch (_) {
         // ignore storage errors
       }
+    };
+
+    let proofsDbPromise = null;
+    const proofUrlCache = new Map();
+
+    const openProofsDb = () => {
+      if (!('indexedDB' in window)) return Promise.resolve(null);
+      if (proofsDbPromise) return proofsDbPromise;
+      proofsDbPromise = new Promise((resolve) => {
+        const request = window.indexedDB.open(QUICK_PROOFS_DB_NAME, QUICK_PROOFS_DB_VERSION);
+        request.onupgradeneeded = () => {
+          const db = request.result;
+          if (!db.objectStoreNames.contains(QUICK_PROOFS_STORE)) {
+            db.createObjectStore(QUICK_PROOFS_STORE, { keyPath: 'id' });
+          }
+        };
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => resolve(null);
+      });
+      return proofsDbPromise;
+    };
+
+    const getProofRecord = async (id) => {
+      if (!id) return null;
+      const db = await openProofsDb();
+      if (!db) return null;
+      return new Promise((resolve) => {
+        const tx = db.transaction(QUICK_PROOFS_STORE, 'readonly');
+        const store = tx.objectStore(QUICK_PROOFS_STORE);
+        const request = store.get(id);
+        request.onsuccess = () => resolve(request.result || null);
+        request.onerror = () => resolve(null);
+      });
+    };
+
+    const saveProofRecord = async (record) => {
+      if (!record?.id) return false;
+      const db = await openProofsDb();
+      if (!db) return false;
+      return new Promise((resolve) => {
+        const tx = db.transaction(QUICK_PROOFS_STORE, 'readwrite');
+        tx.objectStore(QUICK_PROOFS_STORE).put(record);
+        tx.oncomplete = () => resolve(true);
+        tx.onerror = () => resolve(false);
+      });
+    };
+
+    const deleteProofRecord = async (id) => {
+      if (!id) return false;
+      const db = await openProofsDb();
+      if (!db) return false;
+      if (proofUrlCache.has(id)) {
+        URL.revokeObjectURL(proofUrlCache.get(id));
+        proofUrlCache.delete(id);
+      }
+      return new Promise((resolve) => {
+        const tx = db.transaction(QUICK_PROOFS_STORE, 'readwrite');
+        tx.objectStore(QUICK_PROOFS_STORE).delete(id);
+        tx.oncomplete = () => resolve(true);
+        tx.onerror = () => resolve(false);
+      });
+    };
+
+    const getProofUrl = (id, blob) => {
+      if (!id || !blob) return '';
+      if (proofUrlCache.has(id)) {
+        URL.revokeObjectURL(proofUrlCache.get(id));
+      }
+      const url = URL.createObjectURL(blob);
+      proofUrlCache.set(id, url);
+      return url;
     };
 
     const QUICK_DELETES_STORAGE_KEY = 'cvCardDeletesV1';
@@ -3497,6 +3628,7 @@
       if (editId && !deletes.includes(editId)) {
         deletes.push(editId);
         saveCardDeletes(deletes);
+        deleteProofRecord(editId);
       }
 
       if (card.dataset.quickAdded === 'true' && card.dataset.quickEntryId) {
@@ -3517,6 +3649,81 @@
       card.appendChild(btn);
     };
 
+    const updateProofControls = async (card) => {
+      if (!card) return;
+      const editId = card.dataset.editId || '';
+      const wrap = card.querySelector(':scope > .inline-proof-wrap');
+      if (!wrap) return;
+      const nameNode = wrap.querySelector('.inline-proof-name');
+      const openLink = wrap.querySelector('.inline-proof-link');
+      const removeBtn = wrap.querySelector('.inline-proof-remove');
+      const record = await getProofRecord(editId);
+      if (!record?.file) {
+        if (nameNode) nameNode.textContent = 'Sin justificante subido';
+        if (openLink) {
+          openLink.hidden = true;
+          openLink.removeAttribute('href');
+        }
+        if (removeBtn) removeBtn.hidden = true;
+        return;
+      }
+
+      if (nameNode) nameNode.textContent = record.name || 'Justificante adjunto';
+      if (openLink) {
+        openLink.href = getProofUrl(editId, record.file);
+        openLink.hidden = false;
+      }
+      if (removeBtn) removeBtn.hidden = false;
+    };
+
+    const ensureInlineProofControls = (card) => {
+      if (!card || card.querySelector(':scope > .inline-proof-wrap')) return;
+      const wrap = document.createElement('div');
+      wrap.className = 'inline-proof-wrap';
+      wrap.innerHTML = `
+        <div class="inline-proof-main">
+          <button type="button" class="inline-proof-btn">Subir justificante</button>
+          <a class="inline-proof-link" href="#" target="_blank" rel="noopener" hidden>Abrir</a>
+          <button type="button" class="inline-proof-remove" hidden>Quitar</button>
+          <input type="file" class="inline-proof-input" hidden />
+        </div>
+        <span class="inline-proof-name">Sin justificante subido</span>
+      `;
+
+      const input = wrap.querySelector('.inline-proof-input');
+      const uploadBtn = wrap.querySelector('.inline-proof-btn');
+      const removeBtn = wrap.querySelector('.inline-proof-remove');
+
+      uploadBtn?.addEventListener('click', () => {
+        input?.click();
+      });
+
+      input?.addEventListener('change', async (event) => {
+        const file = event.target?.files?.[0];
+        const editId = card.dataset.editId || '';
+        if (!file || !editId) return;
+        await saveProofRecord({
+          id: editId,
+          name: file.name,
+          type: file.type || '',
+          updatedAt: Date.now(),
+          file
+        });
+        await updateProofControls(card);
+        input.value = '';
+      });
+
+      removeBtn?.addEventListener('click', async () => {
+        const editId = card.dataset.editId || '';
+        if (!editId) return;
+        await deleteProofRecord(editId);
+        await updateProofControls(card);
+      });
+
+      card.appendChild(wrap);
+      updateProofControls(card);
+    };
+
     const refreshEditableCards = () => {
       const cards = Array.from(document.querySelectorAll(editableCardSelector));
       cards.forEach((card, idx) => {
@@ -3526,6 +3733,7 @@
         }
         ensureInlineEditButton(card);
         ensureInlineDeleteButton(card);
+        ensureInlineProofControls(card);
       });
 
       const edits = getCardEdits();
@@ -3541,6 +3749,7 @@
         card.innerHTML = rendered.innerHTML;
         ensureInlineEditButton(card);
         ensureInlineDeleteButton(card);
+        ensureInlineProofControls(card);
       });
 
       const subjectStack = document.getElementById('quick-subjects-stack');
@@ -3889,6 +4098,7 @@
 
         ensureInlineEditButton(currentEditingCard);
         ensureInlineDeleteButton(currentEditingCard);
+        ensureInlineProofControls(currentEditingCard);
         refreshPublicationQ3Visibility();
         closeQuickModal();
         return;
