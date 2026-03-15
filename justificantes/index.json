@@ -1,18 +1,10 @@
-{
-  "sobre-mi--": {
-    "id": "sobre-mi--",
-    "section": "formacion-academica",
-    "name": "-ítulo -niversitario ----.pd-",
-    "type": "application/pdf",
-    "stored_path": "justificantes/formacion-academica/-ítulo -niversitario ----.pd-",
-    "url": "/api/proofs/sobre-mi--/file"
-  },
+﻿{
   "sobre-mi-1": {
     "id": "sobre-mi-1",
     "section": "formacion-academica",
     "name": "Título Universitario MAES.pdf",
     "type": "application/pdf",
-    "stored_path": "justificantes/formacion-academica/Título Universitario MAES.pdf",
-    "url": "/api/proofs/sobre-mi-1/file"
+    "stored_path": "formacion-academica/Título Universitario MAES.pdf",
+    "url": "/justificantes/formacion-academica/Título%20Universitario%20MAES.pdf"
   }
 }
