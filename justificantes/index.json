@@ -37,7 +37,7 @@
     "name": "Meshlets.pdf",
     "type": "application/pdf",
     "stored_path": "publicaciones/Meshlets.pdf",
-    "url": "http://127.0.0.1:8081/api/proofs/publicaciones-5/file"
+    "url": "/justificantes/publicaciones/Meshlets.pdf"
   },
   "publicaciones-6": {
     "id": "publicaciones-6",
@@ -45,7 +45,7 @@
     "name": "Automated.pdf",
     "type": "application/pdf",
     "stored_path": "publicaciones/Automated.pdf",
-    "url": "http://127.0.0.1:8081/api/proofs/publicaciones-6/file"
+    "url": "/justificantes/publicaciones/Automated.pdf"
   },
   "publicaciones-8": {
     "id": "publicaciones-8",
@@ -53,7 +53,7 @@
     "name": "3D models.pdf",
     "type": "application/pdf",
     "stored_path": "publicaciones/3D models.pdf",
-    "url": "http://127.0.0.1:8081/api/proofs/publicaciones-8/file"
+    "url": "/justificantes/publicaciones/3D%20models.pdf"
   },
   "publicaciones-9": {
     "id": "publicaciones-9",
@@ -61,6 +61,6 @@
     "name": "Planar.pdf",
     "type": "application/pdf",
     "stored_path": "publicaciones/Planar.pdf",
-    "url": "http://127.0.0.1:8081/api/proofs/publicaciones-9/file"
+    "url": "/justificantes/publicaciones/Planar.pdf"
   }
 }
