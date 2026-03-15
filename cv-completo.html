@@ -1987,12 +1987,14 @@
     }
 
     .export-pdf-root {
-      position: fixed;
-      left: -10000px;
+      position: absolute;
+      left: 0;
       top: 0;
       width: 920px;
       background: #fff;
       color: #17324c;
+      opacity: 0;
+      pointer-events: none;
       z-index: -1;
     }
 
@@ -3405,6 +3407,7 @@
   </div>
 
   <script src="./assets/vendor/html2pdf.bundle.min.js"></script>
+  <script src="./assets/vendor/pdf-lib.min.js"></script>
   <script src="proofs-config.js"></script>
   <script>
     // Bloqueo visual por contraseña (protección básica en frontend)
@@ -3612,9 +3615,16 @@
         .replace(/^-+|-+$/g, '') || 'seccion';
 
     const isExportLibraryReady = () => typeof window.html2pdf === 'function';
+    const isPdfMergeLibraryReady = () => Boolean(window.PDFLib?.PDFDocument);
 
     const isElementVisibleForExport = (node) =>
       Boolean(node && !node.hidden && !node.classList.contains('is-hidden'));
+
+    const waitForNextPaint = () => new Promise((resolve) => {
+      window.requestAnimationFrame(() => {
+        window.requestAnimationFrame(resolve);
+      });
+    });
 
     const getTextContent = (selector, scope = document) =>
       (scope?.querySelector(selector)?.textContent || '').replace(/\s+/g, ' ').trim();
@@ -3634,7 +3644,11 @@
         subtitle: () => `${Array.from(getAcademicTrainingColumn()?.querySelectorAll(':scope > .card') || []).filter(isElementVisibleForExport).length} meritos academicos recopilados en la seccion.`,
         countLabel: (count) => `${count} ${count === 1 ? 'merito academico' : 'meritos academicos'}`,
         items: () => Array.from(getAcademicTrainingColumn()?.querySelectorAll(':scope > .card') || [])
+          .filter(isElementVisibleForExport),
+        proofIds: () => Array.from(getAcademicTrainingColumn()?.querySelectorAll(':scope > .card') || [])
           .filter(isElementVisibleForExport)
+          .map((item) => getProofHostId(item))
+          .filter(Boolean)
       },
       {
         key: 'publicaciones',
@@ -3643,7 +3657,11 @@
         subtitle: () => getTextContent('p', document.getElementById('acad-title-block')),
         countLabel: (count) => `${count} ${count === 1 ? 'publicacion' : 'publicaciones'}`,
         items: () => Array.from(document.querySelectorAll('#publicaciones .stack-1 > article.card'))
+          .filter(isElementVisibleForExport),
+        proofIds: () => Array.from(document.querySelectorAll('#publicaciones .stack-1 > article.card'))
           .filter(isElementVisibleForExport)
+          .map((item) => getProofHostId(item))
+          .filter(Boolean)
       },
       {
         key: 'congresos',
@@ -3652,7 +3670,11 @@
         subtitle: () => getTextContent('#congresos .title p'),
         countLabel: (count) => `${count} ${count === 1 ? 'contribucion' : 'contribuciones'}`,
         items: () => Array.from(document.querySelectorAll('#congresos .stack-1 > .card'))
+          .filter(isElementVisibleForExport),
+        proofIds: () => Array.from(document.querySelectorAll('#congresos .stack-1 > .card'))
           .filter(isElementVisibleForExport)
+          .map((item) => getProofHostId(item))
+          .filter(Boolean)
       },
       {
         key: 'proyectos',
@@ -3661,7 +3683,11 @@
         subtitle: () => getTextContent('#projects-main-subtitle'),
         countLabel: (count) => `${count} ${count === 1 ? 'proyecto' : 'proyectos'}`,
         items: () => Array.from(document.querySelectorAll('#proyectos > .container.stack-2 > .stack-1 > .card, #proyectos > .container.stack-2 > .card'))
+          .filter(isElementVisibleForExport),
+        proofIds: () => Array.from(document.querySelectorAll('#proyectos > .container.stack-2 > .stack-1 > .card, #proyectos > .container.stack-2 > .card'))
           .filter(isElementVisibleForExport)
+          .map((item) => getProofHostId(item))
+          .filter(Boolean)
       },
       {
         key: 'docencia',
@@ -3670,7 +3696,8 @@
         subtitle: () => getTextContent('#docencia-title-block p'),
         countLabel: (count) => `${count} ${count === 1 ? 'bloque docente' : 'bloques docentes'}`,
         items: () => Array.from(document.querySelectorAll('#docencia .year-card, #quick-subjects-stack > .card'))
-          .filter(isElementVisibleForExport)
+          .filter(isElementVisibleForExport),
+        proofIds: () => ['group-docencia']
       },
       {
         key: 'direccion-academica',
@@ -3679,7 +3706,14 @@
         subtitle: () => getTextContent('#acad-main-subtitle'),
         countLabel: (count) => `${count} ${count === 1 ? 'merito academico' : 'meritos academicos'}`,
         items: () => Array.from(document.querySelectorAll('#tfg-stack .card, #tfm-stack .card, #trib-stack .card'))
-          .filter(isElementVisibleForExport)
+          .filter(isElementVisibleForExport),
+        proofIds: () => {
+          const ids = [];
+          if (isElementVisibleForExport(document.getElementById('tfg-stack'))) ids.push('group-tfg');
+          if (isElementVisibleForExport(document.getElementById('tfm-stack'))) ids.push('group-tfm');
+          if (isElementVisibleForExport(document.getElementById('trib-stack'))) ids.push('group-tribunales');
+          return ids;
+        }
       }
     ];
 
@@ -3737,6 +3771,80 @@
       return root;
     };
 
+    const getSectionProofRecords = async (config) => {
+      const proofIds = Array.from(new Set((typeof config.proofIds === 'function' ? config.proofIds() : [])
+        .filter(Boolean)));
+      const records = [];
+      for (const proofId of proofIds) {
+        const record = await getProofRecord(proofId);
+        if (!record?.url && !record?.stored_path) continue;
+        records.push({ id: proofId, record });
+      }
+      return records;
+    };
+
+    const renderSectionSummaryPdf = async (exportRoot, title) => {
+      await waitForNextPaint();
+      const worker = window.html2pdf()
+        .set({
+          margin: [10, 10, 10, 10],
+          filename: `${slugifyFileName(title)}.pdf`,
+          pagebreak: { mode: ['css', 'legacy'] },
+          html2canvas: {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: '#ffffff'
+          },
+          jsPDF: {
+            unit: 'mm',
+            format: 'a4',
+            orientation: 'portrait'
+          }
+        })
+        .from(exportRoot)
+        .toPdf();
+      const pdf = await worker.get('pdf');
+      return pdf.output('arraybuffer');
+    };
+
+    const mergePdfBuffers = async (baseBuffer, proofRecords) => {
+      const mergedPdf = await window.PDFLib.PDFDocument.load(baseBuffer);
+      let mergedProofs = 0;
+
+      for (const { id, record } of proofRecords) {
+        try {
+          const response = await fetch(getProofUrl(id, record), { cache: 'no-store' });
+          if (!response.ok) continue;
+          const contentType = (response.headers.get('content-type') || record.type || '').toLowerCase();
+          if (!contentType.includes('pdf')) continue;
+          const bytes = await response.arrayBuffer();
+          const proofPdf = await window.PDFLib.PDFDocument.load(bytes);
+          const copiedPages = await mergedPdf.copyPages(proofPdf, proofPdf.getPageIndices());
+          copiedPages.forEach((page) => mergedPdf.addPage(page));
+          mergedProofs += 1;
+        } catch (_) {
+          // ignore broken proof files during export
+        }
+      }
+
+      return {
+        bytes: await mergedPdf.save(),
+        mergedProofs
+      };
+    };
+
+    const downloadPdfBytes = (bytes, fileName) => {
+      const blob = new Blob([bytes], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    };
+
     const exportSectionToPdf = async (config, button) => {
       const items = config.items();
       const title = config.title();
@@ -3745,7 +3853,7 @@
         showProofToast(`No hay meritos visibles en ${title}.`);
         return;
       }
-      if (!isExportLibraryReady()) {
+      if (!isExportLibraryReady() || !isPdfMergeLibraryReady()) {
         showProofToast('La descarga PDF no esta disponible ahora mismo.');
         return;
       }
@@ -3760,25 +3868,15 @@
       showProofToast(`Generando PDF de ${title}...`);
 
       try {
-        await window.html2pdf()
-          .set({
-            margin: [10, 10, 10, 10],
-            filename: `${slugifyFileName(title)}.pdf`,
-            pagebreak: { mode: ['css', 'legacy'] },
-            html2canvas: {
-              scale: 2,
-              useCORS: true,
-              backgroundColor: '#ffffff'
-            },
-            jsPDF: {
-              unit: 'mm',
-              format: 'a4',
-              orientation: 'portrait'
-            }
-          })
-          .from(exportRoot)
-          .save();
-        showProofToast(`PDF preparado: ${title}`);
+        const baseBuffer = await renderSectionSummaryPdf(exportRoot, title);
+        const proofRecords = await getSectionProofRecords(config);
+        const { bytes, mergedProofs } = await mergePdfBuffers(baseBuffer, proofRecords);
+        downloadPdfBytes(bytes, `${slugifyFileName(title)}.pdf`);
+        if (mergedProofs > 0) {
+          showProofToast(`PDF preparado: ${title} + ${mergedProofs} justificantes.`);
+        } else {
+          showProofToast(`PDF preparado: ${title}.`);
+        }
       } catch (_) {
         showProofToast(`No se pudo generar el PDF de ${title}.`);
       } finally {
