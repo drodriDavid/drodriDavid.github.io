@@ -3634,7 +3634,7 @@
         host: () => getAcademicTrainingColumn(),
         anchor: () => getAcademicTrainingColumn()?.querySelector(':scope > h3'),
         title: () => getTextContent(':scope > h3', getAcademicTrainingColumn()) || 'Formacion Academica',
-        subtitle: () => `${Array.from(getAcademicTrainingColumn()?.querySelectorAll(':scope > .card') || []).filter(isElementVisibleForExport).length} meritos academicos recopilados en la seccion.`,
+        subtitle: () => 'Titulaciones y meritos academicos acreditados.',
         countLabel: (count) => `${count} ${count === 1 ? 'merito academico' : 'meritos academicos'}`,
         items: () => Array.from(getAcademicTrainingColumn()?.querySelectorAll(':scope > .card') || [])
           .filter(isElementVisibleForExport),
@@ -3877,14 +3877,6 @@
         color: rgb(1, 1, 1)
       });
 
-      cover.drawText(`SECCION: ${title.toUpperCase()}`, {
-        x: margin,
-        y: pageHeight - 182,
-        size: 14,
-        font: boldFont,
-        color: rgb(0.9, 0.95, 1)
-      });
-
       drawPdfBox(cover, margin, pageHeight - 248, 220, 32, {
         fill: rgb(0.87, 0.92, 0.99),
         borderWidth: 0
@@ -3937,8 +3929,8 @@
       );
 
       const blocks = buildSectionExportBlocks(items);
-      let page = pdfDoc.addPage([pageWidth, pageHeight]);
-      let currentY = pageHeight - margin;
+      let page = cover;
+      let currentY = coverY - 44;
       page.drawText('Detalle de meritos', {
         x: margin,
         y: currentY,
