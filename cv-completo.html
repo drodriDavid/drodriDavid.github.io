@@ -3622,6 +3622,9 @@
     const getTextContent = (selector, scope = document) =>
       (scope?.querySelector(selector)?.textContent || '').replace(/\s+/g, ' ').trim();
 
+    const buildDynamicSubtitle = (count, singular, plural, suffix = 'visibles en esta seccion.') =>
+      `Se exportan ${count} ${count === 1 ? singular : plural} ${suffix}`.trim();
+
     const getAcademicSectionTitleBlock = () =>
       document.querySelector('#tfg-tfm > .container.stack-2 > .title');
 
@@ -3647,7 +3650,7 @@
         key: 'publicaciones',
         host: () => document.getElementById('acad-title-block'),
         title: () => getTextContent('h2', document.getElementById('acad-title-block')) || 'Publicaciones',
-        subtitle: () => getTextContent('p', document.getElementById('acad-title-block')),
+        subtitle: (count) => buildDynamicSubtitle(count, 'publicacion', 'publicaciones'),
         countLabel: (count) => `${count} ${count === 1 ? 'publicacion' : 'publicaciones'}`,
         items: () => Array.from(document.querySelectorAll('#publicaciones .stack-1 > article.card'))
           .filter(isElementVisibleForExport),
@@ -3660,7 +3663,7 @@
         key: 'congresos',
         host: () => document.querySelector('#congresos .title'),
         title: () => getTextContent('#congresos .title h2') || 'Congresos y Conferencias',
-        subtitle: () => getTextContent('#congresos .title p'),
+        subtitle: (count) => buildDynamicSubtitle(count, 'contribucion', 'contribuciones'),
         countLabel: (count) => `${count} ${count === 1 ? 'contribucion' : 'contribuciones'}`,
         items: () => Array.from(document.querySelectorAll('#congresos .stack-1 > .card'))
           .filter(isElementVisibleForExport),
@@ -3673,7 +3676,7 @@
         key: 'proyectos',
         host: () => document.querySelector('#proyectos .title'),
         title: () => getTextContent('#projects-main-title') || 'Proyectos',
-        subtitle: () => getTextContent('#projects-main-subtitle'),
+        subtitle: (count) => buildDynamicSubtitle(count, 'proyecto', 'proyectos'),
         countLabel: (count) => `${count} ${count === 1 ? 'proyecto' : 'proyectos'}`,
         items: () => Array.from(document.querySelectorAll('#proyectos > .container.stack-2 > .stack-1 > .card, #proyectos > .container.stack-2 > .card'))
           .filter(isElementVisibleForExport),
@@ -3686,7 +3689,7 @@
         key: 'docencia',
         host: () => document.getElementById('docencia-title-block'),
         title: () => getTextContent('#docencia-title-block h2') || 'Docencia',
-        subtitle: () => getTextContent('#docencia-title-block p'),
+        subtitle: (count) => buildDynamicSubtitle(count, 'bloque docente', 'bloques docentes'),
         countLabel: (count) => `${count} ${count === 1 ? 'bloque docente' : 'bloques docentes'}`,
         items: () => Array.from(document.querySelectorAll('#docencia .year-card, #quick-subjects-stack > .card'))
           .filter(isElementVisibleForExport),
@@ -3696,7 +3699,7 @@
         key: 'direccion-academica',
         host: () => getAcademicSectionTitleBlock(),
         title: () => getTextContent('#acad-main-title') || 'Dirección académica',
-        subtitle: () => getTextContent('#acad-main-subtitle'),
+        subtitle: (count) => buildDynamicSubtitle(count, 'merito academico', 'meritos academicos', 'visibles del bloque actual.'),
         countLabel: (count) => `${count} ${count === 1 ? 'merito academico' : 'meritos academicos'}`,
         items: () => Array.from(document.querySelectorAll('#tfg-stack .card, #tfm-stack .card, #trib-stack .card'))
           .filter(isElementVisibleForExport),
@@ -4016,7 +4019,9 @@
     const exportSectionToPdf = async (config, button) => {
       const items = config.items();
       const title = config.title();
-      const subtitle = config.subtitle();
+      const subtitle = typeof config.subtitle === 'function'
+        ? config.subtitle(items.length, items)
+        : '';
       if (!items.length) {
         showProofToast(`No hay meritos visibles en ${title}.`);
         return;
