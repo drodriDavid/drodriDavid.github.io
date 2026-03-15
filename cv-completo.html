@@ -1519,7 +1519,9 @@
     }
 
     .quick-add-card {
-      width: min(92vw, 460px);
+      width: min(96vw, 860px);
+      max-height: min(92vh, 980px);
+      overflow: auto;
       background: #fff;
       border-radius: 14px;
       border: 1px solid #d5e1ee;
@@ -1555,6 +1557,15 @@
     .quick-add-form {
       display: grid;
       gap: .55rem;
+    }
+
+    .quick-add-card::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    .quick-add-card::-webkit-scrollbar-thumb {
+      background: #c8d8e8;
+      border-radius: 999px;
     }
 
     .quick-add-form label {
@@ -1619,6 +1630,69 @@
       margin: 0;
       font-size: .78rem;
       color: #56708b;
+    }
+
+    .quick-proof-panel {
+      display: grid;
+      gap: .55rem;
+      padding: .8rem;
+      border: 1px solid #d7e4f0;
+      border-radius: 12px;
+      background: #f8fbfe;
+    }
+
+    .quick-proof-panel[hidden] {
+      display: none !important;
+    }
+
+    .quick-proof-row {
+      display: flex;
+      align-items: center;
+      gap: .55rem;
+      flex-wrap: wrap;
+    }
+
+    .quick-proof-upload,
+    .quick-proof-open,
+    .quick-proof-remove {
+      border: 1px solid #c3d5e7;
+      border-radius: 8px;
+      background: #fff;
+      color: #20486f;
+      font-size: .78rem;
+      font-weight: 700;
+      padding: .45rem .7rem;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .quick-proof-upload {
+      background: #eaf4ff;
+      border-color: #b9cfe5;
+    }
+
+    .quick-proof-remove {
+      border-color: #f0b4b4;
+      background: #fff5f5;
+      color: #9b1c1c;
+    }
+
+    .quick-proof-name {
+      font-size: .82rem;
+      color: #56708b;
+      word-break: break-word;
+    }
+
+    @media (max-width: 720px) {
+      .quick-add-modal {
+        padding: .5rem;
+      }
+
+      .quick-add-card {
+        width: 100%;
+        max-height: 94vh;
+        padding: .8rem;
+      }
     }
 
     .card {
@@ -2960,6 +3034,17 @@
           <input id="quick-contact-uja" type="text" maxlength="220" />
         </div>
 
+        <div id="quick-proof-panel" class="quick-proof-panel" hidden>
+          <label>Justificante</label>
+          <div class="quick-proof-row">
+            <button type="button" id="quick-proof-upload" class="quick-proof-upload">Subir PDF o archivo</button>
+            <a id="quick-proof-open" class="quick-proof-open" href="#" target="_blank" rel="noopener" hidden>Abrir justificante</a>
+            <button type="button" id="quick-proof-remove" class="quick-proof-remove" hidden>Quitar justificante</button>
+            <input id="quick-proof-input" type="file" hidden />
+          </div>
+          <p id="quick-proof-name" class="quick-proof-name">Sin justificante subido.</p>
+        </div>
+
         <div class="quick-add-actions">
           <button type="button" id="quick-add-cancel">Cancelar</button>
           <button type="submit">Guardar</button>
@@ -3076,6 +3161,12 @@
     const quickContactScholar = document.getElementById('quick-contact-scholar');
     const quickContactRg = document.getElementById('quick-contact-rg');
     const quickContactUja = document.getElementById('quick-contact-uja');
+    const quickProofPanel = document.getElementById('quick-proof-panel');
+    const quickProofUpload = document.getElementById('quick-proof-upload');
+    const quickProofOpen = document.getElementById('quick-proof-open');
+    const quickProofRemove = document.getElementById('quick-proof-remove');
+    const quickProofInput = document.getElementById('quick-proof-input');
+    const quickProofName = document.getElementById('quick-proof-name');
     const quickSubjectsBlock = document.getElementById('quick-subjects-block');
     const pubQ3Btn = document.getElementById('pub-q3-btn');
     const pubQ3Summary = document.getElementById('pub-q3-summary');
@@ -3186,6 +3277,42 @@
       const url = URL.createObjectURL(blob);
       proofUrlCache.set(id, url);
       return url;
+    };
+
+    const getCurrentProofId = () => currentEditingCardId || currentEditingSubjectId || '';
+
+    const syncQuickProofPanel = async () => {
+      const proofId = getCurrentProofId();
+      const showPanel = Boolean(proofId);
+      if (quickProofPanel) quickProofPanel.hidden = !showPanel;
+      if (!showPanel) {
+        if (quickProofName) quickProofName.textContent = 'Sin justificante subido.';
+        if (quickProofOpen) {
+          quickProofOpen.hidden = true;
+          quickProofOpen.removeAttribute('href');
+        }
+        if (quickProofRemove) quickProofRemove.hidden = true;
+        if (quickProofInput) quickProofInput.value = '';
+        return;
+      }
+
+      const record = await getProofRecord(proofId);
+      if (!record?.file) {
+        if (quickProofName) quickProofName.textContent = 'Sin justificante subido.';
+        if (quickProofOpen) {
+          quickProofOpen.hidden = true;
+          quickProofOpen.removeAttribute('href');
+        }
+        if (quickProofRemove) quickProofRemove.hidden = true;
+        return;
+      }
+
+      if (quickProofName) quickProofName.textContent = record.name || 'Justificante adjunto';
+      if (quickProofOpen) {
+        quickProofOpen.href = getProofUrl(proofId, record.file);
+        quickProofOpen.hidden = false;
+      }
+      if (quickProofRemove) quickProofRemove.hidden = false;
     };
 
     const QUICK_DELETES_STORAGE_KEY = 'cvCardDeletesV1';
@@ -3862,6 +3989,7 @@
       if (quickType) quickType.disabled = isEditing;
       quickAddModal.removeAttribute('hidden');
       setQuickFormMode();
+      syncQuickProofPanel();
       quickTitle.focus();
     };
 
@@ -3877,9 +4005,38 @@
       currentEditingSubjectId = null;
       document.getElementById('quick-add-title').textContent = 'Añadir nueva entrada';
       quickAddForm.querySelector('button[type="submit"]').textContent = 'Guardar';
+      syncQuickProofPanel();
     };
 
     quickType?.addEventListener('change', setQuickFormMode);
+
+    quickProofUpload?.addEventListener('click', () => {
+      quickProofInput?.click();
+    });
+
+    quickProofInput?.addEventListener('change', async (event) => {
+      const proofId = getCurrentProofId();
+      const file = event.target?.files?.[0];
+      if (!proofId || !file) return;
+      await saveProofRecord({
+        id: proofId,
+        name: file.name,
+        type: file.type || '',
+        updatedAt: Date.now(),
+        file
+      });
+      await syncQuickProofPanel();
+      await updateProofControls(currentEditingCard);
+      quickProofInput.value = '';
+    });
+
+    quickProofRemove?.addEventListener('click', async () => {
+      const proofId = getCurrentProofId();
+      if (!proofId) return;
+      await deleteProofRecord(proofId);
+      await syncQuickProofPanel();
+      await updateProofControls(currentEditingCard);
+    });
 
     const updateSettingsActiveStates = () => {
       quickSettingsEdit?.classList.toggle('is-active', document.body.classList.contains('edit-mode'));
