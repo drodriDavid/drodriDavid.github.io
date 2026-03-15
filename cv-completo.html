@@ -3252,11 +3252,9 @@
 
     const QUICK_STORAGE_KEY = 'cvQuickEntriesV1';
     const QUICK_EDITS_STORAGE_KEY = 'cvCardEditsV1';
+    const PROOFS_STATIC_INDEX_URL = '/justificantes/index.json';
+    const PROOFS_STATIC_BASE = '/justificantes';
     const PROOFS_API_BASE = (() => {
-      const configuredBase = typeof window.CV_PROOFS_API_BASE === 'string'
-        ? window.CV_PROOFS_API_BASE.trim().replace(/\/$/, '')
-        : '';
-      if (configuredBase) return configuredBase;
       const host = (window.location.hostname || '').toLowerCase();
       if (host === '127.0.0.1' || host === 'localhost') return '/api/proofs';
       return '';
@@ -3371,17 +3369,45 @@
       }, 2200);
     };
 
-    const hasProofApiConfigured = () => Boolean(PROOFS_API_BASE);
+    const isLocalProofHost = () => Boolean(PROOFS_API_BASE);
+    const getLocalProofUploadMessage = () =>
+      'La subida de justificantes solo funciona en local. Sube el PDF en local y luego haz git push.';
+    const showLocalProofUploadMessage = () => {
+      showProofToast(getLocalProofUploadMessage());
+    };
+    let proofIndexCache = null;
 
-    const getProofApiSetupMessage = () =>
-      'Configura proofs-config.js con la URL publica del backend de justificantes.';
+    const normalizeProofStoredPath = (storedPath) =>
+      String(storedPath || '')
+        .replace(/\\/g, '/')
+        .replace(/^\/+/, '')
+        .replace(/^\.\/+/, '');
 
-    const showProofApiSetupMessage = () => {
-      showProofToast(getProofApiSetupMessage());
+    const getPublishedProofUrl = (record) => {
+      const normalizedPath = normalizeProofStoredPath(record?.stored_path);
+      if (!normalizedPath) return '';
+      if (normalizedPath.startsWith('justificantes/')) return `/${normalizedPath}`;
+      return `${PROOFS_STATIC_BASE}/${normalizedPath}`;
+    };
+
+    const loadPublishedProofIndex = async () => {
+      if (proofIndexCache) return proofIndexCache;
+      try {
+        const response = await fetch(PROOFS_STATIC_INDEX_URL, { cache: 'no-store' });
+        if (!response.ok) return {};
+        proofIndexCache = await response.json();
+        return proofIndexCache;
+      } catch (_) {
+        return {};
+      }
     };
 
     const getProofRecord = async (id) => {
-      if (!id || !hasProofApiConfigured()) return null;
+      if (!id) return null;
+      if (!isLocalProofHost()) {
+        const index = await loadPublishedProofIndex();
+        return index?.[id] || null;
+      }
       try {
         const response = await fetch(`${PROOFS_API_BASE}/${encodeURIComponent(id)}`, { cache: 'no-store' });
         if (!response.ok) return null;
@@ -3393,7 +3419,7 @@
 
     const saveProofRecord = async (record) => {
       if (!record?.id || !record?.file) return null;
-      if (!hasProofApiConfigured()) return { error: 'proof-api-not-configured' };
+      if (!isLocalProofHost()) return { error: 'local-upload-only' };
       const formData = new FormData();
       formData.append('proofId', record.id);
       formData.append('section', record.section || 'general');
@@ -3411,7 +3437,7 @@
     };
 
     const deleteProofRecord = async (id) => {
-      if (!id || !hasProofApiConfigured()) return false;
+      if (!id || !isLocalProofHost()) return false;
       try {
         const response = await fetch(`${PROOFS_API_BASE}/${encodeURIComponent(id)}`, { method: 'DELETE' });
         return response.ok;
@@ -3420,9 +3446,11 @@
       }
     };
 
-    const getProofUrl = (id) => id && hasProofApiConfigured()
-      ? `${PROOFS_API_BASE}/${encodeURIComponent(id)}/file`
-      : '';
+    const getProofUrl = (id, record = null) => {
+      if (!id) return '';
+      if (isLocalProofHost()) return `${PROOFS_API_BASE}/${encodeURIComponent(id)}/file`;
+      return getPublishedProofUrl(record);
+    };
 
     const getCurrentProofId = () => currentEditingCardId || currentEditingSubjectId || '';
 
@@ -3446,11 +3474,12 @@
       }
 
       const record = await getProofRecord(proofId);
-      if (!record?.url) {
+      if (!record?.stored_path && !record?.url) {
         if (quickProofName) quickProofName.textContent = 'Sin justificante subido.';
         if (quickProofUpload) {
           quickProofUpload.textContent = 'Subir PDF o archivo';
           quickProofUpload.classList.remove('has-file');
+          quickProofUpload.hidden = !isLocalProofHost();
         }
         if (quickProofOpen) {
           quickProofOpen.hidden = true;
@@ -3464,12 +3493,13 @@
       if (quickProofUpload) {
         quickProofUpload.textContent = 'Reemplazar justificante';
         quickProofUpload.classList.add('has-file');
+        quickProofUpload.hidden = !isLocalProofHost();
       }
       if (quickProofOpen) {
-        quickProofOpen.href = getProofUrl(proofId);
+        quickProofOpen.href = getProofUrl(proofId, record);
         quickProofOpen.hidden = false;
       }
-      if (quickProofRemove) quickProofRemove.hidden = false;
+      if (quickProofRemove) quickProofRemove.hidden = !isLocalProofHost();
     };
 
     const getProofHostId = (node) => node?.dataset.editId || node?.dataset.proofId || '';
@@ -3981,7 +4011,7 @@
       const removeBtn = wrap.querySelector('.inline-proof-remove');
       const uploadBtn = wrap.querySelector('.inline-proof-btn');
       const record = await getProofRecord(proofId);
-      if (!record?.url) {
+      if (!record?.stored_path && !record?.url) {
         wrap.classList.remove('has-visible-open');
         wrap.classList.add('has-visible-empty');
         main?.classList.remove('has-file');
@@ -3992,21 +4022,29 @@
           openLink.removeAttribute('href');
         }
         if (removeBtn) removeBtn.hidden = true;
-        if (uploadBtn) uploadBtn.title = 'Subir justificante';
+        if (uploadBtn) {
+          uploadBtn.title = 'Subir justificante';
+          uploadBtn.hidden = !isLocalProofHost();
+        }
+        if (!isLocalProofHost()) wrap.hidden = true;
         return;
       }
 
+      wrap.hidden = false;
       wrap.classList.add('has-visible-open');
       wrap.classList.remove('has-visible-empty');
       main?.classList.remove('no-file');
       main?.classList.add('has-file');
       if (nameNode) nameNode.textContent = record.name || 'Justificante adjunto';
       if (openLink) {
-        openLink.href = getProofUrl(proofId);
+        openLink.href = getProofUrl(proofId, record);
         openLink.hidden = false;
       }
-      if (removeBtn) removeBtn.hidden = false;
-      if (uploadBtn) uploadBtn.title = 'Cambiar justificante';
+      if (removeBtn) removeBtn.hidden = !isLocalProofHost();
+      if (uploadBtn) {
+        uploadBtn.title = 'Cambiar justificante';
+        uploadBtn.hidden = !isLocalProofHost();
+      }
     };
 
     const ensureInlineProofControls = (card) => {
@@ -4055,8 +4093,8 @@
       const removeBtn = wrap.querySelector('.inline-proof-remove');
 
       uploadBtn?.addEventListener('click', () => {
-        if (!hasProofApiConfigured()) {
-          showProofApiSetupMessage();
+        if (!isLocalProofHost()) {
+          showLocalProofUploadMessage();
           return;
         }
         input?.click();
@@ -4079,8 +4117,8 @@
           updatedAt: Date.now(),
           file
         });
-        if (savedRecord?.error === 'proof-api-not-configured') {
-          showProofApiSetupMessage();
+        if (savedRecord?.error === 'local-upload-only') {
+          showLocalProofUploadMessage();
           input.value = '';
           return;
         }
@@ -4157,8 +4195,8 @@
         const removeBtn = wrap.querySelector('.inline-proof-remove');
 
         uploadBtn?.addEventListener('click', () => {
-          if (!hasProofApiConfigured()) {
-            showProofApiSetupMessage();
+          if (!isLocalProofHost()) {
+            showLocalProofUploadMessage();
             return;
           }
           input?.click();
@@ -4180,8 +4218,8 @@
             updatedAt: Date.now(),
             file
           });
-          if (savedRecord?.error === 'proof-api-not-configured') {
-            showProofApiSetupMessage();
+          if (savedRecord?.error === 'local-upload-only') {
+            showLocalProofUploadMessage();
             input.value = '';
             return;
           }
@@ -4248,8 +4286,8 @@
       const removeBtn = wrap.querySelector('.inline-proof-remove');
 
       uploadBtn?.addEventListener('click', () => {
-        if (!hasProofApiConfigured()) {
-          showProofApiSetupMessage();
+        if (!isLocalProofHost()) {
+          showLocalProofUploadMessage();
           return;
         }
         input?.click();
@@ -4271,8 +4309,8 @@
           updatedAt: Date.now(),
           file
         });
-        if (savedRecord?.error === 'proof-api-not-configured') {
-          showProofApiSetupMessage();
+        if (savedRecord?.error === 'local-upload-only') {
+          showLocalProofUploadMessage();
           input.value = '';
           return;
         }
@@ -4516,8 +4554,8 @@
     quickType?.addEventListener('change', setQuickFormMode);
 
     quickProofUpload?.addEventListener('click', () => {
-      if (!hasProofApiConfigured()) {
-        showProofApiSetupMessage();
+      if (!isLocalProofHost()) {
+        showLocalProofUploadMessage();
         return;
       }
       quickProofInput?.click();
@@ -4540,8 +4578,8 @@
         updatedAt: Date.now(),
         file
       });
-      if (savedRecord?.error === 'proof-api-not-configured') {
-        showProofApiSetupMessage();
+      if (savedRecord?.error === 'local-upload-only') {
+        showLocalProofUploadMessage();
         quickProofInput.value = '';
         return;
       }
