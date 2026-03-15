@@ -3362,6 +3362,11 @@
       }, 2200);
     };
 
+    const isHostedProofUploadBlocked = () => {
+      const host = (window.location.hostname || '').toLowerCase();
+      return host.endsWith('github.io');
+    };
+
     const getProofRecord = async (id) => {
       if (!id) return null;
       try {
@@ -3375,6 +3380,9 @@
 
     const saveProofRecord = async (record) => {
       if (!record?.id || !record?.file) return null;
+      if (isHostedProofUploadBlocked()) {
+        return { error: 'hosted-upload-disabled' };
+      }
       const formData = new FormData();
       formData.append('proofId', record.id);
       formData.append('section', record.section || 'general');
@@ -3475,6 +3483,7 @@
       if (!card) return false;
       const academicColumn = getAcademicTrainingColumn();
       return Boolean(
+        card.closest('#publicaciones') ||
         card.closest('#congresos') ||
         academicColumn?.contains(card)
       );
@@ -4053,6 +4062,11 @@
           updatedAt: Date.now(),
           file
         });
+        if (savedRecord?.error === 'hosted-upload-disabled') {
+          showProofToast('Las subidas solo funcionan en http://127.0.0.1:8081/cv-completo.html');
+          input.value = '';
+          return;
+        }
         if (!savedRecord?.url) {
           showProofToast('No se pudo guardar el justificante');
           input.value = '';
@@ -4145,6 +4159,11 @@
             updatedAt: Date.now(),
             file
           });
+          if (savedRecord?.error === 'hosted-upload-disabled') {
+            showProofToast('Las subidas solo funcionan en http://127.0.0.1:8081/cv-completo.html');
+            input.value = '';
+            return;
+          }
           if (!savedRecord?.url) {
             showProofToast('No se pudo guardar el justificante');
             input.value = '';
@@ -4227,6 +4246,11 @@
           updatedAt: Date.now(),
           file
         });
+        if (savedRecord?.error === 'hosted-upload-disabled') {
+          showProofToast('Las subidas solo funcionan en http://127.0.0.1:8081/cv-completo.html');
+          input.value = '';
+          return;
+        }
         if (!savedRecord?.url) {
           showProofToast('No se pudo guardar el justificante');
           input.value = '';
@@ -4486,6 +4510,11 @@
         updatedAt: Date.now(),
         file
       });
+      if (savedRecord?.error === 'hosted-upload-disabled') {
+        showProofToast('Las subidas solo funcionan en http://127.0.0.1:8081/cv-completo.html');
+        quickProofInput.value = '';
+        return;
+      }
       if (!savedRecord?.url) {
         showProofToast('No se pudo guardar el justificante');
         quickProofInput.value = '';
