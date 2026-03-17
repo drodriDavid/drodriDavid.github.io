@@ -2209,7 +2209,7 @@
   </style>
 </head>
 
-<body data-new-gr-c-s-check-loaded="14.1277.0" data-gr-ext-installed="" cz-shortcut-listen="true" class="edit-mode">
+<body>
   <a href="#sobre-mi" class="skip" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden">Saltar al contenido</a>
 
   <header>
@@ -5009,6 +5009,10 @@
       quickPublishStatus.textContent = '';
     }
 
+    document.body.classList.remove('edit-mode');
+    if (quickSettingsMenu) quickSettingsMenu.setAttribute('hidden', '');
+    if (quickSettingsEdit) quickSettingsEdit.classList.remove('is-active');
+
     if (IS_READ_ONLY) {
       document.body.classList.add('read-only');
       if (quickSettings) quickSettings.hidden = true;
@@ -5622,6 +5626,13 @@
       }
       const publishBtnSnapshot = root.querySelector('#quick-settings-publish');
       if (publishBtnSnapshot) publishBtnSnapshot.removeAttribute('disabled');
+      const bodyClone = root.querySelector('body');
+      if (bodyClone) {
+        bodyClone.classList.remove('edit-mode');
+        bodyClone.removeAttribute('data-new-gr-c-s-check-loaded');
+        bodyClone.removeAttribute('data-gr-ext-installed');
+        bodyClone.removeAttribute('cz-shortcut-listen');
+      }
       root.querySelector('#cv-published-state')?.remove();
       const stateScript = document.createElement('script');
       stateScript.id = 'cv-published-state';
