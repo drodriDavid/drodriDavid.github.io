@@ -5909,6 +5909,14 @@
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;');
 
+    function queueDynamicCounterRefresh() {
+      window.setTimeout(() => {
+        if (typeof window.__cvUpdateDynamicCounters === 'function') {
+          window.__cvUpdateDynamicCounters();
+        }
+      }, 0);
+    }
+
     const setQuickFormMode = () => {
       const currentType = quickType.value;
       quickFields.forEach((group) => {
@@ -6336,6 +6344,7 @@
       }
 
       card.remove();
+      queueDynamicCounterRefresh();
     };
 
     const ensureInlineDeleteButton = (card) => {
@@ -7053,6 +7062,7 @@
       }
       row.remove();
       ensureSubjectRowControls();
+      queueDynamicCounterRefresh();
     });
 
     quickSettingsAdd?.addEventListener('click', () => {
@@ -7164,6 +7174,7 @@
         }
 
         ensureSubjectRowControls();
+        queueDynamicCounterRefresh();
         closeQuickModal();
         return;
       }
@@ -7193,6 +7204,7 @@
         ensureInlineDeleteButton(currentEditingCard);
         ensureInlineProofControls(currentEditingCard);
         refreshPublicationQ3Visibility();
+        queueDynamicCounterRefresh();
         closeQuickModal();
         return;
       }
@@ -7201,6 +7213,7 @@
       entries.push(entry);
       saveQuickEntries(entries);
       appendQuickEntry(entry);
+      queueDynamicCounterRefresh();
       closeQuickModal();
     });
 
@@ -7208,6 +7221,7 @@
     dedupeQuickCardsInDom();
     getQuickEntries().forEach(appendQuickEntry);
     dedupeQuickCardsInDom();
+    queueDynamicCounterRefresh();
     refreshEditableCards();
     ensureSubjectRowControls();
     updateSettingsActiveStates();
@@ -7349,6 +7363,7 @@
         docSubjects
       };
     };
+    window.__cvUpdateDynamicCounters = updateDynamicCounters;
 
     setupFilterGroup(
       'pub-filters',
