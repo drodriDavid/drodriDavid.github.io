@@ -38,6 +38,23 @@
       margin: 0 auto;
     }
 
+    header {
+      padding: .72rem 0;
+      border-bottom: 1px solid rgba(21, 40, 59, .08);
+      backdrop-filter: saturate(1.1) blur(6px);
+      background: rgba(255, 255, 255, .9);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: .6rem;
+    }
+
     .btn {
       display: inline-flex;
       align-items: center;
@@ -59,28 +76,30 @@
     }
 
     .btn-ghost {
-      position: fixed;
-      right: 16px;
-      bottom: 16px;
-      z-index: 1200;
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, .72);
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .85);
       color: #6f869d;
       border: 1px solid rgba(175, 195, 214, .75);
-      box-shadow: 0 6px 12px rgba(20, 45, 70, .12);
+      box-shadow: 0 2px 8px rgba(20, 45, 70, .08);
       padding: 0;
       font-weight: 500;
-      font-size: .88rem;
-      opacity: .72;
+      font-size: .8rem;
+      opacity: .82;
     }
 
     .btn-ghost:hover {
       color: #486988;
       border-color: #b8cde1;
-      background: rgba(255, 255, 255, .92);
-      opacity: .95;
+      background: #fff;
+      opacity: 1;
+    }
+
+    .btn-ghost svg {
+      width: 15px;
+      height: 15px;
+      display: block;
     }
 
     .hero {
@@ -466,7 +485,16 @@
 </head>
 
 <body>
-  <a class="btn btn-ghost" href="./cv-completo.html" aria-label="Área privada" title="Área privada">⚙</a>
+  <header>
+    <div class="container topbar">
+      <a class="btn btn-ghost" href="./cv-completo.html" aria-label="Área privada" title="Área privada">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path fill="currentColor"
+            d="M12 1a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5zm-3 8V6a3 3 0 1 1 6 0v3H9z" />
+        </svg>
+      </a>
+    </div>
+  </header>
 
   <main class="container">
     <section class="hero" aria-label="Presentacion resumida">
