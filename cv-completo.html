@@ -2242,23 +2242,23 @@
   <section class="container impact-strip" aria-label="Indicadores de actividad">
     <article class="impact-card reveal-in is-visible">
       <p>Producción</p>
-      <strong data-count="9">9</strong>
+      <strong id="impact-pub-count" data-count="9">9</strong>
       <span>articulos indexados</span>
     </article>
     <article class="impact-card reveal-in is-visible">
       <p>Difusión</p>
-      <strong data-count="16">16</strong>
+      <strong id="impact-cong-count" data-count="16">16</strong>
       <span>contribuciones en congresos</span>
     </article>
     <article class="impact-card reveal-in is-visible">
       <p>Proyectos</p>
-      <strong data-count="14">14</strong>
+      <strong id="impact-proj-count" data-count="14">14</strong>
       <span>I+D, innovación y transferencia</span>
     </article>
     <article class="impact-card reveal-in is-visible">
       <p>Docencia</p>
-      <strong data-count="79">79</strong>
-      <span>ECTS impartidos</span>
+      <strong id="impact-doc-count" data-count="79">79</strong>
+      <span>asignaturas registradas</span>
     </article>
   </section>
   <main id="contenido">
@@ -2396,10 +2396,10 @@
             <button class="filter-btn" type="button" data-filter="q2">Q2</button>
             <button id="pub-q3-btn" class="filter-btn is-hidden" type="button" data-filter="q3">Q3</button>
           </div>
-          <p>
-            9 artículos en revistas indexadas ·
-            <span class="pill q1">Q1</span> 5 ·
-            <span class="pill q2">Q2</span> 4 ·
+          <p id="pub-summary-line">
+            <span id="pub-total-count">9</span> artículos en revistas indexadas ·
+            <span class="pill q1">Q1</span> <span id="pub-q1-count">5</span> ·
+            <span class="pill q2">Q2</span> <span id="pub-q2-count">4</span> ·
             <span id="pub-q3-summary" class="is-hidden">Q3 0 ·</span>
           </p>
 
@@ -2811,11 +2811,11 @@
             <button class="filter-btn" type="button" data-filter="nac">Nacionales</button>
             <button class="filter-btn" type="button" data-filter="oth">Otros formatos</button>
           </div>
-          <p>
-            16 contribuciones:
-            5 internacionales ·
-            8 nacionales ·
-            3 invitaciones
+          <p id="cong-summary-line">
+            <span id="cong-total-count">16</span> contribuciones:
+            <span id="cong-int-count">5</span> internacionales ·
+            <span id="cong-nac-count">8</span> nacionales ·
+            <span id="cong-oth-count">3</span> invitaciones
           </p>
         <div class="section-export-slot" data-export-key="congresos"><button type="button" class="section-export-btn">
       <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -5986,13 +5986,15 @@
         const card = document.createElement('article');
         card.className = 'card';
         card.style.borderLeftColor = quartile === 'q1' ? 'var(--q1)' : (quartile === 'q2' ? 'var(--q2)' : '#a855f7');
-        const meta = [extra.journal || '', extra.year || '', extra.doi ? `doi:${extra.doi}` : '']
-          .filter(Boolean)
-          .join(' · ');
+        const metaParts = [];
+        if (extra.journal) metaParts.push(`<em>${escapeHtml(extra.journal)}</em>`);
+        if (extra.year) metaParts.push(escapeHtml(extra.year));
+        if (extra.doi) metaParts.push(`doi:${escapeHtml(extra.doi)}`);
+        const meta = metaParts.join(' · ');
         card.innerHTML = `
           <h3>${escapeHtml(title)}</h3>
           <p class="pub-authors">${escapeHtml(extra.authors || 'Autores pendientes')}</p>
-          <p class="pub-meta">${escapeHtml(meta || legacyMeta || 'Pendiente de completar metadatos.')}</p>
+          <p class="pub-meta">${meta || escapeHtml(legacyMeta || 'Pendiente de completar metadatos.')}</p>
           ${desc ? `<p>${escapeHtml(desc)}</p>` : ''}
         `;
         return card;
@@ -6778,6 +6780,7 @@
       syncAcademicProofControls('all');
       ensurePublicationProofControls();
       refreshPublicationQ3Visibility();
+      updateDynamicCounters();
     };
 
     const parseHours = (value) => {
@@ -7264,18 +7267,97 @@
       }
     }
 
+    const getPublicationQuartile = (item) => {
+      const style = item.getAttribute('style') || '';
+      if (style.includes('var(--q1)')) return 'q1';
+      if (style.includes('#a855f7')) return 'q3';
+      return 'q2';
+    };
+
+    const ensurePublicationJournalItalic = () => {
+      document.querySelectorAll('#publicaciones .stack-1 > article.card .pub-meta').forEach((metaNode) => {
+        if (!metaNode) return;
+        if (metaNode.querySelector('em')) return;
+        const raw = (metaNode.textContent || '').trim();
+        if (!raw) return;
+        const parts = raw.split('·').map((part) => part.trim()).filter(Boolean);
+        if (!parts.length) return;
+        metaNode.textContent = '';
+        const em = document.createElement('em');
+        em.textContent = parts[0];
+        metaNode.appendChild(em);
+        if (parts.length > 1) {
+          metaNode.appendChild(document.createTextNode(`, ${parts[1]}`));
+        }
+        if (parts.length > 2) {
+          metaNode.appendChild(document.createTextNode(` · ${parts.slice(2).join(' · ')}`));
+        }
+      });
+    };
+
+    const updateDynamicCounters = () => {
+      ensurePublicationJournalItalic();
+      const pubCards = Array.from(document.querySelectorAll('#publicaciones .stack-1 > article.card'));
+      const q1Count = pubCards.filter((card) => getPublicationQuartile(card) === 'q1').length;
+      const q2Count = pubCards.filter((card) => getPublicationQuartile(card) === 'q2').length;
+      const q3Count = pubCards.filter((card) => getPublicationQuartile(card) === 'q3').length;
+      const pubTotal = pubCards.length;
+
+      const pubTotalNode = document.getElementById('pub-total-count');
+      const pubQ1Node = document.getElementById('pub-q1-count');
+      const pubQ2Node = document.getElementById('pub-q2-count');
+      if (pubTotalNode) pubTotalNode.textContent = String(pubTotal);
+      if (pubQ1Node) pubQ1Node.textContent = String(q1Count);
+      if (pubQ2Node) pubQ2Node.textContent = String(q2Count);
+
+      const congCards = Array.from(document.querySelectorAll('#congresos .stack-1 > .card'));
+      const congInt = congCards.filter((item) => (item.textContent || '').toLowerCase().includes('(internacional)')).length;
+      const congNac = congCards.filter((item) => (item.textContent || '').toLowerCase().includes('(nacional)')).length;
+      const congOth = Math.max(0, congCards.length - congInt - congNac);
+      const congTotalNode = document.getElementById('cong-total-count');
+      const congIntNode = document.getElementById('cong-int-count');
+      const congNacNode = document.getElementById('cong-nac-count');
+      const congOthNode = document.getElementById('cong-oth-count');
+      if (congTotalNode) congTotalNode.textContent = String(congCards.length);
+      if (congIntNode) congIntNode.textContent = String(congInt);
+      if (congNacNode) congNacNode.textContent = String(congNac);
+      if (congOthNode) congOthNode.textContent = String(congOth);
+
+      const projectCards = Array.from(document.querySelectorAll('#proyectos .stack-1 > .card, #proyectos > .container.stack-2 > .card'))
+        .filter((card) => card.querySelector('.tag'));
+      const projResearch = projectCards.filter((card) => (card.querySelector('.tag')?.textContent || '').toLowerCase().includes('investig')).length;
+      const projInnovation = projectCards.filter((card) => (card.querySelector('.tag')?.textContent || '').toLowerCase().includes('innov')).length;
+      const projTransfer = projectCards.filter((card) => (card.querySelector('.tag')?.textContent || '').toLowerCase().includes('transfer')).length;
+
+      const docSubjects = Array.from(document.querySelectorAll('#docencia tbody tr')).length;
+
+      const setImpact = (id, value) => {
+        const node = document.getElementById(id);
+        if (!node) return;
+        node.dataset.count = String(value);
+        node.textContent = String(value);
+      };
+      setImpact('impact-pub-count', pubTotal);
+      setImpact('impact-cong-count', congCards.length);
+      setImpact('impact-proj-count', projectCards.length);
+      setImpact('impact-doc-count', docSubjects);
+
+      return {
+        pubTotal, q1Count, q2Count, q3Count,
+        congTotal: congCards.length, congInt, congNac, congOth,
+        projTotal: projectCards.length, projResearch, projInnovation, projTransfer,
+        docSubjects
+      };
+    };
+
     setupFilterGroup(
       'pub-filters',
       '#publicaciones .stack-1 > article.card',
       'pub',
-      (item) => {
-        const style = item.getAttribute('style') || '';
-        if (style.includes('var(--q1)')) return 'q1';
-        if (style.includes('#a855f7')) return 'q3';
-        return 'q2';
-      }
+      (item) => getPublicationQuartile(item)
     );
     refreshPublicationQ3Visibility();
+    updateDynamicCounters();
 
     setupFilterGroup(
       'cong-filters',
@@ -7333,18 +7415,19 @@
         transferExtras.forEach((card) => setVisibility(card, showTransfer));
 
         if (projectMainTitle && projectMainSubtitle) {
+          const stats = updateDynamicCounters();
           if (filter === 'investigacion') {
             projectMainTitle.textContent = 'Proyectos de Investigación';
-            projectMainSubtitle.textContent = '8 proyectos competitivos: 1 internacional, 5 nacionales y 2 autonómicos';
+            projectMainSubtitle.textContent = `${stats.projResearch} proyectos de investigación activos y finalizados.`;
           } else if (filter === 'innovación') {
             projectMainTitle.textContent = 'Proyectos de Innovación Docente';
-            projectMainSubtitle.textContent = '2 proyectos de innovación docente vigentes y finalizados';
+            projectMainSubtitle.textContent = `${stats.projInnovation} proyectos de innovación docente vigentes y finalizados.`;
           } else if (filter === 'transferencia') {
             projectMainTitle.textContent = 'Proyectos de Transferencia de Conocimiento';
-            projectMainSubtitle.textContent = '4 contratos art. 60 LOSU con entidades públicas y privadas';
+            projectMainSubtitle.textContent = `${stats.projTransfer} contratos/proyectos de transferencia con entidades públicas y privadas.`;
           } else {
             projectMainTitle.textContent = 'Proyectos';
-            projectMainSubtitle.textContent = '14 proyectos en total: 8 de investigación, 2 de innovación docente y 4 de transferencia.';
+            projectMainSubtitle.textContent = `${stats.projTotal} proyectos en total: ${stats.projResearch} de investigación, ${stats.projInnovation} de innovación y ${stats.projTransfer} de transferencia.`;
           }
         }
       };
@@ -7399,17 +7482,23 @@
         }
 
         if (filter === 'tfg') {
+          const tfgCount = document.querySelectorAll('#tfg-stack .card').length;
           acadMainTitle.textContent = 'Dirección de TFG';
-          acadMainSubtitle.textContent = '6 trabajos dirigidos con defensas entre 2023 y 2025.';
+          acadMainSubtitle.textContent = `${tfgCount} trabajos de fin de grado dirigidos.`;
         } else if (filter === 'tfm') {
+          const tfmCount = document.querySelectorAll('#tfm-stack .card').length;
           acadMainTitle.textContent = 'Dirección de TFM';
-          acadMainSubtitle.textContent = '3 trabajos de máster dirigidos entre 2024 y 2025.';
+          acadMainSubtitle.textContent = `${tfmCount} trabajos de fin de máster dirigidos.`;
         } else if (filter === 'tribunales') {
+          const tribCount = document.querySelectorAll('#trib-stack .card').length;
           acadMainTitle.textContent = 'Participación en Tribunales';
-          acadMainSubtitle.textContent = '10 participaciones registradas en defensas de 2023-24 y 2024-25.';
+          acadMainSubtitle.textContent = `${tribCount} participaciones en tribunales registradas.`;
         } else {
+          const tfgCount = document.querySelectorAll('#tfg-stack .card').length;
+          const tfmCount = document.querySelectorAll('#tfm-stack .card').length;
+          const tribCount = document.querySelectorAll('#trib-stack .card').length;
           acadMainTitle.textContent = 'Dirección de TFG, TFM y Tribunales';
-          acadMainSubtitle.textContent = 'Datos actualizados según certificados de TFGs, TFMs y Tribunales (febrero 2026).';
+          acadMainSubtitle.textContent = `${tfgCount + tfmCount + tribCount} méritos en total (${tfgCount} TFG, ${tfmCount} TFM, ${tribCount} tribunales).`;
         }
       };
 
@@ -7515,3 +7604,4 @@
 
 
 <script id="cv-published-state" type="application/json">{"entries":[{"desc":"","extra":{"authors":"w","doi":"w","journal":"w","quartile":"q1","year":"w"},"id":1773754078344,"title":"w","type":"articulo"},{"id":1773755705896,"type":"articulo","title":"Generation of Synthetic Labeled Datasets for Anomaly Detection in Heritage Architecture","desc":"","extra":{"authors":"David Jurado-Rodríguez ;Antonio Garrido; Francisco R. Feito; Juan M. Jurado","journal":"Graphical Models","year":"2026","doi":"","quartile":"q2"}}],"edits":{},"deletes":["quick-1773738325811","quick-1773739056081","quick-1773739029495","quick-1773751770814","quick-1773752004403","quick-1773752865452","quick-1773753728373","quick-1773752948458","quick-1773754078344","quick-1773754573397"]}</script></body></html>
+
