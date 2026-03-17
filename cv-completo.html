@@ -6850,6 +6850,11 @@
       const target = getInsertTarget(entry);
       if (!target) return;
       const type = (entry.type === 'tfg' || entry.type === 'tfm') ? 'trabajo' : entry.type;
+      const entryId = String(entry.id || '').trim();
+      if (entryId) {
+        const existing = target.querySelector(`.card[data-quick-added="true"][data-quick-entry-id="${entryId}"]`);
+        if (existing) return;
+      }
       const node = createCardNode(entry);
       if (type === 'contacto' && target.matches('#contacto .card')) {
         target.innerHTML = node.innerHTML;
@@ -6857,13 +6862,26 @@
         return;
       }
       node.dataset.quickAdded = 'true';
-      node.dataset.quickEntryId = String(entry.id || '');
+      node.dataset.quickEntryId = entryId;
       if (entry.id) node.dataset.editId = `quick-${entry.id}`;
       target.prepend(node);
       if (type === 'asignatura' && quickSubjectsBlock) {
         quickSubjectsBlock.classList.remove('is-hidden');
       }
       refreshEditableCards();
+    };
+
+    const dedupeQuickCardsInDom = () => {
+      const seen = new Set();
+      document.querySelectorAll('.card[data-quick-added="true"][data-quick-entry-id]').forEach((card) => {
+        const id = String(card.dataset.quickEntryId || '').trim();
+        if (!id) return;
+        if (seen.has(id)) {
+          card.remove();
+          return;
+        }
+        seen.add(id);
+      });
     };
 
     const openQuickModal = () => {
@@ -7171,7 +7189,9 @@
     });
 
     setQuickFormMode();
+    dedupeQuickCardsInDom();
     getQuickEntries().forEach(appendQuickEntry);
+    dedupeQuickCardsInDom();
     refreshEditableCards();
     ensureSubjectRowControls();
     updateSettingsActiveStates();
@@ -7480,3 +7500,4 @@
 
 
 <script id="cv-published-state" type="application/json">{"entries":[{"id":1773754078344,"type":"articulo","title":"w","desc":"","extra":{"authors":"w","journal":"w","year":"w","doi":"w","quartile":"q1"}}],"edits":{},"deletes":["quick-1773738325811","quick-1773739056081","quick-1773739029495","quick-1773751770814","quick-1773752004403","quick-1773752865452","quick-1773753728373","quick-1773752948458"]}</script></body></html>
+
