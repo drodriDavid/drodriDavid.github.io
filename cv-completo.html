@@ -879,12 +879,22 @@
       margin-bottom: .25rem;
     }
 
-    .reveal-in,
-    .js-enhanced .reveal-in,
-    .js-enhanced .reveal-in.is-visible {
-      opacity: 1 !important;
-      transform: none !important;
-      transition: none !important;
+    @keyframes fadeInUpSoft {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .reveal-in {
+      opacity: 1;
+      transform: translateY(0);
+      animation: fadeInUpSoft .42s ease both;
     }
 
     @media (max-width: 980px) {
@@ -7324,6 +7334,7 @@
           const category = withCachedCategory(item, key, resolver);
           const show = filter === 'all' || category === filter;
           item.classList.toggle('is-hidden', !show);
+          item.hidden = !show;
         });
       };
 
@@ -7493,6 +7504,7 @@
       const setVisibility = (el, show) => {
         if (!el) return;
         el.classList.toggle('is-hidden', !show);
+        el.hidden = !show;
       };
 
       const applyProjectFilter = (filter) => {
@@ -7553,6 +7565,7 @@
       const setVisibility = (el, show) => {
         if (!el) return;
         el.classList.toggle('is-hidden', !show);
+        el.hidden = !show;
       };
 
       const applyAcademicFilter = (filter) => {
