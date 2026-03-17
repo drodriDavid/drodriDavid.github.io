@@ -4882,6 +4882,7 @@
   <script src="./assets/cv-completo/vendor/html2pdf.bundle.min.js"></script>
   <script src="./assets/cv-completo/vendor/pdf-lib.min.js"></script>
   <script src="proofs-config.js"></script>
+  <script src="published-state.js"></script>
   <script>
     // Acceso local sin contraseña
 // Menu accesible y responsive
@@ -5039,6 +5040,9 @@
 
     const getEmbeddedPublishedState = () => {
       try {
+        if (window.CV_PUBLISHED_STATE && typeof window.CV_PUBLISHED_STATE === 'object') {
+          return window.CV_PUBLISHED_STATE;
+        }
         const node = document.getElementById('cv-published-state');
         if (!node) return {};
         const parsed = JSON.parse(node.textContent || '{}');
@@ -5639,10 +5643,18 @@
       quickSettingsPublish.disabled = true;
       showPublishStatus('Publicando cambios...', true);
       try {
+        const publishedState = {
+          entries: getQuickEntries(),
+          edits: getCardEdits(),
+          deletes: getCardDeletes()
+        };
         const response = await fetch('/api/publish', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ htmlSnapshot: buildPublishSnapshot() })
+          body: JSON.stringify({
+            htmlSnapshot: buildPublishSnapshot(),
+            publishedState
+          })
         });
         const payload = await response.json().catch(() => ({}));
         if (payload && payload.snapshot_received === false) {
@@ -7429,5 +7441,8 @@
 
 
 
-<script id="cv-published-state" type="application/json">{"entries":[],"edits":{},"deletes":[]}</script></body><grammarly-desktop-integration data-grammarly-shadow-root="true"></grammarly-desktop-integration></html>
+  <script id="cv-published-state" type="application/json">{"entries":[],"edits":{},"deletes":[]}</script>
+</body>
+
+</html>
 
