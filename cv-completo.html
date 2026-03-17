@@ -3189,7 +3189,7 @@
     <div id="quick-settings-menu" class="quick-settings-menu" hidden>
       <button id="quick-settings-add" class="quick-settings-item" type="button">+ Añadir</button>
       <button id="quick-settings-edit" class="quick-settings-item" type="button">✎ Modo edición</button>
-      <button id="quick-settings-publish" class="quick-settings-item publish-action" type="button">Publicar cambios</button>
+      <button id="quick-settings-publish" class="quick-settings-item publish-action" type="button">Publicar privado + público</button>
     </div>
     <button id="quick-settings-main" class="quick-settings-main" type="button" title="Ajustes">⚙ Ajustes</button>
   </div>
@@ -4139,12 +4139,12 @@
 
     const publishLocalChanges = async () => {
       if (!isLocalProofHost()) {
-        showPublishStatus('Publicar cambios solo funciona en la web local.');
+        showPublishStatus('Publicar privado + público solo funciona en la web local.');
         return;
       }
       if (!quickSettingsPublish) return;
       quickSettingsPublish.disabled = true;
-      showPublishStatus('Publicando cambios...', true);
+      showPublishStatus('Publicando en privado y público...', true);
       try {
         const response = await fetch('/api/publish', {
           method: 'POST',
