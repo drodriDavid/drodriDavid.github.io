@@ -4946,10 +4946,12 @@
       });
     });
 
-    const QUICK_STORAGE_KEY = 'cvQuickEntriesV1';
-    const QUICK_EDITS_STORAGE_KEY = 'cvCardEditsV1';
     const CV_FLAGS = window.CV_FLAGS || {};
     const IS_READ_ONLY = Boolean(CV_FLAGS.readOnly);
+    const STORAGE_MODE = IS_READ_ONLY ? 'public' : 'private';
+    const QUICK_STORAGE_KEY = `cvQuickEntriesV2:${STORAGE_MODE}`;
+    const QUICK_EDITS_STORAGE_KEY = `cvCardEditsV2:${STORAGE_MODE}`;
+    const QUICK_DELETES_STORAGE_KEY = `cvCardDeletesV2:${STORAGE_MODE}`;
     const DISABLE_PROOFS = Boolean(CV_FLAGS.disableProofs);
     const PROOFS_STATIC_INDEX_URL = '/justificantes/index.json';
     const PROOFS_STATIC_BASE = '/justificantes';
@@ -5056,6 +5058,10 @@
       try {
         localStorage.removeItem(QUICK_STORAGE_KEY);
         localStorage.removeItem(QUICK_EDITS_STORAGE_KEY);
+        localStorage.removeItem(QUICK_DELETES_STORAGE_KEY);
+        // Limpieza de claves antiguas para evitar estados heredados
+        localStorage.removeItem('cvQuickEntriesV1');
+        localStorage.removeItem('cvCardEditsV1');
         localStorage.removeItem('cvCardDeletesV1');
       } catch (_) {
         // ignore storage errors
@@ -5898,7 +5904,6 @@
       );
     };
 
-    const QUICK_DELETES_STORAGE_KEY = 'cvCardDeletesV1';
     const getCardDeletes = () => {
       const embedded = getEmbeddedPublishedState();
       if (IS_READ_ONLY) {
@@ -5911,6 +5916,60 @@
         return Array.isArray(embedded.deletes) ? embedded.deletes : [];
       } catch (_) {
         return Array.isArray(embedded.deletes) ? embedded.deletes : [];
+      }
+    };
+
+    const sanitizeLocalStateBeforeApply = () => {
+      if (IS_READ_ONLY) return;
+      const deletes = getCardDeletes();
+      const edits = getCardEdits();
+      const domIds = new Set(
+        Array.from(document.querySelectorAll('[data-edit-id]'))
+          .map((node) => String(node.dataset.editId || '').trim())
+          .filter(Boolean)
+      );
+
+      const cleanedDeletes = deletes.filter((id) => {
+        const key = String(id || '').trim();
+        return key && (key.startsWith('quick-') || domIds.has(key));
+      });
+
+      const cleanedEdits = {};
+      Object.entries(edits || {}).forEach(([id, value]) => {
+        const key = String(id || '').trim();
+        if (!key) return;
+        if (!key.startsWith('quick-') && !domIds.has(key)) return;
+        if (!value || typeof value !== 'object' || !value.type) return;
+        cleanedEdits[key] = value;
+      });
+
+      const sections = [
+        '#congresos [data-edit-id]',
+        '#proyectos [data-edit-id]',
+        '#docencia [data-edit-id]',
+        '#contacto [data-edit-id]'
+      ];
+      const deleteSet = new Set(cleanedDeletes);
+      const fullyDeletedSections = sections.filter((selector) => {
+        const ids = Array.from(document.querySelectorAll(selector))
+          .map((node) => String(node.dataset.editId || '').trim())
+          .filter(Boolean);
+        return ids.length > 0 && ids.every((id) => deleteSet.has(id));
+      }).length;
+
+      const hasChanges =
+        cleanedDeletes.length !== deletes.length ||
+        Object.keys(cleanedEdits).length !== Object.keys(edits || {}).length;
+
+      if (fullyDeletedSections >= 2) {
+        saveCardDeletes([]);
+        saveCardEdits({});
+        return;
+      }
+
+      if (hasChanges) {
+        saveCardDeletes(cleanedDeletes);
+        saveCardEdits(cleanedEdits);
       }
     };
     const saveCardDeletes = (deletes) => {
@@ -7242,6 +7301,7 @@
     dedupeQuickCardsInDom();
     getQuickEntries().forEach(appendQuickEntry);
     dedupeQuickCardsInDom();
+    sanitizeLocalStateBeforeApply();
     queueDynamicCounterRefresh();
     refreshEditableCards();
     ensureSubjectRowControls();
