@@ -5053,6 +5053,13 @@
       document.body.classList.add('read-only');
       if (quickSettings) quickSettings.hidden = true;
       if (quickAddModal) quickAddModal.hidden = true;
+      try {
+        localStorage.removeItem(QUICK_STORAGE_KEY);
+        localStorage.removeItem(QUICK_EDITS_STORAGE_KEY);
+        localStorage.removeItem('cvCardDeletesV1');
+      } catch (_) {
+        // ignore storage errors
+      }
     }
 
     if (REQUIRE_PASSWORD) {
@@ -5094,6 +5101,9 @@
 
     const getQuickEntries = () => {
       const embedded = getEmbeddedPublishedState();
+      if (IS_READ_ONLY) {
+        return Array.isArray(embedded.entries) ? embedded.entries : [];
+      }
       try {
         const raw = localStorage.getItem(QUICK_STORAGE_KEY);
         const parsed = raw ? JSON.parse(raw) : [];
@@ -5105,6 +5115,7 @@
     };
 
     const saveQuickEntries = (entries) => {
+      if (IS_READ_ONLY) return;
       try {
         localStorage.setItem(QUICK_STORAGE_KEY, JSON.stringify(entries));
       } catch (_) {
@@ -5114,6 +5125,9 @@
 
     const getCardEdits = () => {
       const embedded = getEmbeddedPublishedState();
+      if (IS_READ_ONLY) {
+        return embedded.edits && typeof embedded.edits === 'object' ? embedded.edits : {};
+      }
       try {
         const raw = localStorage.getItem(QUICK_EDITS_STORAGE_KEY);
         const parsed = raw ? JSON.parse(raw) : {};
@@ -5125,6 +5139,7 @@
     };
 
     const saveCardEdits = (edits) => {
+      if (IS_READ_ONLY) return;
       try {
         localStorage.setItem(QUICK_EDITS_STORAGE_KEY, JSON.stringify(edits));
       } catch (_) {
@@ -5886,6 +5901,9 @@
     const QUICK_DELETES_STORAGE_KEY = 'cvCardDeletesV1';
     const getCardDeletes = () => {
       const embedded = getEmbeddedPublishedState();
+      if (IS_READ_ONLY) {
+        return Array.isArray(embedded.deletes) ? embedded.deletes : [];
+      }
       try {
         const raw = localStorage.getItem(QUICK_DELETES_STORAGE_KEY);
         const parsed = raw ? JSON.parse(raw) : [];
@@ -5896,6 +5914,7 @@
       }
     };
     const saveCardDeletes = (deletes) => {
+      if (IS_READ_ONLY) return;
       try {
         localStorage.setItem(QUICK_DELETES_STORAGE_KEY, JSON.stringify(deletes));
       } catch (_) {
