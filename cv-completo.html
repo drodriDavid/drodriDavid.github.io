@@ -4114,6 +4114,19 @@
       });
     };
 
+    const buildPublishSnapshot = () => {
+      const root = document.documentElement.cloneNode(true);
+      root.querySelectorAll('.proof-toast.is-visible').forEach((node) => node.classList.remove('is-visible'));
+      const menu = root.querySelector('#quick-settings-menu');
+      if (menu) menu.setAttribute('hidden', '');
+      const publishStatus = root.querySelector('#quick-publish-status');
+      if (publishStatus) publishStatus.setAttribute('hidden', '');
+      root.querySelectorAll('input[type="password"], input[type="text"], input[type="url"], input[type="email"], textarea').forEach((input) => {
+        input.removeAttribute('value');
+      });
+      return `<!DOCTYPE html>\n${root.outerHTML}`;
+    };
+
     const publishLocalChanges = async () => {
       if (!isLocalProofHost()) {
         showPublishStatus('Publicar cambios solo funciona en la web local.');
@@ -4123,7 +4136,11 @@
       quickSettingsPublish.disabled = true;
       showPublishStatus('Publicando cambios...', true);
       try {
-        const response = await fetch('/api/publish', { method: 'POST' });
+        const response = await fetch('/api/publish', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ htmlSnapshot: buildPublishSnapshot() })
+        });
         const payload = await response.json().catch(() => ({}));
         showPublishStatus(payload?.message || 'No se pudo publicar los cambios.');
       } catch (_) {
