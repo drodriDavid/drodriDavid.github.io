@@ -1469,6 +1469,16 @@
       display: none !important;
     }
 
+    body.read-only {
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    body.read-only::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+    }
+
     .quick-settings-main {
       border: 0;
       border-radius: 999px;
