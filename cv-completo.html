@@ -4152,7 +4152,11 @@
           body: JSON.stringify({ htmlSnapshot: buildPublishSnapshot() })
         });
         const payload = await response.json().catch(() => ({}));
-        showPublishStatus(payload?.message || 'No se pudo publicar los cambios.');
+        if (payload && payload.snapshot_received === false) {
+          showPublishStatus('Servidor local sin versión nueva. Reinicia el .exe y vuelve a publicar.');
+        } else {
+          showPublishStatus(payload?.message || 'No se pudo publicar los cambios.');
+        }
       } catch (_) {
         showPublishStatus('No se pudo conectar con el publicador local.');
       } finally {
