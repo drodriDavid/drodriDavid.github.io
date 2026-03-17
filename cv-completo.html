@@ -3575,13 +3575,26 @@
       document.body.classList.remove('gated');
     }
 
+    const getEmbeddedPublishedState = () => {
+      try {
+        const node = document.getElementById('cv-published-state');
+        if (!node) return {};
+        const parsed = JSON.parse(node.textContent || '{}');
+        return parsed && typeof parsed === 'object' ? parsed : {};
+      } catch (_) {
+        return {};
+      }
+    };
+
     const getQuickEntries = () => {
+      const embedded = getEmbeddedPublishedState();
       try {
         const raw = localStorage.getItem(QUICK_STORAGE_KEY);
         const parsed = raw ? JSON.parse(raw) : [];
-        return Array.isArray(parsed) ? parsed : [];
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        return Array.isArray(embedded.entries) ? embedded.entries : [];
       } catch (_) {
-        return [];
+        return Array.isArray(embedded.entries) ? embedded.entries : [];
       }
     };
 
@@ -3594,12 +3607,14 @@
     };
 
     const getCardEdits = () => {
+      const embedded = getEmbeddedPublishedState();
       try {
         const raw = localStorage.getItem(QUICK_EDITS_STORAGE_KEY);
         const parsed = raw ? JSON.parse(raw) : {};
-        return parsed && typeof parsed === 'object' ? parsed : {};
+        if (parsed && typeof parsed === 'object' && Object.keys(parsed).length > 0) return parsed;
+        return embedded.edits && typeof embedded.edits === 'object' ? embedded.edits : {};
       } catch (_) {
-        return {};
+        return embedded.edits && typeof embedded.edits === 'object' ? embedded.edits : {};
       }
     };
 
@@ -4126,11 +4141,22 @@
 
     const buildPublishSnapshot = () => {
       const root = document.documentElement.cloneNode(true);
+      const snapshotState = {
+        entries: getQuickEntries(),
+        edits: getCardEdits(),
+        deletes: getCardDeletes()
+      };
       root.querySelectorAll('.proof-toast.is-visible').forEach((node) => node.classList.remove('is-visible'));
       const menu = root.querySelector('#quick-settings-menu');
       if (menu) menu.setAttribute('hidden', '');
       const publishStatus = root.querySelector('#quick-publish-status');
       if (publishStatus) publishStatus.setAttribute('hidden', '');
+      root.querySelector('#cv-published-state')?.remove();
+      const stateScript = document.createElement('script');
+      stateScript.id = 'cv-published-state';
+      stateScript.type = 'application/json';
+      stateScript.textContent = JSON.stringify(snapshotState);
+      root.querySelector('body')?.appendChild(stateScript);
       root.querySelectorAll('input[type="password"], input[type="text"], input[type="url"], input[type="email"], textarea').forEach((input) => {
         input.removeAttribute('value');
       });
@@ -4333,12 +4359,14 @@
 
     const QUICK_DELETES_STORAGE_KEY = 'cvCardDeletesV1';
     const getCardDeletes = () => {
+      const embedded = getEmbeddedPublishedState();
       try {
         const raw = localStorage.getItem(QUICK_DELETES_STORAGE_KEY);
         const parsed = raw ? JSON.parse(raw) : [];
-        return Array.isArray(parsed) ? parsed : [];
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        return Array.isArray(embedded.deletes) ? embedded.deletes : [];
       } catch (_) {
-        return [];
+        return Array.isArray(embedded.deletes) ? embedded.deletes : [];
       }
     };
     const saveCardDeletes = (deletes) => {
