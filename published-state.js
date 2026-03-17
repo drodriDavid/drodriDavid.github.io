@@ -1,5 +1,1 @@
-window.CV_PUBLISHED_STATE = {
-  entries: [],
-  edits: {},
-  deletes: []
-};
+window.CV_PUBLISHED_STATE = {"deletes": ["quick-1773738325811", "quick-1773739056081", "quick-1773739029495", "quick-1773751770814", "quick-1773752004403", "quick-1773752865452", "quick-1773753728373", "quick-1773752948458"], "edits": {}, "entries": [{"desc": "", "extra": {"authors": "w", "doi": "w", "journal": "w", "quartile": "q1", "year": "w"}, "id": 1773754078344, "title": "w", "type": "articulo"}]};
