@@ -4922,16 +4922,18 @@
 // Menu accesible y responsive
     const btn = document.querySelector('.menu');
     const list = document.getElementById('site-nav');
-    const toggleNav = () => {
-      const open = list.hasAttribute('hidden');
-      if (open) list.removeAttribute('hidden'); else list.setAttribute('hidden', '');
-      btn.setAttribute('aria-expanded', String(open));
-    };
-    btn.addEventListener('click', toggleNav);
+    if (btn && list) {
+      const toggleNav = () => {
+        const open = list.hasAttribute('hidden');
+        if (open) list.removeAttribute('hidden'); else list.setAttribute('hidden', '');
+        btn.setAttribute('aria-expanded', String(open));
+      };
+      btn.addEventListener('click', toggleNav);
 
-    list.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-      if (window.innerWidth <= 980) { list.setAttribute('hidden', ''); btn.setAttribute('aria-expanded', 'false'); }
-    }));
+      list.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+        if (window.innerWidth <= 980) { list.setAttribute('hidden', ''); btn.setAttribute('aria-expanded', 'false'); }
+      }));
+    }
 
     document.querySelectorAll('a[href^="#"]').forEach(a => {
       a.addEventListener('click', e => {
