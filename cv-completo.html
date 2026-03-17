@@ -880,12 +880,17 @@
     }
 
     .reveal-in {
-      opacity: 0;
-      transform: translateY(18px);
+      opacity: 1;
+      transform: none;
       transition: opacity .55s ease, transform .55s ease;
     }
 
-    .reveal-in.is-visible {
+    .js-enhanced .reveal-in {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+
+    .js-enhanced .reveal-in.is-visible {
       opacity: 1;
       transform: translateY(0);
     }
@@ -4919,6 +4924,7 @@
   <script src="published-state.js"></script>
   <script>
     // Acceso local sin contraseña
+    document.body.classList.add('js-enhanced');
 // Menu accesible y responsive
     const btn = document.querySelector('.menu');
     const list = document.getElementById('site-nav');
