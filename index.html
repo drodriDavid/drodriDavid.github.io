@@ -38,27 +38,6 @@
       margin: 0 auto;
     }
 
-    header {
-      padding: 1rem 0;
-      border-bottom: 1px solid rgba(21, 40, 59, .08);
-      backdrop-filter: saturate(1.1) blur(6px);
-      background: rgba(244, 247, 251, .85);
-      position: sticky;
-      top: 0;
-    }
-
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      gap: .8rem;
-    }
-
-    .brand {
-      font-weight: 700;
-      letter-spacing: .2px;
-    }
-
     .btn {
       display: inline-flex;
       align-items: center;
@@ -80,20 +59,28 @@
     }
 
     .btn-ghost {
-      background: transparent;
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      z-index: 1200;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, .72);
       color: #6f869d;
-      border: 1px solid rgba(175, 195, 214, .65);
-      box-shadow: none;
-      padding: .2rem .48rem;
+      border: 1px solid rgba(175, 195, 214, .75);
+      box-shadow: 0 6px 12px rgba(20, 45, 70, .12);
+      padding: 0;
       font-weight: 500;
-      font-size: .74rem;
-      opacity: .82;
+      font-size: .88rem;
+      opacity: .72;
     }
 
     .btn-ghost:hover {
       color: #486988;
       border-color: #b8cde1;
-      opacity: 1;
+      background: rgba(255, 255, 255, .92);
+      opacity: .95;
     }
 
     .hero {
@@ -479,11 +466,7 @@
 </head>
 
 <body>
-  <header>
-    <div class="container topbar">
-      <a class="btn btn-ghost" href="./cv-completo.html">Área privada</a>
-    </div>
-  </header>
+  <a class="btn btn-ghost" href="./cv-completo.html" aria-label="Área privada" title="Área privada">⚙</a>
 
   <main class="container">
     <section class="hero" aria-label="Presentacion resumida">
