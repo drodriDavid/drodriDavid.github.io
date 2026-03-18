@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es" suppresshydrationwarning="true" data-lt-installed="true"><head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -884,6 +884,22 @@
     #sobre-mi .stack-1>h3 {
       text-align: center;
       margin-bottom: .25rem;
+    }
+
+    .about-side-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: .75rem;
+      flex-wrap: wrap;
+    }
+
+    .about-accreditations {
+      font-size: .78rem;
+      color: #5a6f86;
+      font-weight: 600;
+      line-height: 1.2;
+      white-space: nowrap;
     }
 
     @keyframes fadeInUpSoft {
@@ -7330,6 +7346,26 @@
       if (!item.dataset[key]) item.dataset[key] = resolver(item);
       return item.dataset[key];
     };
+
+    const ensureAcademicAccreditationsBadge = () => {
+      const rightColumn = document.querySelector('#sobre-mi .grid-2 > .stack-1:last-child');
+      if (!rightColumn) return;
+      const heading = rightColumn.querySelector('h3');
+      if (!heading) return;
+      if (rightColumn.querySelector('.about-accreditations')) return;
+
+      const headWrap = document.createElement('div');
+      headWrap.className = 'about-side-head';
+      heading.parentNode.insertBefore(headWrap, heading);
+      headWrap.appendChild(heading);
+
+      const badge = document.createElement('small');
+      badge.className = 'about-accreditations';
+      badge.textContent = 'Acreditaciones: Ayudante Doctor · Contratado Doctor';
+      headWrap.appendChild(badge);
+    };
+
+    ensureAcademicAccreditationsBadge();
 
     const setFilteredVisibility = (el, show) => {
       if (!el) return;
