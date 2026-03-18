@@ -4963,6 +4963,7 @@
 
     const CV_FLAGS = window.CV_FLAGS || {};
     const IS_READ_ONLY = Boolean(CV_FLAGS.readOnly);
+    const IS_FILE_PROTOCOL = window.location.protocol === 'file:';
     const STORAGE_MODE = IS_READ_ONLY ? 'public' : 'private';
     const QUICK_STORAGE_KEY = `cvQuickEntriesV2:${STORAGE_MODE}`;
     const QUICK_EDITS_STORAGE_KEY = `cvCardEditsV2:${STORAGE_MODE}`;
@@ -5778,6 +5779,7 @@
     };
 
     const loadPublishedProofIndex = async () => {
+      if (IS_FILE_PROTOCOL) return {};
       if (proofIndexCache) return proofIndexCache;
       try {
         const response = await fetch(PROOFS_STATIC_INDEX_URL, { cache: 'no-store' });
@@ -5836,6 +5838,7 @@
 
     const getProofUrl = (id, record = null) => {
       if (!id) return '';
+      if (IS_FILE_PROTOCOL) return '';
       if (isLocalProofHost()) return `${PROOFS_API_BASE}/${encodeURIComponent(id)}/file`;
       return getPublishedProofUrl(record);
     };
@@ -6884,7 +6887,7 @@
       syncAcademicProofControls('all');
       ensurePublicationProofControls();
       refreshPublicationQ3Visibility();
-      updateDynamicCounters();
+      queueDynamicCounterRefresh();
     };
 
     const parseHours = (value) => {
