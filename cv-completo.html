@@ -7399,6 +7399,30 @@
       subtitleNode.innerHTML = `<span id="cong-total-count">${stats.congTotal}</span> contribuciones: <span id="cong-int-count">${stats.congInt}</span> internacionales · <span id="cong-nac-count">${stats.congNac}</span> nacionales · <span id="cong-oth-count">${stats.congOth}</span> invitaciones`;
     };
 
+    const updateProjectHeaderByFilter = (stats, forcedFilter = null) => {
+      const titleNode = document.getElementById('projects-main-title');
+      const subtitleNode = document.getElementById('projects-main-subtitle');
+      if (!titleNode || !subtitleNode || !stats) return;
+      const filter = forcedFilter || document.querySelector('#proj-filters .filter-btn.is-active')?.dataset.filter || 'all';
+      if (filter === 'investigacion') {
+        titleNode.textContent = 'Proyectos de Investigación';
+        subtitleNode.textContent = `${stats.projResearch} proyectos de investigación activos y finalizados.`;
+        return;
+      }
+      if (filter === 'innovación') {
+        titleNode.textContent = 'Proyectos de Innovación Docente';
+        subtitleNode.textContent = `${stats.projInnovation} proyectos de innovación docente vigentes y finalizados.`;
+        return;
+      }
+      if (filter === 'transferencia') {
+        titleNode.textContent = 'Proyectos de Transferencia de Conocimiento';
+        subtitleNode.textContent = `${stats.projTransfer} contratos/proyectos de transferencia con entidades públicas y privadas.`;
+        return;
+      }
+      titleNode.textContent = 'Proyectos';
+      subtitleNode.textContent = `${stats.projTotal} proyectos en total: ${stats.projResearch} de investigación, ${stats.projInnovation} de innovación y ${stats.projTransfer} de transferencia.`;
+    };
+
     function ensurePublicationProofControls() {
       document.querySelectorAll('#publicaciones .stack-1 > article.card').forEach((card) => {
         ensureInlineProofControls(card);
@@ -7593,6 +7617,12 @@
         congNac,
         congOth
       });
+      updateProjectHeaderByFilter({
+        projTotal,
+        projResearch,
+        projInnovation,
+        projTransfer
+      });
 
       return {
         pubTotal, q1Count, q2Count, q3Count,
@@ -7672,19 +7702,7 @@
 
         if (projectMainTitle && projectMainSubtitle) {
           const stats = updateDynamicCounters();
-          if (filter === 'investigacion') {
-            projectMainTitle.textContent = 'Proyectos de Investigación';
-            projectMainSubtitle.textContent = `${stats.projResearch} proyectos de investigación activos y finalizados.`;
-          } else if (filter === 'innovación') {
-            projectMainTitle.textContent = 'Proyectos de Innovación Docente';
-            projectMainSubtitle.textContent = `${stats.projInnovation} proyectos de innovación docente vigentes y finalizados.`;
-          } else if (filter === 'transferencia') {
-            projectMainTitle.textContent = 'Proyectos de Transferencia de Conocimiento';
-            projectMainSubtitle.textContent = `${stats.projTransfer} contratos/proyectos de transferencia con entidades públicas y privadas.`;
-          } else {
-            projectMainTitle.textContent = 'Proyectos';
-            projectMainSubtitle.textContent = `${stats.projTotal} proyectos en total: ${stats.projResearch} de investigación, ${stats.projInnovation} de innovación y ${stats.projTransfer} de transferencia.`;
-          }
+          updateProjectHeaderByFilter(stats, filter);
         }
       };
       window.__applyProjectFilter = applyProjectFilter;
