@@ -886,43 +886,18 @@
       margin-bottom: .25rem;
     }
 
-    .about-side-head {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      align-items: flex-end;
-      justify-content: space-between;
-    }
-
-    .about-side-title {
-      min-width: 220px;
-      flex: 1;
-    }
-
-    .about-accreditations-card {
-      min-width: 200px;
-      padding: .5rem 1rem .65rem;
-      border-radius: .85rem;
+    #sobre-mi .stack-1:first-child .about-accreditations-simple {
+      display: block;
+      margin-top: 1rem;
+      padding: .5rem 1rem;
+      border-radius: .65rem;
       background: rgba(255, 255, 255, .85);
-      border: 1px solid rgba(90, 111, 134, .25);
-      box-shadow: 0 12px 30px rgba(8, 48, 92, .15);
-      display: flex;
-      flex-direction: column;
-      gap: .25rem;
-      text-align: left;
-    }
-
-    .about-accreditations-card strong {
-      font-size: .8rem;
-      letter-spacing: .02em;
-      text-transform: uppercase;
-      color: #49516c;
-    }
-
-    .about-accreditations-card span {
-      font-size: 1rem;
-      font-weight: 600;
+      border: 1px solid rgba(90, 111, 134, .35);
       color: #0f2d5f;
+      font-weight: 600;
+      font-size: .95rem;
+      letter-spacing: .01em;
+      max-width: 45ch;
     }
 
     @keyframes fadeInUpSoft {
@@ -7371,33 +7346,14 @@
     };
 
     const ensureAcademicAccreditationsBadge = () => {
-      const rightColumn = document.querySelector('#sobre-mi .grid-2 > .stack-1:last-child');
-      if (!rightColumn) return;
-      const heading = rightColumn.querySelector('h3');
-      if (!heading) return;
-      if (rightColumn.querySelector('.about-accreditations')) return;
+      const textColumn = document.querySelector('#sobre-mi .grid-2 .stack-1:first-child');
+      if (!textColumn) return;
+      if (textColumn.querySelector('.about-accreditations-simple')) return;
 
-      const headWrap = document.createElement('div');
-      headWrap.className = 'about-side-head';
-      heading.parentNode.insertBefore(headWrap, heading);
-
-      const titleWrap = document.createElement('div');
-      titleWrap.className = 'about-side-title';
-      titleWrap.appendChild(heading);
-      headWrap.appendChild(titleWrap);
-
-      const badgeCard = document.createElement('div');
-      badgeCard.className = 'about-accreditations-card';
-
-      const label = document.createElement('strong');
-      label.textContent = 'Acreditaciones';
-      badgeCard.appendChild(label);
-
-      const detail = document.createElement('span');
-      detail.textContent = 'Ayudante Doctor · Contratado Doctor';
-      badgeCard.appendChild(detail);
-
-      headWrap.appendChild(badgeCard);
+      const badge = document.createElement('p');
+      badge.className = 'about-accreditations-simple';
+      badge.textContent = 'Acreditaciones: Ayudante Doctor · Contratado Doctor';
+      textColumn.appendChild(badge);
     };
 
     ensureAcademicAccreditationsBadge();
