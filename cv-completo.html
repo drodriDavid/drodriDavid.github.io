@@ -2818,14 +2818,14 @@
       <div class="container stack-2">
 
         <div class="title reveal-in is-visible">
-          <h2>Congresos y Conferencias</h2>
+          <h2 id="cong-main-title">Congresos y Conferencias</h2>
           <div class="filters" id="cong-filters" aria-label="Filtros de congresos">
             <button class="filter-btn" type="button" data-filter="all">Todas</button>
             <button class="filter-btn is-active" type="button" data-filter="int">Internacionales</button>
             <button class="filter-btn" type="button" data-filter="nac">Nacionales</button>
             <button class="filter-btn" type="button" data-filter="oth">Otros formatos</button>
           </div>
-          <p id="cong-summary-line">
+          <p id="cong-main-subtitle">
             <span id="cong-total-count">16</span> contribuciones:
             <span id="cong-int-count">5</span> internacionales ·
             <span id="cong-nac-count">8</span> nacionales ·
@@ -7344,7 +7344,7 @@
 
     const FILTER_APPLIERS = Object.create(null);
 
-    const setupFilterGroup = (containerId, itemSelector, key, resolver) => {
+    const setupFilterGroup = (containerId, itemSelector, key, resolver, onFilterChanged = null) => {
       const wrap = document.getElementById(containerId);
       if (!wrap) return;
       const buttons = Array.from(wrap.querySelectorAll('button[data-filter]'));
@@ -7358,6 +7358,9 @@
           const show = filter === 'all' || category === filter;
           setFilteredVisibility(item, show);
         });
+        if (typeof onFilterChanged === 'function') {
+          onFilterChanged(filter);
+        }
       };
 
       buttons.forEach((button) => {
@@ -7370,6 +7373,30 @@
 
       FILTER_APPLIERS[containerId] = apply;
       apply('all');
+    };
+
+    const updateCongHeaderByFilter = (stats, forcedFilter = null) => {
+      const titleNode = document.getElementById('cong-main-title');
+      const subtitleNode = document.getElementById('cong-main-subtitle');
+      if (!titleNode || !subtitleNode || !stats) return;
+      const filter = forcedFilter || document.querySelector('#cong-filters .filter-btn.is-active')?.dataset.filter || 'all';
+      if (filter === 'int') {
+        titleNode.textContent = 'Congresos y Conferencias Internacionales';
+        subtitleNode.textContent = `${stats.congInt} contribuciones internacionales.`;
+        return;
+      }
+      if (filter === 'nac') {
+        titleNode.textContent = 'Congresos y Conferencias Nacionales';
+        subtitleNode.textContent = `${stats.congNac} contribuciones nacionales.`;
+        return;
+      }
+      if (filter === 'oth') {
+        titleNode.textContent = 'Invitaciones y Otros Formatos';
+        subtitleNode.textContent = `${stats.congOth} contribuciones en formato invitación/otros.`;
+        return;
+      }
+      titleNode.textContent = 'Congresos y Conferencias';
+      subtitleNode.innerHTML = `<span id="cong-total-count">${stats.congTotal}</span> contribuciones: <span id="cong-int-count">${stats.congInt}</span> internacionales · <span id="cong-nac-count">${stats.congNac}</span> nacionales · <span id="cong-oth-count">${stats.congOth}</span> invitaciones`;
     };
 
     function ensurePublicationProofControls() {
@@ -7551,6 +7578,13 @@
         }
       }
 
+      updateCongHeaderByFilter({
+        congTotal: congCards.length,
+        congInt,
+        congNac,
+        congOth
+      });
+
       return {
         pubTotal, q1Count, q2Count, q3Count,
         congTotal: congCards.length, congInt, congNac, congOth,
@@ -7578,6 +7612,10 @@
         if (txt.includes('(internacional)')) return 'int';
         if (txt.includes('(nacional)')) return 'nac';
         return 'oth';
+      },
+      (filter) => {
+        const stats = updateDynamicCounters();
+        updateCongHeaderByFilter(stats, filter);
       }
     );
 
@@ -7835,3 +7873,4 @@
 
 
 <script id="cv-published-state" type="application/json">{"entries":[{"desc":"","extra":{"authors":"w","doi":"w","journal":"w","quartile":"q1","year":"w"},"id":1773754078344,"title":"w","type":"articulo"},{"desc":"","extra":{"authors":"David Jurado-Rodríguez ;Antonio Garrido; Francisco R. Feito; Juan M. Jurado","doi":"","journal":"Graphical Models","quartile":"q2","year":"2026"},"id":1773755705896,"title":"Generation of Synthetic Labeled Datasets for Anomaly Detection in Heritage Architecture","type":"articulo"}],"edits":{},"deletes":["quick-1773738325811","quick-1773739056081","quick-1773739029495","quick-1773751770814","quick-1773752004403","quick-1773752865452","quick-1773753728373","quick-1773752948458","quick-1773754078344","quick-1773754573397","quick-1773823345238"]}</script></body></html>
+
