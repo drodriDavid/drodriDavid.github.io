@@ -6521,50 +6521,16 @@
       }
     };
 
-    const ensureInlineProofControls = (card) => {
-      if (!card) return;
-      if (!shouldRenderInlineProof(card)) {
-        removeInlineProofControls(card);
-        return;
-      }
-      if (card.querySelector(':scope > .inline-proof-wrap')) return;
-      card.classList.add('has-inline-proof');
-      const wrap = document.createElement('div');
-      wrap.className = 'inline-proof-wrap has-visible-empty';
-      wrap.innerHTML = `
-        <div class="inline-proof-main no-file">
-          <button type="button" class="inline-proof-btn" title="Subir justificante" aria-label="Subir justificante">
-            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 16V4"></path>
-              <path d="m7 9 5-5 5 5"></path>
-              <path d="M20 16v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3"></path>
-            </svg>
-            <span class="inline-proof-status" aria-hidden="true"></span>
-          </button>
-          <a class="inline-proof-link" href="#" target="_blank" rel="noopener" title="Abrir justificante" aria-label="Abrir justificante" hidden>
-            <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M14 3h7v7"></path>
-              <path d="M10 14 21 3"></path>
-              <path d="M21 14v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h6"></path>
-            </svg>
-          </a>
-          <button type="button" class="inline-proof-remove" title="Quitar justificante" aria-label="Quitar justificante" hidden>
-            <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M3 6h18"></path>
-              <path d="M8 6V4h8v2"></path>
-              <path d="m19 6-1 14H6L5 6"></path>
-              <path d="M10 11v6"></path>
-              <path d="M14 11v6"></path>
-            </svg>
-          </button>
-          <input type="file" class="inline-proof-input" hidden />
-        </div>
-        <span class="inline-proof-name">Sin justificante subido</span>
-      `;
+    const bindProofControls = (host) => {
+      if (!host) return;
+      const wrap = host.querySelector(':scope > .inline-proof-wrap');
+      if (!wrap || wrap.dataset.bound === 'true') return;
 
       const input = wrap.querySelector('.inline-proof-input');
       const uploadBtn = wrap.querySelector('.inline-proof-btn');
       const removeBtn = wrap.querySelector('.inline-proof-remove');
+
+      if (input) input.setAttribute('accept', '.pdf,application/pdf');
 
       uploadBtn?.addEventListener('click', () => {
         if (!isLocalProofHost()) {
@@ -6576,7 +6542,7 @@
 
       input?.addEventListener('change', async (event) => {
         const file = event.target?.files?.[0];
-        const proofId = getProofHostId(card);
+        const proofId = getProofHostId(host);
         if (!file || !proofId) return;
         const currentRecord = await getProofRecord(proofId);
         if (currentRecord?.url && !window.confirm('Este justificante ya existe. ¿Quieres reemplazarlo?')) {
@@ -6585,7 +6551,7 @@
         }
         const savedRecord = await saveProofRecord({
           id: proofId,
-          section: getProofSection(card),
+          section: getProofSection(host),
           name: file.name,
           type: file.type || '',
           updatedAt: Date.now(),
@@ -6601,38 +6567,34 @@
           input.value = '';
           return;
         }
-        await updateProofControls(card);
+        await updateProofControls(host);
         showProofToast(`Justificante subido: ${file.name}`);
         input.value = '';
       });
 
       removeBtn?.addEventListener('click', async () => {
-        const proofId = getProofHostId(card);
+        const proofId = getProofHostId(host);
         if (!proofId) return;
         if (!window.confirm('¿Quieres eliminar este justificante?')) return;
         await deleteProofRecord(proofId);
-        await updateProofControls(card);
+        await updateProofControls(host);
         showProofToast('Justificante eliminado');
       });
 
-      card.appendChild(wrap);
-      updateProofControls(card);
+      wrap.dataset.bound = 'true';
     };
 
-    const ensureGroupProofControls = () => {
-      const groups = [
-        { selector: '#tfg-title-block', proofId: 'group-tfg' },
-        { selector: '#tfm-title-block', proofId: 'group-tfm' },
-        { selector: '#trib-title-block', proofId: 'group-tribunales' },
-        { selector: '#docencia-title-block', proofId: 'group-docencia' }
-      ];
-
-      groups.forEach(({ selector, proofId }) => {
-        const block = document.querySelector(selector);
-        if (!block || block.querySelector(':scope > .inline-proof-wrap')) return;
-        block.dataset.proofId = proofId;
-        const wrap = document.createElement('div');
-        wrap.className = 'inline-proof-wrap is-group-control has-visible-empty';
+    const ensureInlineProofControls = (card) => {
+      if (!card) return;
+      if (!shouldRenderInlineProof(card)) {
+        removeInlineProofControls(card);
+        return;
+      }
+      card.classList.add('has-inline-proof');
+      let wrap = card.querySelector(':scope > .inline-proof-wrap');
+      if (!wrap) {
+        wrap = document.createElement('div');
+        wrap.className = 'inline-proof-wrap has-visible-empty';
         wrap.innerHTML = `
           <div class="inline-proof-main no-file">
             <button type="button" class="inline-proof-btn" title="Subir justificante" aria-label="Subir justificante">
@@ -6663,151 +6625,108 @@
           </div>
           <span class="inline-proof-name">Sin justificante subido</span>
         `;
+        card.appendChild(wrap);
+      }
 
-        const input = wrap.querySelector('.inline-proof-input');
-        const uploadBtn = wrap.querySelector('.inline-proof-btn');
-        const removeBtn = wrap.querySelector('.inline-proof-remove');
+      bindProofControls(card);
+      updateProofControls(card);
+    };
 
-        uploadBtn?.addEventListener('click', () => {
-          if (!isLocalProofHost()) {
-            showLocalProofUploadMessage();
-            return;
-          }
-          input?.click();
-        });
+    const ensureGroupProofControls = () => {
+      const groups = [
+        { selector: '#tfg-title-block', proofId: 'group-tfg' },
+        { selector: '#tfm-title-block', proofId: 'group-tfm' },
+        { selector: '#trib-title-block', proofId: 'group-tribunales' },
+        { selector: '#docencia-title-block', proofId: 'group-docencia' }
+      ];
 
-        input?.addEventListener('change', async (event) => {
-          const file = event.target?.files?.[0];
-          if (!file) return;
-          const currentRecord = await getProofRecord(proofId);
-          if (currentRecord?.url && !window.confirm('Este justificante ya existe. ¿Quieres reemplazarlo?')) {
-            input.value = '';
-            return;
-          }
-          const savedRecord = await saveProofRecord({
-            id: proofId,
-            section: getProofSection(block),
-            name: file.name,
-            type: file.type || '',
-            updatedAt: Date.now(),
-            file
-          });
-          if (savedRecord?.error === 'local-upload-only') {
-            showLocalProofUploadMessage();
-            input.value = '';
-            return;
-          }
-          if (!savedRecord?.url) {
-            showProofToast('No se pudo guardar el justificante');
-            input.value = '';
-            return;
-          }
-          await updateProofControls(block);
-          showProofToast(`Justificante subido: ${file.name}`);
-          input.value = '';
-        });
+      groups.forEach(({ selector, proofId }) => {
+        const block = document.querySelector(selector);
+        if (!block) return;
+        block.dataset.proofId = proofId;
+        let wrap = block.querySelector(':scope > .inline-proof-wrap');
+        if (!wrap) {
+          wrap = document.createElement('div');
+          wrap.className = 'inline-proof-wrap is-group-control has-visible-empty';
+          wrap.innerHTML = `
+            <div class="inline-proof-main no-file">
+              <button type="button" class="inline-proof-btn" title="Subir justificante" aria-label="Subir justificante">
+                <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 16V4"></path>
+                  <path d="m7 9 5-5 5 5"></path>
+                  <path d="M20 16v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3"></path>
+                </svg>
+                <span class="inline-proof-status" aria-hidden="true"></span>
+              </button>
+              <a class="inline-proof-link" href="#" target="_blank" rel="noopener" title="Abrir justificante" aria-label="Abrir justificante" hidden>
+                <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14 3h7v7"></path>
+                  <path d="M10 14 21 3"></path>
+                  <path d="M21 14v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h6"></path>
+                </svg>
+              </a>
+              <button type="button" class="inline-proof-remove" title="Quitar justificante" aria-label="Quitar justificante" hidden>
+                <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 6h18"></path>
+                  <path d="M8 6V4h8v2"></path>
+                  <path d="m19 6-1 14H6L5 6"></path>
+                  <path d="M10 11v6"></path>
+                  <path d="M14 11v6"></path>
+                </svg>
+              </button>
+              <input type="file" class="inline-proof-input" hidden />
+            </div>
+            <span class="inline-proof-name">Sin justificante subido</span>
+          `;
+          block.appendChild(wrap);
+        }
 
-        removeBtn?.addEventListener('click', async () => {
-          if (!window.confirm('¿Quieres eliminar este justificante?')) return;
-          await deleteProofRecord(proofId);
-          await updateProofControls(block);
-          showProofToast('Justificante eliminado');
-        });
-
-        block.appendChild(wrap);
+        bindProofControls(block);
         updateProofControls(block);
       });
     };
 
     const ensureAcademicMainProofControl = () => {
       const block = document.getElementById('acad-title-block');
-      if (!block || block.querySelector(':scope > .inline-proof-wrap')) return;
-      const wrap = document.createElement('div');
-      wrap.className = 'inline-proof-wrap is-group-control has-visible-empty';
-      wrap.hidden = true;
-      wrap.innerHTML = `
-        <div class="inline-proof-main no-file">
-          <button type="button" class="inline-proof-btn" title="Subir justificante" aria-label="Subir justificante">
-            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 16V4"></path>
-              <path d="m7 9 5-5 5 5"></path>
-              <path d="M20 16v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3"></path>
-            </svg>
-            <span class="inline-proof-status" aria-hidden="true"></span>
-          </button>
-          <a class="inline-proof-link" href="#" target="_blank" rel="noopener" title="Abrir justificante" aria-label="Abrir justificante" hidden>
-            <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M14 3h7v7"></path>
-              <path d="M10 14 21 3"></path>
-              <path d="M21 14v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h6"></path>
-            </svg>
-          </a>
-          <button type="button" class="inline-proof-remove" title="Quitar justificante" aria-label="Quitar justificante" hidden>
-            <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M3 6h18"></path>
-              <path d="M8 6V4h8v2"></path>
-              <path d="m19 6-1 14H6L5 6"></path>
-              <path d="M10 11v6"></path>
-              <path d="M14 11v6"></path>
-            </svg>
-          </button>
-          <input type="file" class="inline-proof-input" hidden />
-        </div>
-      `;
+      if (!block) return;
+      let wrap = block.querySelector(':scope > .inline-proof-wrap');
+      if (!wrap) {
+        wrap = document.createElement('div');
+        wrap.className = 'inline-proof-wrap is-group-control has-visible-empty';
+        wrap.hidden = true;
+        wrap.innerHTML = `
+          <div class="inline-proof-main no-file">
+            <button type="button" class="inline-proof-btn" title="Subir justificante" aria-label="Subir justificante">
+              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 16V4"></path>
+                <path d="m7 9 5-5 5 5"></path>
+                <path d="M20 16v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3"></path>
+              </svg>
+              <span class="inline-proof-status" aria-hidden="true"></span>
+            </button>
+            <a class="inline-proof-link" href="#" target="_blank" rel="noopener" title="Abrir justificante" aria-label="Abrir justificante" hidden>
+              <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 3h7v7"></path>
+                <path d="M10 14 21 3"></path>
+                <path d="M21 14v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h6"></path>
+              </svg>
+            </a>
+            <button type="button" class="inline-proof-remove" title="Quitar justificante" aria-label="Quitar justificante" hidden>
+              <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 6h18"></path>
+                <path d="M8 6V4h8v2"></path>
+                <path d="m19 6-1 14H6L5 6"></path>
+                <path d="M10 11v6"></path>
+                <path d="M14 11v6"></path>
+              </svg>
+            </button>
+            <input type="file" class="inline-proof-input" hidden />
+          </div>
+        `;
+        block.appendChild(wrap);
+      }
 
-      const input = wrap.querySelector('.inline-proof-input');
-      const uploadBtn = wrap.querySelector('.inline-proof-btn');
-      const removeBtn = wrap.querySelector('.inline-proof-remove');
-
-      uploadBtn?.addEventListener('click', () => {
-        if (!isLocalProofHost()) {
-          showLocalProofUploadMessage();
-          return;
-        }
-        input?.click();
-      });
-
-      input?.addEventListener('change', async (event) => {
-        const file = event.target?.files?.[0];
-        const proofId = block.dataset.proofId || '';
-        if (!proofId || !file) return;
-        const currentRecord = await getProofRecord(proofId);
-        if (currentRecord?.url && !window.confirm('Este justificante ya existe. ¿Quieres reemplazarlo?')) {
-          input.value = '';
-          return;
-        }
-        const savedRecord = await saveProofRecord({
-          id: proofId,
-          name: file.name,
-          type: file.type || '',
-          updatedAt: Date.now(),
-          file
-        });
-        if (savedRecord?.error === 'local-upload-only') {
-          showLocalProofUploadMessage();
-          input.value = '';
-          return;
-        }
-        if (!savedRecord?.url) {
-          showProofToast('No se pudo guardar el justificante');
-          input.value = '';
-          return;
-        }
-        await updateProofControls(block);
-        showProofToast(`Justificante subido: ${file.name}`);
-        input.value = '';
-      });
-
-      removeBtn?.addEventListener('click', async () => {
-        const proofId = block.dataset.proofId || '';
-        if (!proofId) return;
-        if (!window.confirm('¿Quieres eliminar este justificante?')) return;
-        await deleteProofRecord(proofId);
-        await updateProofControls(block);
-        showProofToast('Justificante eliminado');
-      });
-
-      block.appendChild(wrap);
+      bindProofControls(block);
     };
 
     const syncAcademicProofControls = (filter) => {
@@ -7045,6 +6964,8 @@
     };
 
     quickType?.addEventListener('change', setQuickFormMode);
+
+    if (quickProofInput) quickProofInput.setAttribute('accept', '.pdf,application/pdf');
 
     quickProofUpload?.addEventListener('click', () => {
       if (!isLocalProofHost()) {
