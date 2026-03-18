@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es" suppresshydrationwarning="true" data-lt-installed="true"><head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -5667,27 +5667,39 @@
       }
     };
 
+    const bindSectionExportButton = (button, config) => {
+      if (!button || button.dataset.bound === 'true') return;
+      button.addEventListener('click', () => {
+        exportSectionToPdf(config, button);
+      });
+      button.dataset.bound = 'true';
+    };
+
     const ensureSectionExportButtons = () => {
       getSectionExportConfigs().forEach((config) => {
         const host = config.host();
-        if (!host || host.querySelector(`:scope > .section-export-slot[data-export-key="${config.key}"]`)) return;
-        const anchor = config.anchor?.();
-        const slot = document.createElement('div');
-        slot.className = 'section-export-slot';
-        slot.dataset.exportKey = config.key;
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'section-export-btn';
-        button.innerHTML = `${EXPORT_BUTTON_ICON}<span>Descargar PDF</span>`;
-        button.addEventListener('click', () => {
-          exportSectionToPdf(config, button);
-        });
-        slot.appendChild(button);
-        if (anchor?.parentNode === host) {
-          anchor.insertAdjacentElement('afterend', slot);
-          return;
+        if (!host) return;
+
+        let slot = host.querySelector(`:scope > .section-export-slot[data-export-key="${config.key}"]`);
+        if (!slot) {
+          const anchor = config.anchor?.();
+          slot = document.createElement('div');
+          slot.className = 'section-export-slot';
+          slot.dataset.exportKey = config.key;
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'section-export-btn';
+          button.innerHTML = `${EXPORT_BUTTON_ICON}<span>Descargar PDF</span>`;
+          slot.appendChild(button);
+          if (anchor?.parentNode === host) {
+            anchor.insertAdjacentElement('afterend', slot);
+          } else {
+            host.appendChild(slot);
+          }
         }
-        host.appendChild(slot);
+
+        const button = slot.querySelector('.section-export-btn');
+        bindSectionExportButton(button, config);
       });
     };
 
@@ -7850,3 +7862,4 @@
 
 
 <script id="cv-published-state" type="application/json">{"entries":[{"desc":"","extra":{"authors":"w","doi":"w","journal":"w","quartile":"q1","year":"w"},"id":1773754078344,"title":"w","type":"articulo"},{"desc":"","extra":{"authors":"David Jurado-Rodríguez ;Antonio Garrido; Francisco R. Feito; Juan M. Jurado","doi":"","journal":"Graphical Models","quartile":"q2","year":"2026"},"id":1773755705896,"title":"Generation of Synthetic Labeled Datasets for Anomaly Detection in Heritage Architecture","type":"articulo"}],"edits":{},"deletes":["quick-1773738325811","quick-1773739056081","quick-1773739029495","quick-1773751770814","quick-1773752004403","quick-1773752865452","quick-1773753728373","quick-1773752948458","quick-1773754078344","quick-1773754573397","quick-1773823345238"]}</script></body></html>
+
