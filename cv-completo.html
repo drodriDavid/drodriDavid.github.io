@@ -4028,7 +4028,7 @@
           <h2>Docencia</h2>
           <p>
             Desde 15/09/2022 · Universidad de Jaén ·
-            <strong>79,5 ECTS impartidos</strong> · Certificado oficial de Ordenación Académica (06/03/2026)
+            <strong><span id="doc-ects-total">0</span> ECTS impartidos</strong> · Certificado oficial de Ordenación Académica (06/03/2026)
           </p>
         <div class="inline-proof-wrap is-group-control has-visible-empty">
           <div class="inline-proof-main no-file">
@@ -7549,6 +7549,8 @@
       }
       const impactDocLabel = document.getElementById('impact-doc-label');
       if (impactDocLabel) impactDocLabel.textContent = 'créditos impartidos';
+      const docEctsTotalNode = document.getElementById('doc-ects-total');
+      if (docEctsTotalNode) docEctsTotalNode.textContent = formattedCredits;
 
       const tfgCount = document.querySelectorAll('#tfg-stack .card').length;
       const tfmCount = document.querySelectorAll('#tfm-stack .card').length;
