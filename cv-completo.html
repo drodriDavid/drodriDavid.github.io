@@ -888,18 +888,41 @@
 
     .about-side-head {
       display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      gap: .75rem;
       flex-wrap: wrap;
+      gap: 1rem;
+      align-items: flex-end;
+      justify-content: space-between;
     }
 
-    .about-accreditations {
-      font-size: .78rem;
-      color: #5a6f86;
+    .about-side-title {
+      min-width: 220px;
+      flex: 1;
+    }
+
+    .about-accreditations-card {
+      min-width: 200px;
+      padding: .5rem 1rem .65rem;
+      border-radius: .85rem;
+      background: rgba(255, 255, 255, .85);
+      border: 1px solid rgba(90, 111, 134, .25);
+      box-shadow: 0 12px 30px rgba(8, 48, 92, .15);
+      display: flex;
+      flex-direction: column;
+      gap: .25rem;
+      text-align: left;
+    }
+
+    .about-accreditations-card strong {
+      font-size: .8rem;
+      letter-spacing: .02em;
+      text-transform: uppercase;
+      color: #49516c;
+    }
+
+    .about-accreditations-card span {
+      font-size: 1rem;
       font-weight: 600;
-      line-height: 1.2;
-      white-space: nowrap;
+      color: #0f2d5f;
     }
 
     @keyframes fadeInUpSoft {
@@ -7357,12 +7380,24 @@
       const headWrap = document.createElement('div');
       headWrap.className = 'about-side-head';
       heading.parentNode.insertBefore(headWrap, heading);
-      headWrap.appendChild(heading);
 
-      const badge = document.createElement('small');
-      badge.className = 'about-accreditations';
-      badge.textContent = 'Acreditaciones: Ayudante Doctor · Contratado Doctor';
-      headWrap.appendChild(badge);
+      const titleWrap = document.createElement('div');
+      titleWrap.className = 'about-side-title';
+      titleWrap.appendChild(heading);
+      headWrap.appendChild(titleWrap);
+
+      const badgeCard = document.createElement('div');
+      badgeCard.className = 'about-accreditations-card';
+
+      const label = document.createElement('strong');
+      label.textContent = 'Acreditaciones';
+      badgeCard.appendChild(label);
+
+      const detail = document.createElement('span');
+      detail.textContent = 'Ayudante Doctor · Contratado Doctor';
+      badgeCard.appendChild(detail);
+
+      headWrap.appendChild(badgeCard);
     };
 
     ensureAcademicAccreditationsBadge();
