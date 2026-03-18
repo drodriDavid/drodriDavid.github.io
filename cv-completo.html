@@ -886,20 +886,6 @@
       margin-bottom: .25rem;
     }
 
-    #sobre-mi .stack-1:first-child .about-accreditations-simple {
-      margin: .45rem auto 0;
-      max-width: 70ch;
-      text-align: justify;
-      color: #516781;
-      font-size: 1rem;
-      line-height: 1.65;
-    }
-
-    #sobre-mi .stack-1:first-child .about-accreditations-simple strong {
-      color: #1d3f70;
-      font-weight: 700;
-    }
-
     @keyframes fadeInUpSoft {
       from {
         opacity: 0;
@@ -2290,7 +2276,7 @@
     </article>
   </section>
   <main id="contenido">
-    <section id="sobre-mi">       <div class="container stack-2">         <div class="title reveal-in is-visible">           <h2>Sobre mí</h2>         </div>         <div class="grid-2">           <div class="stack-1">             <p>Doctor en Tecnologías de la Información y la Comunicación por la Universidad de Córdoba               (2019–2022), con mención <strong>Cum Laude</strong>, <strong>Industrial</strong> e               <strong>Internacional</strong>. Tesis: «Contributions to camera pose estimation in               industrial augmented reality applications», en colaboración con Seabery Soluciones S.L. y el               grupo AVA.             </p>             <p>Estancia internacional (3 meses) en UTAD (Vila Real, Portugal), generando colaboraciones con               publicaciones de alto impacto.</p>             <p>Especializado en <strong>visión por computador</strong>, <strong>modelado 3D</strong>,               <strong>segmentación de nubes de puntos</strong> y <strong>estimación de pose</strong>, con               aplicaciones en RA, robótica, navegación autónoma y medicina.             </p>           <p class="about-accreditations-simple"><strong>Acreditaciones:</strong> Ayudante Doctor y Contratado Doctor.</p></div>           <div class="stack-1">             <h3>Formación Académica</h3><div class="section-export-slot" data-export-key="formacion-academica"><button type="button" class="section-export-btn">
+    <section id="sobre-mi">       <div class="container stack-2">         <div class="title reveal-in is-visible">           <h2>Sobre mí</h2>         </div>         <div class="grid-2">           <div class="stack-1">             <p>Doctor en Tecnologías de la Información y la Comunicación por la Universidad de Córdoba               (2019–2022), con mención <strong>Cum Laude</strong>, <strong>Industrial</strong> e               <strong>Internacional</strong>. Tesis: «Contributions to camera pose estimation in               industrial augmented reality applications», en colaboración con Seabery Soluciones S.L. y el               grupo AVA.             </p>             <p>Estancia internacional (3 meses) en UTAD (Vila Real, Portugal), generando colaboraciones con               publicaciones de alto impacto.</p>             <p>Especializado en <strong>visión por computador</strong>, <strong>modelado 3D</strong>,               <strong>segmentación de nubes de puntos</strong> y <strong>estimación de pose</strong>, con               aplicaciones en RA, robótica, navegación autónoma y medicina. Actualmente cuento con las               acreditaciones de <strong>Ayudante Doctor</strong> y <strong>Contratado Doctor</strong>.             </p></div>           <div class="stack-1">             <h3>Formación Académica</h3><div class="section-export-slot" data-export-key="formacion-academica"><button type="button" class="section-export-btn">
       <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M12 3v12"></path>
         <path d="m7 10 5 5 5-5"></path>
@@ -7272,19 +7258,6 @@
       if (!item.dataset[key]) item.dataset[key] = resolver(item);
       return item.dataset[key];
     };
-
-    const ensureAcademicAccreditationsBadge = () => {
-      const textColumn = document.querySelector('#sobre-mi .grid-2 .stack-1:first-child');
-      if (!textColumn) return;
-      if (textColumn.querySelector('.about-accreditations-simple')) return;
-
-      const badge = document.createElement('p');
-      badge.className = 'about-accreditations-simple';
-      badge.innerHTML = '<strong>Acreditaciones:</strong> Ayudante Doctor y Contratado Doctor.';
-      textColumn.appendChild(badge);
-    };
-
-    ensureAcademicAccreditationsBadge();
 
     const setFilteredVisibility = (el, show) => {
       if (!el) return;
