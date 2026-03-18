@@ -820,6 +820,13 @@
       margin-bottom: .6rem;
       border-bottom: 1px solid var(--bor);
       padding-bottom: .35rem;
+      position: relative;
+      z-index: 6;
+      pointer-events: auto;
+    }
+
+    .filters * {
+      pointer-events: auto;
     }
 
     .filter-btn {
@@ -7332,6 +7339,8 @@
       }
     };
 
+    const FILTER_APPLIERS = Object.create(null);
+
     const setupFilterGroup = (containerId, itemSelector, key, resolver) => {
       const wrap = document.getElementById(containerId);
       if (!wrap) return;
@@ -7356,6 +7365,7 @@
         });
       });
 
+      FILTER_APPLIERS[containerId] = apply;
       apply('all');
     };
 
@@ -7545,6 +7555,7 @@
           }
         }
       };
+      window.__applyProjectFilter = applyProjectFilter;
 
       projectButtons.forEach((button) => {
         button.addEventListener('click', () => {
@@ -7614,6 +7625,7 @@
           acadMainSubtitle.textContent = `${tfgCount + tfmCount + tribCount} méritos en total (${tfgCount} TFG, ${tfmCount} TFM, ${tribCount} tribunales).`;
         }
       };
+      window.__applyAcademicFilter = applyAcademicFilter;
 
       acadButtons.forEach((button) => {
         button.addEventListener('click', () => {
@@ -7625,6 +7637,25 @@
 
       applyAcademicFilter('all');
     }
+
+    document.addEventListener('click', (event) => {
+      const button = event.target.closest('.filters button[data-filter]');
+      if (!button) return;
+      const wrap = button.closest('.filters');
+      if (!wrap || !wrap.id) return;
+
+      const buttons = Array.from(wrap.querySelectorAll('button[data-filter]'));
+      buttons.forEach((b) => b.classList.remove('is-active'));
+      button.classList.add('is-active');
+
+      const filter = button.dataset.filter || 'all';
+      const applier = FILTER_APPLIERS[wrap.id]
+        || (wrap.id === 'proj-filters' ? window.__applyProjectFilter : null)
+        || (wrap.id === 'acad-filters' ? window.__applyAcademicFilter : null);
+      if (typeof applier === 'function') {
+        applier(filter);
+      }
+    });
 
     const normalizeTitle = (text) =>
       (text || '')
