@@ -887,17 +887,17 @@
     }
 
     #sobre-mi .stack-1:first-child .about-accreditations-simple {
-      display: block;
-      margin-top: 1rem;
-      padding: .5rem 1rem;
-      border-radius: .65rem;
-      background: rgba(255, 255, 255, .85);
-      border: 1px solid rgba(90, 111, 134, .35);
-      color: #0f2d5f;
-      font-weight: 600;
-      font-size: .95rem;
-      letter-spacing: .01em;
-      max-width: 45ch;
+      margin: .45rem auto 0;
+      max-width: 70ch;
+      text-align: justify;
+      color: #516781;
+      font-size: 1rem;
+      line-height: 1.65;
+    }
+
+    #sobre-mi .stack-1:first-child .about-accreditations-simple strong {
+      color: #1d3f70;
+      font-weight: 700;
     }
 
     @keyframes fadeInUpSoft {
@@ -7352,7 +7352,7 @@
 
       const badge = document.createElement('p');
       badge.className = 'about-accreditations-simple';
-      badge.textContent = 'Acreditaciones: Ayudante Doctor · Contratado Doctor';
+      badge.innerHTML = '<strong>Acreditaciones:</strong> Ayudante Doctor y Contratado Doctor.';
       textColumn.appendChild(badge);
     };
 
