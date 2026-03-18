@@ -2272,7 +2272,7 @@
     <article class="impact-card reveal-in is-visible">
       <p>Docencia</p>
       <strong id="impact-doc-count" data-count="17">17</strong>
-      <span>asignaturas registradas</span>
+      <span id="impact-doc-label">créditos impartidos</span>
     </article>
   </section>
   <main id="contenido">
@@ -7461,7 +7461,30 @@
       const projInnovation = projectCards.filter((card) => (card.querySelector('.tag')?.textContent || '').toLowerCase().includes('innov')).length;
       const projTransfer = projectCards.filter((card) => (card.querySelector('.tag')?.textContent || '').toLowerCase().includes('transfer')).length;
 
-      const docSubjects = Array.from(document.querySelectorAll('#docencia tbody tr')).length;
+      const parseHoursFromText = (text) => {
+        const matches = String(text || '').match(/(?:T|P)\s*:\s*([0-9]+(?:[.,][0-9]+)?)/gi) || [];
+        return matches.reduce((sum, chunk) => {
+          const value = Number((chunk.split(':')[1] || '').replace(',', '.').trim());
+          return sum + (Number.isFinite(value) ? value : 0);
+        }, 0);
+      };
+
+      const docTableRows = Array.from(document.querySelectorAll('#docencia tbody tr'));
+      const quickSubjectCards = Array.from(document.querySelectorAll('#quick-subjects-stack > .card'));
+      const docSubjects = docTableRows.length + quickSubjectCards.length;
+      const tableHours = docTableRows.reduce((sum, row) => {
+        const txt = row.querySelector('.subject-hours-value')?.textContent || '';
+        return sum + parseHoursFromText(txt);
+      }, 0);
+      const quickHours = quickSubjectCards.reduce((sum, card) => {
+        const txt = card.querySelector('.pub-meta')?.textContent || '';
+        return sum + parseHoursFromText(txt);
+      }, 0);
+      const totalHours = tableHours + quickHours;
+      const totalCredits = totalHours / 10;
+      const formattedCredits = Number.isFinite(totalCredits)
+        ? totalCredits.toLocaleString('es-ES', { minimumFractionDigits: 0, maximumFractionDigits: 1 })
+        : '0';
 
       const setImpact = (id, value) => {
         const node = document.getElementById(id);
@@ -7472,13 +7495,54 @@
       setImpact('impact-pub-count', pubTotal);
       setImpact('impact-cong-count', congCards.length);
       setImpact('impact-proj-count', projectCards.length);
-      setImpact('impact-doc-count', docSubjects);
+      const docImpactNode = document.getElementById('impact-doc-count');
+      if (docImpactNode) {
+        docImpactNode.dataset.count = String(Number.isFinite(totalCredits) ? totalCredits : 0);
+        docImpactNode.textContent = formattedCredits;
+      }
+      const impactDocLabel = document.getElementById('impact-doc-label');
+      if (impactDocLabel) impactDocLabel.textContent = 'créditos impartidos';
+
+      const tfgCount = document.querySelectorAll('#tfg-stack .card').length;
+      const tfmCount = document.querySelectorAll('#tfm-stack .card').length;
+      const tribCount = document.querySelectorAll('#trib-stack .card').length;
+      const acadKpiMap = {
+        tfg: tfgCount,
+        tfm: tfmCount,
+        tribunales: tribCount
+      };
+      document.querySelectorAll('#acad-kpis .mini[data-kind]').forEach((item) => {
+        const kind = item.getAttribute('data-kind');
+        const value = acadKpiMap[kind];
+        if (value === undefined) return;
+        const strong = item.querySelector('strong');
+        if (strong) strong.textContent = String(value);
+      });
+
+      const acadActiveFilter = document.querySelector('#acad-filters .filter-btn.is-active')?.dataset.filter || 'all';
+      const acadMainTitleNode = document.getElementById('acad-main-title');
+      const acadMainSubtitleNode = document.getElementById('acad-main-subtitle');
+      if (acadMainTitleNode && acadMainSubtitleNode) {
+        if (acadActiveFilter === 'tfg') {
+          acadMainTitleNode.textContent = 'Dirección de TFG';
+          acadMainSubtitleNode.textContent = `${tfgCount} trabajos de fin de grado dirigidos.`;
+        } else if (acadActiveFilter === 'tfm') {
+          acadMainTitleNode.textContent = 'Dirección de TFM';
+          acadMainSubtitleNode.textContent = `${tfmCount} trabajos de fin de máster dirigidos.`;
+        } else if (acadActiveFilter === 'tribunales') {
+          acadMainTitleNode.textContent = 'Participación en Tribunales';
+          acadMainSubtitleNode.textContent = `${tribCount} participaciones en tribunales registradas.`;
+        } else {
+          acadMainTitleNode.textContent = 'Dirección de TFG, TFM y Tribunales';
+          acadMainSubtitleNode.textContent = `${tfgCount + tfmCount + tribCount} méritos en total (${tfgCount} TFG, ${tfmCount} TFM, ${tribCount} tribunales).`;
+        }
+      }
 
       return {
         pubTotal, q1Count, q2Count, q3Count,
         congTotal: congCards.length, congInt, congNac, congOth,
         projTotal: projectCards.length, projResearch, projInnovation, projTransfer,
-        docSubjects
+        docSubjects, totalHours, totalCredits, tfgCount, tfmCount, tribCount
       };
     };
     window.__cvUpdateDynamicCounters = updateDynamicCounters;
@@ -7757,3 +7821,4 @@
 
 
 <script id="cv-published-state" type="application/json">{"entries":[{"desc":"","extra":{"authors":"w","doi":"w","journal":"w","quartile":"q1","year":"w"},"id":1773754078344,"title":"w","type":"articulo"},{"desc":"","extra":{"authors":"David Jurado-Rodríguez ;Antonio Garrido; Francisco R. Feito; Juan M. Jurado","doi":"","journal":"Graphical Models","quartile":"q2","year":"2026"},"id":1773755705896,"title":"Generation of Synthetic Labeled Datasets for Anomaly Detection in Heritage Architecture","type":"articulo"},{"id":1773823345238,"type":"trabajo","title":"a","desc":"","extra":{"workKind":"tfg","student":"a","role":"Director","degree":"a","defense":"a","course":"a","grade":"a"}}],"edits":{},"deletes":["quick-1773738325811","quick-1773739056081","quick-1773739029495","quick-1773751770814","quick-1773752004403","quick-1773752865452","quick-1773753728373","quick-1773752948458","quick-1773754078344","quick-1773754573397"]}</script></body></html>
+
