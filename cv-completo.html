@@ -7321,6 +7321,17 @@
       return item.dataset[key];
     };
 
+    const setFilteredVisibility = (el, show) => {
+      if (!el) return;
+      el.classList.toggle('is-hidden', !show);
+      el.hidden = !show;
+      if (show) {
+        el.style.removeProperty('display');
+      } else {
+        el.style.setProperty('display', 'none', 'important');
+      }
+    };
+
     const setupFilterGroup = (containerId, itemSelector, key, resolver) => {
       const wrap = document.getElementById(containerId);
       if (!wrap) return;
@@ -7333,8 +7344,7 @@
         items.forEach((item) => {
           const category = withCachedCategory(item, key, resolver);
           const show = filter === 'all' || category === filter;
-          item.classList.toggle('is-hidden', !show);
-          item.hidden = !show;
+          setFilteredVisibility(item, show);
         });
       };
 
@@ -7502,9 +7512,7 @@
       }
 
       const setVisibility = (el, show) => {
-        if (!el) return;
-        el.classList.toggle('is-hidden', !show);
-        el.hidden = !show;
+        setFilteredVisibility(el, show);
       };
 
       const applyProjectFilter = (filter) => {
@@ -7563,9 +7571,7 @@
     if (acadFilterWrap && acadMainTitle && acadMainSubtitle) {
       const acadButtons = Array.from(acadFilterWrap.querySelectorAll('button[data-filter]'));
       const setVisibility = (el, show) => {
-        if (!el) return;
-        el.classList.toggle('is-hidden', !show);
-        el.hidden = !show;
+        setFilteredVisibility(el, show);
       };
 
       const applyAcademicFilter = (filter) => {
