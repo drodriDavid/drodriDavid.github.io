@@ -7455,11 +7455,29 @@
       if (congNacNode) congNacNode.textContent = String(congNac);
       if (congOthNode) congOthNode.textContent = String(congOth);
 
-      const projectCards = Array.from(document.querySelectorAll('#proyectos .stack-1 > .card, #proyectos > .container.stack-2 > .card'))
-        .filter((card) => card.querySelector('.tag'));
-      const projResearch = projectCards.filter((card) => (card.querySelector('.tag')?.textContent || '').toLowerCase().includes('investig')).length;
-      const projInnovation = projectCards.filter((card) => (card.querySelector('.tag')?.textContent || '').toLowerCase().includes('innov')).length;
-      const projTransfer = projectCards.filter((card) => (card.querySelector('.tag')?.textContent || '').toLowerCase().includes('transfer')).length;
+      const projectsRoot = document.querySelector('#proyectos > .container.stack-2');
+      const projectStacks = projectsRoot
+        ? Array.from(projectsRoot.children).filter((el) => el.classList.contains('stack-1'))
+        : [];
+      const researchStack = projectStacks[0] || null;
+      const innovationStack = projectStacks[1] || null;
+      const transferStack = projectStacks[2] || null;
+      const countTaggedCards = (host) => host
+        ? Array.from(host.querySelectorAll(':scope > .card')).filter((card) => card.querySelector('.tag')).length
+        : 0;
+      const projResearch = countTaggedCards(researchStack);
+      const projInnovation = countTaggedCards(innovationStack);
+      let projTransfer = countTaggedCards(transferStack);
+      if (transferStack) {
+        let next = transferStack.nextElementSibling;
+        while (next && !next.classList.contains('title')) {
+          if (next.classList.contains('card') && next.querySelector('.tag')) {
+            projTransfer += 1;
+          }
+          next = next.nextElementSibling;
+        }
+      }
+      const projTotal = projResearch + projInnovation + projTransfer;
 
       const parseHoursFromText = (text) => {
         const matches = String(text || '').match(/(?:T|P)\s*:\s*([0-9]+(?:[.,][0-9]+)?)/gi) || [];
@@ -7494,7 +7512,7 @@
       };
       setImpact('impact-pub-count', pubTotal);
       setImpact('impact-cong-count', congCards.length);
-      setImpact('impact-proj-count', projectCards.length);
+      setImpact('impact-proj-count', projTotal);
       const docImpactNode = document.getElementById('impact-doc-count');
       if (docImpactNode) {
         docImpactNode.dataset.count = String(Number.isFinite(totalCredits) ? totalCredits : 0);
@@ -7541,7 +7559,7 @@
       return {
         pubTotal, q1Count, q2Count, q3Count,
         congTotal: congCards.length, congInt, congNac, congOth,
-        projTotal: projectCards.length, projResearch, projInnovation, projTransfer,
+        projTotal, projResearch, projInnovation, projTransfer,
         docSubjects, totalHours, totalCredits, tfgCount, tfmCount, tribCount
       };
     };
