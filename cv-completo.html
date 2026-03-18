@@ -7502,9 +7502,16 @@
       const projTotal = projResearch + projInnovation + projTransfer;
 
       const parseHoursFromText = (text) => {
-        const matches = String(text || '').match(/(?:T|P)\s*:\s*([0-9]+(?:[.,][0-9]+)?)/gi) || [];
-        return matches.reduce((sum, chunk) => {
+        const source = String(text || '');
+        const matches = source.match(/(?:T|P)\s*:\s*([0-9]+(?:[.,][0-9]+)?)/gi) || [];
+        const taggedTotal = matches.reduce((sum, chunk) => {
           const value = Number((chunk.split(':')[1] || '').replace(',', '.').trim());
+          return sum + (Number.isFinite(value) ? value : 0);
+        }, 0);
+        if (taggedTotal > 0) return taggedTotal;
+        const plain = source.match(/([0-9]+(?:[.,][0-9]+)?)/g) || [];
+        return plain.reduce((sum, chunk) => {
+          const value = Number(String(chunk).replace(',', '.').trim());
           return sum + (Number.isFinite(value) ? value : 0);
         }, 0);
       };
@@ -7836,11 +7843,17 @@
     revealTargets.forEach((el) => revealObserver.observe(el));
 
     const countUp = (el, endValue, duration = 1100) => {
+      const hasDecimals = !Number.isInteger(endValue);
       const start = performance.now();
       const step = (now) => {
         const progress = Math.min((now - start) / duration, 1);
-        const value = Math.round(endValue * progress);
-        el.textContent = value.toLocaleString('es-ES');
+        const rawValue = endValue * progress;
+        const value = hasDecimals
+          ? Math.round(rawValue * 10) / 10
+          : Math.round(rawValue);
+        el.textContent = value.toLocaleString('es-ES', hasDecimals
+          ? { minimumFractionDigits: 0, maximumFractionDigits: 1 }
+          : undefined);
         if (progress < 1) requestAnimationFrame(step);
       };
       requestAnimationFrame(step);
