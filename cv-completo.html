@@ -282,6 +282,25 @@
       font-size: .9rem
     }
 
+    .congress-card {
+      display: block;
+    }
+
+    .congress-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem;
+      margin-bottom: .45rem;
+    }
+
+    .congress-card .tag {
+      margin-bottom: 0;
+    }
+
+    .congress-card h3 {
+      margin-bottom: .35rem;
+    }
+
     footer {
       margin-top: 18px;
       padding: 14px 0;
@@ -856,6 +875,65 @@
       color: #173b60;
       border-color: #173b60;
       box-shadow: none;
+    }
+
+    #cong-filters .filter-btn {
+      padding: .38rem .8rem;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      border-bottom-width: 1px;
+    }
+
+    #cong-filters .filter-btn[data-filter="all"] {
+      color: #173b60;
+      background: #eef4fb;
+      border-color: #d7e4f0;
+    }
+
+    #cong-filters .filter-btn[data-filter="all"].is-active,
+    #cong-filters .filter-btn[data-filter="all"]:hover {
+      color: #173b60;
+      background: #dbeafe;
+      border-color: #93c5fd;
+    }
+
+    #cong-filters .filter-btn[data-filter="int"] {
+      color: #173b60;
+      background: #e6fffb;
+      border-color: #99f6e4;
+    }
+
+    #cong-filters .filter-btn[data-filter="int"].is-active,
+    #cong-filters .filter-btn[data-filter="int"]:hover {
+      color: #173b60;
+      background: #ccfbf1;
+      border-color: #2dd4bf;
+    }
+
+    #cong-filters .filter-btn[data-filter="nac"] {
+      color: #173b60;
+      background: #fff7ed;
+      border-color: #fdba74;
+    }
+
+    #cong-filters .filter-btn[data-filter="nac"].is-active,
+    #cong-filters .filter-btn[data-filter="nac"]:hover {
+      color: #173b60;
+      background: #ffedd5;
+      border-color: #fb923c;
+    }
+
+    #cong-filters .filter-btn[data-filter="oth"] {
+      color: #173b60;
+      background: #f5f3ff;
+      border-color: #c4b5fd;
+    }
+
+    #cong-filters .filter-btn[data-filter="oth"].is-active,
+    #cong-filters .filter-btn[data-filter="oth"]:hover {
+      color: #173b60;
+      background: #ede9fe;
+      border-color: #8b5cf6;
     }
 
     .is-hidden {
@@ -2472,14 +2550,14 @@
         <path d="M5 21h14"></path>
       </svg>
     <span>Descargar PDF</span></button></div></div>
-        <div class="stack-1"><article class="card has-inline-edit has-inline-proof reveal-in is-visible" data-quick-added="true" data-quick-entry-id="1773755705896" data-edit-id="quick-1773755705896" style="border-left-color: rgb(168, 85, 247);" data-pub="q3">
+        <div class="stack-1"><article class="card has-inline-edit has-inline-proof" data-quick-added="true" data-quick-entry-id="1773755705896" data-edit-id="quick-1773755705896" style="border-left-color: rgb(168, 85, 247);" data-pub="q3">
           <h3>Generation of Synthetic Labeled Datasets for Anomaly Detection in Heritage Architecture</h3>
           <p class="pub-authors">David Jurado-Rodríguez ;Antonio Garrido; Francisco R. Feito; Juan M. Jurado</p>
-          <p class="pub-meta"><em>Graphical Models, 2026</em></p>
+          <p class="pub-meta"><em>Graphical Models, 2026</em> · doi:https://doi.org/10.1016/j.gmod.2026.101325</p>
           
-        <button type="button" class="inline-edit-btn" title="Editar mérito" aria-label="Editar mérito">Editar</button><button type="button" class="inline-delete-btn" title="Eliminar mérito" aria-label="Eliminar mérito">Eliminar</button><div class="inline-proof-wrap has-visible-empty" data-bound="true">
-          <div class="inline-proof-main no-file">
-            <button type="button" class="inline-proof-btn" title="Subir justificante" aria-label="Subir justificante">
+        <button type="button" class="inline-edit-btn" title="Editar mérito" aria-label="Editar mérito">Editar</button><button type="button" class="inline-delete-btn" title="Eliminar mérito" aria-label="Eliminar mérito">Eliminar</button><div class="inline-proof-wrap has-visible-open" data-bound="true">
+          <div class="inline-proof-main has-file">
+            <button type="button" class="inline-proof-btn" title="Cambiar justificante" aria-label="Subir justificante">
               <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 16V4"></path>
                 <path d="m7 9 5-5 5 5"></path>
@@ -2487,14 +2565,14 @@
               </svg>
               <span class="inline-proof-status" aria-hidden="true"></span>
             </button>
-            <a class="inline-proof-link" target="_blank" rel="noopener" title="Abrir justificante" aria-label="Abrir justificante" hidden="">
+            <a class="inline-proof-link" target="_blank" rel="noopener" title="Abrir justificante" aria-label="Abrir justificante" href="/api/proofs/quick-1773755705896/file">
               <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M14 3h7v7"></path>
                 <path d="M10 14 21 3"></path>
                 <path d="M21 14v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h6"></path>
               </svg>
             </a>
-            <button type="button" class="inline-proof-remove" title="Quitar justificante" aria-label="Quitar justificante" hidden="">
+            <button type="button" class="inline-proof-remove" title="Quitar justificante" aria-label="Quitar justificante">
               <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M3 6h18"></path>
                 <path d="M8 6V4h8v2"></path>
@@ -2505,7 +2583,7 @@
             </button>
             <input type="file" class="inline-proof-input" hidden="" accept=".pdf,application/pdf">
           </div>
-          <span class="inline-proof-name">Sin justificante subido</span>
+          <span class="inline-proof-name">Generation of synthetic labeled datasets for anomaly detection in heritage.pdf</span>
         </div></article>
           <article class="card has-inline-edit has-inline-proof reveal-in is-visible" style="border-left-color: var(--q1);" data-edit-id="publicaciones-5" data-pub="q1">
             <h3>Meshlets based data model for real-time interaction and analysis with hyper-spectral
@@ -2857,13 +2935,14 @@
         <div class="stack-1">
 
           <!-- 2025 -->
-          <div class="card row has-inline-edit has-inline-proof reveal-in is-visible" style="border-left-color: var(--pri);" data-edit-id="congresos-14" data-cong="int">
-            <div class="pill acc">Oral</div>
-            <div>
-              <h3>Assessing Olive Tree Detection Performance in UAV Images</h3>
-              <p>IDEAL 2025 · International Conference (Internacional)</p>
-            </div>
-          <button type="button" class="inline-edit-btn" title="Editar mérito" aria-label="Editar mérito">Editar</button><button type="button" class="inline-delete-btn">Eliminar</button><div class="inline-proof-wrap has-visible-empty" data-bound="true">
+          <div class="card has-inline-edit has-inline-proof reveal-in is-visible congress-card" style="border-left-color: var(--pri);" data-edit-id="congresos-14" data-cong="int">
+          <div class="congress-tags">
+            <span class="tag eu">Internacional</span>
+            <span class="tag acc">Oral</span>
+          </div>
+          <h3>Assessing Olive Tree Detection Performance in UAV Images</h3>
+          <p class="pub-meta">IDEAL 2025 · International Conference (Internacional)</p>
+        <button type="button" class="inline-edit-btn" title="Editar mérito" aria-label="Editar mérito">Editar</button><button type="button" class="inline-delete-btn">Eliminar</button><div class="inline-proof-wrap has-visible-empty" data-bound="true">
         <div class="inline-proof-main no-file">
           <button type="button" class="inline-proof-btn" title="Subir justificante" aria-label="Subir justificante">
             <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2894,13 +2973,14 @@
         <span class="inline-proof-name">Sin justificante subido</span>
       </div></div>
 
-          <div class="card row has-inline-edit has-inline-proof reveal-in is-visible" style="border-left-color: var(--pri);" data-edit-id="congresos-15" data-cong="int">
-            <div class="pill acc">Oral</div>
-            <div>
-              <h3>Development of a Geospatial Predictive System of Crop Yield in Vineyards</h3>
-              <p>GEOProcessing 2025 · International Conference (Internacional)</p>
-            </div>
-          <button type="button" class="inline-edit-btn" title="Editar mérito" aria-label="Editar mérito">Editar</button><button type="button" class="inline-delete-btn">Eliminar</button><div class="inline-proof-wrap has-visible-empty" data-bound="true">
+          <div class="card has-inline-edit has-inline-proof reveal-in is-visible congress-card" style="border-left-color: var(--pri);" data-edit-id="congresos-15" data-cong="int">
+          <div class="congress-tags">
+            <span class="tag eu">Internacional</span>
+            <span class="tag acc">Oral</span>
+          </div>
+          <h3>Development of a Geospatial Predictive System of Crop Yield in Vineyards</h3>
+          <p class="pub-meta">GEOProcessing 2025 · International Conference (Internacional)</p>
+        <button type="button" class="inline-edit-btn" title="Editar mérito" aria-label="Editar mérito">Editar</button><button type="button" class="inline-delete-btn">Eliminar</button><div class="inline-proof-wrap has-visible-empty" data-bound="true">
         <div class="inline-proof-main no-file">
           <button type="button" class="inline-proof-btn" title="Subir justificante" aria-label="Subir justificante">
             <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2931,13 +3011,14 @@
         <span class="inline-proof-name">Sin justificante subido</span>
       </div></div>
 
-          <div class="card row has-inline-edit has-inline-proof reveal-in is-visible" style="border-left-color: var(--pri);" data-edit-id="congresos-16" data-cong="nac">
-            <div class="pill acc">Oral</div>
-            <div>
-              <h3>Virtual Reality and how to learn to see how it was</h3>
-              <p>CEIG 2025 · Spanish Computer Graphics Conference (Nacional)</p>
-            </div>
-          <button type="button" class="inline-edit-btn" title="Editar mérito" aria-label="Editar mérito">Editar</button><button type="button" class="inline-delete-btn">Eliminar</button><div class="inline-proof-wrap has-visible-empty" data-bound="true">
+          <div class="card has-inline-edit has-inline-proof reveal-in is-visible congress-card" style="border-left-color: var(--pri);" data-edit-id="congresos-16" data-cong="nac">
+          <div class="congress-tags">
+            <span class="tag nat">Nacional</span>
+            <span class="tag acc">Oral</span>
+          </div>
+          <h3>Virtual Reality and how to learn to see how it was</h3>
+          <p class="pub-meta">CEIG 2025 · Spanish Computer Graphics Conference (Nacional)</p>
+        <button type="button" class="inline-edit-btn" title="Editar mérito" aria-label="Editar mérito">Editar</button><button type="button" class="inline-delete-btn">Eliminar</button><div class="inline-proof-wrap has-visible-empty" data-bound="true">
         <div class="inline-proof-main no-file">
           <button type="button" class="inline-proof-btn" title="Subir justificante" aria-label="Subir justificante">
             <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -2968,13 +3049,14 @@
         <span class="inline-proof-name">Sin justificante subido</span>
       </div></div>
 
-          <div class="card row has-inline-edit has-inline-proof reveal-in is-visible" style="border-left-color: var(--pri);" data-edit-id="congresos-17" data-cong="nac">
-            <div class="pill acc">Poster</div>
-            <div>
-              <h3>Diseño metodológico para la generación de imágenes multiresolución etiquetadas</h3>
-              <p>CEIG 2025 · Spanish Computer Graphics Conference (Nacional)</p>
-            </div>
-          <button type="button" class="inline-edit-btn" title="Editar mérito" aria-label="Editar mérito">Editar</button><button type="button" class="inline-delete-btn">Eliminar</button><div class="inline-proof-wrap has-visible-empty" data-bound="true">
+          <div class="card has-inline-edit has-inline-proof reveal-in is-visible congress-card" style="border-left-color: var(--pri);" data-edit-id="congresos-17" data-cong="nac">
+          <div class="congress-tags">
+            <span class="tag nat">Nacional</span>
+            <span class="tag acc">Poster</span>
+          </div>
+          <h3>Diseño metodológico para la generación de imágenes multiresolución etiquetadas</h3>
+          <p class="pub-meta">CEIG 2025 · Spanish Computer Graphics Conference (Nacional)</p>
+        <button type="button" class="inline-edit-btn" title="Editar mérito" aria-label="Editar mérito">Editar</button><button type="button" class="inline-delete-btn">Eliminar</button><div class="inline-proof-wrap has-visible-empty" data-bound="true">
         <div class="inline-proof-main no-file">
           <button type="button" class="inline-proof-btn" title="Subir justificante" aria-label="Subir justificante">
             <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -3005,14 +3087,15 @@
         <span class="inline-proof-name">Sin justificante subido</span>
       </div></div>
 
-          <div class="card row has-inline-edit has-inline-proof reveal-in is-visible" style="border-left-color: var(--pri);" data-edit-id="congresos-18" data-cong="nac">
-            <div class="pill acc">Poster</div>
-            <div>
-              <h3>First steps in the dimensionality reduction of hyperspectral images of real-world scenarios based on
+          <div class="card has-inline-edit has-inline-proof reveal-in is-visible congress-card" style="border-left-color: var(--pri);" data-edit-id="congresos-18" data-cong="nac">
+          <div class="congress-tags">
+            <span class="tag nat">Nacional</span>
+            <span class="tag acc">Poster</span>
+          </div>
+          <h3>First steps in the dimensionality reduction of hyperspectral images of real-world scenarios based on
                 curve representation</h3>
-              <p>CEIG 2025 · Spanish Computer Graphics Conference (Nacional)</p>
-            </div>
-          <button type="button" class="inline-edit-btn" title="Editar mérito" aria-label="Editar mérito">Editar</button><button type="button" class="inline-delete-btn">Eliminar</button><div class="inline-proof-wrap has-visible-empty" data-bound="true">
+          <p class="pub-meta">CEIG 2025 · Spanish Computer Graphics Conference (Nacional)</p>
+        <button type="button" class="inline-edit-btn" title="Editar mérito" aria-label="Editar mérito">Editar</button><button type="button" class="inline-delete-btn">Eliminar</button><div class="inline-proof-wrap has-visible-empty" data-bound="true">
         <div class="inline-proof-main no-file">
           <button type="button" class="inline-proof-btn" title="Subir justificante" aria-label="Subir justificante">
             <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -3044,13 +3127,14 @@
       </div></div>
 
           <!-- 2024 -->
-          <div class="card row has-inline-edit has-inline-proof reveal-in is-visible" style="border-left-color: var(--pri);" data-edit-id="congresos-19" data-cong="int">
-            <div class="pill acc">Poster</div>
-            <div>
-              <h3>Portable LiDAR Scanners</h3>
-              <p>WEB3D 2024 · Guimarães (PT) · 25–27/09/2024 (Internacional)</p>
-            </div>
-          <button type="button" class="inline-edit-btn" title="Editar mérito" aria-label="Editar mérito">Editar</button><button type="button" class="inline-delete-btn">Eliminar</button><div class="inline-proof-wrap has-visible-empty" data-bound="true">
+          <div class="card has-inline-edit has-inline-proof reveal-in is-visible congress-card" style="border-left-color: var(--pri);" data-edit-id="congresos-19" data-cong="int">
+          <div class="congress-tags">
+            <span class="tag eu">Internacional</span>
+            <span class="tag acc">Poster</span>
+          </div>
+          <h3>Portable LiDAR Scanners</h3>
+          <p class="pub-meta">WEB3D 2024 · Guimarães (PT) · 25–27/09/2024 (Internacional)</p>
+        <button type="button" class="inline-edit-btn" title="Editar mérito" aria-label="Editar mérito">Editar</button><button type="button" class="inline-delete-btn">Eliminar</button><div class="inline-proof-wrap has-visible-empty" data-bound="true">
         <div class="inline-proof-main no-file">
           <button type="button" class="inline-proof-btn" title="Subir justificante" aria-label="Subir justificante">
             <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -3081,13 +3165,14 @@
         <span class="inline-proof-name">Sin justificante subido</span>
       </div></div>
 
-          <div class="card row has-inline-edit has-inline-proof reveal-in is-visible" style="border-left-color: var(--pri);" data-edit-id="congresos-20" data-cong="int">
-            <div class="pill acc">Oral</div>
-            <div>
-              <h3>SAM-Based Detection of Structural Anomalies</h3>
-              <p>VISAPP 2024 · Roma (IT) · 27–29/02/2024 (Internacional)</p>
-            </div>
-          <button type="button" class="inline-edit-btn" title="Editar mérito" aria-label="Editar mérito">Editar</button><button type="button" class="inline-delete-btn">Eliminar</button><div class="inline-proof-wrap has-visible-empty" data-bound="true">
+          <div class="card has-inline-edit has-inline-proof reveal-in is-visible congress-card" style="border-left-color: var(--pri);" data-edit-id="congresos-20" data-cong="int">
+          <div class="congress-tags">
+            <span class="tag eu">Internacional</span>
+            <span class="tag acc">Oral</span>
+          </div>
+          <h3>SAM-Based Detection of Structural Anomalies</h3>
+          <p class="pub-meta">VISAPP 2024 · Roma (IT) · 27–29/02/2024 (Internacional)</p>
+        <button type="button" class="inline-edit-btn" title="Editar mérito" aria-label="Editar mérito">Editar</button><button type="button" class="inline-delete-btn">Eliminar</button><div class="inline-proof-wrap has-visible-empty" data-bound="true">
         <div class="inline-proof-main no-file">
           <button type="button" class="inline-proof-btn" title="Subir justificante" aria-label="Subir justificante">
             <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -3118,13 +3203,14 @@
         <span class="inline-proof-name">Sin justificante subido</span>
       </div></div>
 
-          <div class="card row has-inline-edit has-inline-proof reveal-in is-visible" style="border-left-color: var(--pri);" data-edit-id="congresos-21" data-cong="nac">
-            <div class="pill acc">Poster</div>
-            <div>
-              <h3>3D Modeling of Rural Environments</h3>
-              <p>CEIG 2024 · A Coruña (ES) · 17–19/06/2024 (Nacional)</p>
-            </div>
-          <button type="button" class="inline-edit-btn" title="Editar mérito" aria-label="Editar mérito">Editar</button><button type="button" class="inline-delete-btn">Eliminar</button><div class="inline-proof-wrap has-visible-empty" data-bound="true">
+          <div class="card has-inline-edit has-inline-proof reveal-in is-visible congress-card" style="border-left-color: var(--pri);" data-edit-id="congresos-21" data-cong="nac">
+          <div class="congress-tags">
+            <span class="tag nat">Nacional</span>
+            <span class="tag acc">Poster</span>
+          </div>
+          <h3>3D Modeling of Rural Environments</h3>
+          <p class="pub-meta">CEIG 2024 · A Coruña (ES) · 17–19/06/2024 (Nacional)</p>
+        <button type="button" class="inline-edit-btn" title="Editar mérito" aria-label="Editar mérito">Editar</button><button type="button" class="inline-delete-btn">Eliminar</button><div class="inline-proof-wrap has-visible-empty" data-bound="true">
         <div class="inline-proof-main no-file">
           <button type="button" class="inline-proof-btn" title="Subir justificante" aria-label="Subir justificante">
             <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -3156,13 +3242,14 @@
       </div></div>
 
           <!-- 2023 -->
-          <div class="card row has-inline-edit has-inline-proof reveal-in is-visible" style="border-left-color: var(--pri);" data-edit-id="congresos-22" data-cong="int">
-            <div class="pill acc">Oral</div>
-            <div>
-              <h3>Routine monitoring of hydraulic infrastructures</h3>
-              <p>CENTERIS 2023 · Oporto (PT) · 08/11/2023 (Internacional)</p>
-            </div>
-          <button type="button" class="inline-edit-btn" title="Editar mérito" aria-label="Editar mérito">Editar</button><button type="button" class="inline-delete-btn">Eliminar</button><div class="inline-proof-wrap has-visible-empty" data-bound="true">
+          <div class="card has-inline-edit has-inline-proof reveal-in is-visible congress-card" style="border-left-color: var(--pri);" data-edit-id="congresos-22" data-cong="int">
+          <div class="congress-tags">
+            <span class="tag eu">Internacional</span>
+            <span class="tag acc">Oral</span>
+          </div>
+          <h3>Routine monitoring of hydraulic infrastructures</h3>
+          <p class="pub-meta">CENTERIS 2023 · Oporto (PT) · 08/11/2023 (Internacional)</p>
+        <button type="button" class="inline-edit-btn" title="Editar mérito" aria-label="Editar mérito">Editar</button><button type="button" class="inline-delete-btn">Eliminar</button><div class="inline-proof-wrap has-visible-empty" data-bound="true">
         <div class="inline-proof-main no-file">
           <button type="button" class="inline-proof-btn" title="Subir justificante" aria-label="Subir justificante">
             <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -3193,13 +3280,14 @@
         <span class="inline-proof-name">Sin justificante subido</span>
       </div></div>
 
-          <div class="card row has-inline-edit has-inline-proof reveal-in is-visible" style="border-left-color: var(--pri);" data-edit-id="congresos-23" data-cong="nac">
-            <div class="pill acc">Oral</div>
-            <div>
-              <h3>GEU-AGRO: monitorización multisensorial</h3>
-              <p>Expoliva 2023 · Jaén (ES) · 11/05/2023 (Nacional)</p>
-            </div>
-          <button type="button" class="inline-edit-btn" title="Editar mérito" aria-label="Editar mérito">Editar</button><button type="button" class="inline-delete-btn">Eliminar</button><div class="inline-proof-wrap has-visible-empty" data-bound="true">
+          <div class="card has-inline-edit has-inline-proof reveal-in is-visible congress-card" style="border-left-color: var(--pri);" data-edit-id="congresos-23" data-cong="nac">
+          <div class="congress-tags">
+            <span class="tag nat">Nacional</span>
+            <span class="tag acc">Oral</span>
+          </div>
+          <h3>GEU-AGRO: monitorización multisensorial</h3>
+          <p class="pub-meta">Expoliva 2023 · Jaén (ES) · 11/05/2023 (Nacional)</p>
+        <button type="button" class="inline-edit-btn" title="Editar mérito" aria-label="Editar mérito">Editar</button><button type="button" class="inline-delete-btn">Eliminar</button><div class="inline-proof-wrap has-visible-empty" data-bound="true">
         <div class="inline-proof-main no-file">
           <button type="button" class="inline-proof-btn" title="Subir justificante" aria-label="Subir justificante">
             <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -3230,13 +3318,14 @@
         <span class="inline-proof-name">Sin justificante subido</span>
       </div></div>
 
-          <div class="card row has-inline-edit has-inline-proof reveal-in is-visible" style="border-left-color: var(--pri);" data-edit-id="congresos-24" data-cong="nac">
-            <div class="pill acc">Oral</div>
-            <div>
-              <h3>Planar fiducial markers</h3>
-              <p>CEIG 2023 · Mallorca (ES) · 03–06/07/2023 (Nacional)</p>
-            </div>
-          <button type="button" class="inline-edit-btn" title="Editar mérito" aria-label="Editar mérito">Editar</button><button type="button" class="inline-delete-btn">Eliminar</button><div class="inline-proof-wrap has-visible-empty" data-bound="true">
+          <div class="card has-inline-edit has-inline-proof reveal-in is-visible congress-card" style="border-left-color: var(--pri);" data-edit-id="congresos-24" data-cong="nac">
+          <div class="congress-tags">
+            <span class="tag nat">Nacional</span>
+            <span class="tag acc">Oral</span>
+          </div>
+          <h3>Planar fiducial markers</h3>
+          <p class="pub-meta">CEIG 2023 · Mallorca (ES) · 03–06/07/2023 (Nacional)</p>
+        <button type="button" class="inline-edit-btn" title="Editar mérito" aria-label="Editar mérito">Editar</button><button type="button" class="inline-delete-btn">Eliminar</button><div class="inline-proof-wrap has-visible-empty" data-bound="true">
         <div class="inline-proof-main no-file">
           <button type="button" class="inline-proof-btn" title="Subir justificante" aria-label="Subir justificante">
             <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -3267,13 +3356,14 @@
         <span class="inline-proof-name">Sin justificante subido</span>
       </div></div>
 
-          <div class="card row has-inline-edit has-inline-proof reveal-in is-visible" style="border-left-color: var(--pri);" data-edit-id="congresos-25" data-cong="nac">
-            <div class="pill acc">Poster</div>
-            <div>
-              <h3>Workflow for labeled datasets using Omniverse</h3>
-              <p>CEIG 2023 · Mallorca (ES) · 03–06/07/2023 (Nacional)</p>
-            </div>
-          <button type="button" class="inline-edit-btn" title="Editar mérito" aria-label="Editar mérito">Editar</button><button type="button" class="inline-delete-btn">Eliminar</button><div class="inline-proof-wrap has-visible-empty" data-bound="true">
+          <div class="card has-inline-edit has-inline-proof reveal-in is-visible congress-card" style="border-left-color: var(--pri);" data-edit-id="congresos-25" data-cong="nac">
+          <div class="congress-tags">
+            <span class="tag nat">Nacional</span>
+            <span class="tag acc">Poster</span>
+          </div>
+          <h3>Workflow for labeled datasets using Omniverse</h3>
+          <p class="pub-meta">CEIG 2023 · Mallorca (ES) · 03–06/07/2023 (Nacional)</p>
+        <button type="button" class="inline-edit-btn" title="Editar mérito" aria-label="Editar mérito">Editar</button><button type="button" class="inline-delete-btn">Eliminar</button><div class="inline-proof-wrap has-visible-empty" data-bound="true">
         <div class="inline-proof-main no-file">
           <button type="button" class="inline-proof-btn" title="Subir justificante" aria-label="Subir justificante">
             <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -3305,13 +3395,14 @@
       </div></div>
 
           <!-- 2019–2020 -->
-          <div class="card row has-inline-edit has-inline-proof reveal-in is-visible" style="border-left-color: var(--pri);" data-edit-id="congresos-26" data-cong="nac">
-            <div class="pill acc">Poster</div>
-            <div>
-              <h3>3D Environment Understanding in Real-time</h3>
-              <p>CEIG 2019 · San Sebastián (ES) · 26–28/06/2019 (Nacional)</p>
-            </div>
-          <button type="button" class="inline-edit-btn" title="Editar mérito" aria-label="Editar mérito">Editar</button><button type="button" class="inline-delete-btn">Eliminar</button><div class="inline-proof-wrap has-visible-empty" data-bound="true">
+          <div class="card has-inline-edit has-inline-proof reveal-in is-visible congress-card" style="border-left-color: var(--pri);" data-edit-id="congresos-26" data-cong="nac">
+          <div class="congress-tags">
+            <span class="tag nat">Nacional</span>
+            <span class="tag acc">Poster</span>
+          </div>
+          <h3>3D Environment Understanding in Real-time</h3>
+          <p class="pub-meta">CEIG 2019 · San Sebastián (ES) · 26–28/06/2019 (Nacional)</p>
+        <button type="button" class="inline-edit-btn" title="Editar mérito" aria-label="Editar mérito">Editar</button><button type="button" class="inline-delete-btn">Eliminar</button><div class="inline-proof-wrap has-visible-empty" data-bound="true">
         <div class="inline-proof-main no-file">
           <button type="button" class="inline-proof-btn" title="Subir justificante" aria-label="Subir justificante">
             <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -3342,13 +3433,14 @@
         <span class="inline-proof-name">Sin justificante subido</span>
       </div></div>
 
-          <div class="card row has-inline-edit has-inline-proof reveal-in is-visible" style="border-left-color: var(--pri);" data-edit-id="congresos-27" data-cong="oth">
-            <div class="pill acc">Invitada</div>
-            <div>
-              <h3>Workshop NVIDIA OMNIVERSE</h3>
-              <p>HPC Admintech 2023 · Oporto (PT) · 02/06/2023 (Invitación)</p>
-            </div>
-          <button type="button" class="inline-edit-btn" title="Editar mérito" aria-label="Editar mérito">Editar</button><button type="button" class="inline-delete-btn">Eliminar</button><div class="inline-proof-wrap has-visible-empty" data-bound="true">
+          <div class="card has-inline-edit has-inline-proof reveal-in is-visible congress-card" style="border-left-color: var(--pri);" data-edit-id="congresos-27" data-cong="oth">
+          <div class="congress-tags">
+            <span class="tag auto">Otros formatos</span>
+            <span class="tag acc">Invitada</span>
+          </div>
+          <h3>Workshop NVIDIA OMNIVERSE</h3>
+          <p class="pub-meta">HPC Admintech 2023 · Oporto (PT) · 02/06/2023 (Invitación)</p>
+        <button type="button" class="inline-edit-btn" title="Editar mérito" aria-label="Editar mérito">Editar</button><button type="button" class="inline-delete-btn">Eliminar</button><div class="inline-proof-wrap has-visible-empty" data-bound="true">
         <div class="inline-proof-main no-file">
           <button type="button" class="inline-proof-btn" title="Subir justificante" aria-label="Subir justificante">
             <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -3379,13 +3471,14 @@
         <span class="inline-proof-name">Sin justificante subido</span>
       </div></div>
 
-          <div class="card row has-inline-edit has-inline-proof reveal-in is-visible" style="border-left-color: var(--pri);" data-edit-id="congresos-28" data-cong="oth">
-            <div class="pill acc">Invitada</div>
-            <div>
-              <h3>Realidad Mixta para infraestructuras</h3>
-              <p>Jornadas Innovación IG &amp; RV · Granada (ES) · 11–12/12/2019 (Charla invitada)</p>
-            </div>
-          <button type="button" class="inline-edit-btn" title="Editar mérito" aria-label="Editar mérito">Editar</button><button type="button" class="inline-delete-btn">Eliminar</button><div class="inline-proof-wrap has-visible-empty" data-bound="true">
+          <div class="card has-inline-edit has-inline-proof reveal-in is-visible congress-card" style="border-left-color: var(--pri);" data-edit-id="congresos-28" data-cong="oth">
+          <div class="congress-tags">
+            <span class="tag auto">Otros formatos</span>
+            <span class="tag acc">Invitada</span>
+          </div>
+          <h3>Realidad Mixta para infraestructuras</h3>
+          <p class="pub-meta">Jornadas Innovación IG &amp; RV · Granada (ES) · 11–12/12/2019 (Charla invitada)</p>
+        <button type="button" class="inline-edit-btn" title="Editar mérito" aria-label="Editar mérito">Editar</button><button type="button" class="inline-delete-btn">Eliminar</button><div class="inline-proof-wrap has-visible-empty" data-bound="true">
         <div class="inline-proof-main no-file">
           <button type="button" class="inline-proof-btn" title="Subir justificante" aria-label="Subir justificante">
             <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -3416,13 +3509,14 @@
         <span class="inline-proof-name">Sin justificante subido</span>
       </div></div>
 
-          <div class="card row has-inline-edit has-inline-proof reveal-in is-visible" style="border-left-color: var(--pri);" data-edit-id="congresos-29" data-cong="oth">
-            <div class="pill acc">Invitada</div>
-            <div>
-              <h3>#UCODIvulga. Más allá de los papers</h3>
-              <p>Córdoba (ES) · 11/03/2020 (Charla invitada)</p>
-            </div>
-          <button type="button" class="inline-edit-btn" title="Editar mérito" aria-label="Editar mérito">Editar</button><button type="button" class="inline-delete-btn">Eliminar</button><div class="inline-proof-wrap has-visible-empty" data-bound="true">
+          <div class="card has-inline-edit has-inline-proof reveal-in is-visible congress-card" style="border-left-color: var(--pri);" data-edit-id="congresos-29" data-cong="oth">
+          <div class="congress-tags">
+            <span class="tag auto">Otros formatos</span>
+            <span class="tag acc">Invitada</span>
+          </div>
+          <h3>#UCODIvulga. Más allá de los papers</h3>
+          <p class="pub-meta">Córdoba (ES) · 11/03/2020 (Charla invitada)</p>
+        <button type="button" class="inline-edit-btn" title="Editar mérito" aria-label="Editar mérito">Editar</button><button type="button" class="inline-delete-btn">Eliminar</button><div class="inline-proof-wrap has-visible-empty" data-bound="true">
         <div class="inline-proof-main no-file">
           <button type="button" class="inline-proof-btn" title="Subir justificante" aria-label="Subir justificante">
             <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -4682,7 +4776,7 @@
     <div class="container">© 2025 David Jurado Rodríguez</div>
   </footer>
 
-  <div id="proof-toast" class="proof-toast" aria-live="polite">Justificante subido: Título Universitario Ingeniería Informática David Jurado.pdf</div>
+  <div id="proof-toast" class="proof-toast" aria-live="polite">Justificante subido: Generation of synthetic labeled datasets for anomaly detection in heritage.pdf</div>
 
   <div id="auth-gate" role="dialog" aria-modal="true" aria-labelledby="auth-title" hidden="">
     <div class="auth-modal">
@@ -4707,7 +4801,7 @@
     <div id="quick-publish-status" class="quick-publish-status" aria-live="polite" hidden=""></div>
     <div id="quick-settings-menu" class="quick-settings-menu" hidden="">
       <button id="quick-settings-add" class="quick-settings-item" type="button">+ Añadir</button>
-      <button id="quick-settings-edit" class="quick-settings-item" type="button">✎ Modo edición</button>
+      <button id="quick-settings-edit" class="quick-settings-item is-active" type="button">✎ Modo edición</button>
       <button id="quick-settings-publish" class="quick-settings-item publish-action" type="button">Publicar cambios</button>
     </div>
     <button id="quick-settings-main" class="quick-settings-main" type="button" title="Ajustes">⚙ Ajustes</button>
@@ -6090,6 +6184,53 @@
       };
     };
 
+    const getCongressCategoryMeta = (value) => {
+      const normalized = String(value || '').trim().toLowerCase();
+      if (normalized === 'int') return { className: 'eu', label: 'Internacional' };
+      if (normalized === 'nac') return { className: 'nat', label: 'Nacional' };
+      return { className: 'auto', label: 'Otros formatos' };
+    };
+
+    const buildCongressMetaLine = (extra = {}, fallback = '') => {
+      const metaLine = [extra.event || '', extra.location || '', extra.talkDate || '', extra.talkCategory ? `(${extra.talkCategory})` : '']
+        .filter(Boolean)
+        .join(' · ');
+      return metaLine || fallback || 'Entrada añadida manualmente';
+    };
+
+    const normalizeCongressCards = () => {
+      const cards = Array.from(document.querySelectorAll('#congresos .stack-1 > .card'));
+      cards.forEach((card) => {
+        const editBtn = card.querySelector(':scope > .inline-edit-btn');
+        const deleteBtn = card.querySelector(':scope > .inline-delete-btn');
+        const proofWrap = card.querySelector(':scope > .inline-proof-wrap');
+        const titleNode = card.querySelector('h3');
+        const metaNode = card.querySelector('p');
+        const kindNode = card.querySelector('.pill.acc, .tag.acc');
+        if (!titleNode || !metaNode) return;
+
+        const categoryMeta = getCongressCategoryMeta(card.dataset.cong || '');
+        const kindLabel = (kindNode?.textContent || 'Ponencia').trim();
+        const titleText = titleNode.textContent || '';
+        const metaText = metaNode.textContent || '';
+
+        card.classList.remove('row');
+        card.classList.add('congress-card');
+        card.innerHTML = `
+          <div class="congress-tags">
+            <span class="tag ${categoryMeta.className}">${categoryMeta.label}</span>
+            <span class="tag acc">${escapeHtml(kindLabel)}</span>
+          </div>
+          <h3>${escapeHtml(titleText)}</h3>
+          <p class="pub-meta">${escapeHtml(metaText)}</p>
+        `;
+
+        [editBtn, deleteBtn, proofWrap].forEach((node) => {
+          if (node) card.appendChild(node);
+        });
+      });
+    };
+
     const createCardNode = (entry) => {
       const rawType = entry.type;
       const type = (rawType === 'tfg' || rawType === 'tfm') ? 'trabajo' : rawType;
@@ -6212,20 +6353,22 @@
         return card;
       }
 
-      const row = document.createElement('div');
-      row.className = 'card row';
-      row.style.borderLeftColor = 'var(--pri)';
-      const metaLine = [extra.event || '', extra.location || '', extra.talkDate || '', extra.talkCategory ? `(${extra.talkCategory})` : '']
-        .filter(Boolean)
-        .join(' · ');
-      row.innerHTML = `
-        <div class="pill acc">${escapeHtml(extra.talkKind || 'Ponencia')}</div>
-        <div>
-          <h3>${escapeHtml(title)}</h3>
-          <p>${escapeHtml(metaLine || legacyMeta || 'Entrada añadida manualmente')}</p>
+      const card = document.createElement('article');
+      card.className = 'card congress-card';
+      card.style.borderLeftColor = 'var(--pri)';
+      const categoryMeta = getCongressCategoryMeta(
+        (extra.talkCategory || '').toLowerCase().includes('intern') ? 'int'
+          : ((extra.talkCategory || '').toLowerCase().includes('nac') ? 'nac' : 'oth')
+      );
+      card.innerHTML = `
+        <div class="congress-tags">
+          <span class="tag ${categoryMeta.className}">${categoryMeta.label}</span>
+          <span class="tag acc">${escapeHtml(extra.talkKind || 'Ponencia')}</span>
         </div>
+        <h3>${escapeHtml(title)}</h3>
+        <p class="pub-meta">${escapeHtml(buildCongressMetaLine(extra, legacyMeta))}</p>
       `;
-      return row;
+      return card;
     };
 
     const syncRenderedCardState = (targetCard, renderedCard) => {
@@ -6236,6 +6379,8 @@
       else targetCard.removeAttribute('style');
       if (renderedCard.dataset.pub) targetCard.dataset.pub = renderedCard.dataset.pub;
       else delete targetCard.dataset.pub;
+      if (renderedCard.dataset.cong) targetCard.dataset.cong = renderedCard.dataset.cong;
+      else delete targetCard.dataset.cong;
       targetCard.innerHTML = renderedCard.innerHTML;
     };
 
@@ -6857,6 +7002,7 @@
       ensureGroupProofControls();
       syncAcademicProofControls('all');
       ensurePublicationProofControls();
+      normalizeCongressCards();
       refreshPublicationQ3Visibility();
       queueDynamicCounterRefresh();
     };
@@ -7917,4 +8063,5 @@
 
 
 
-<script id="cv-published-state" type="application/json">{"entries":[{"desc":"","extra":{"authors":"w","doi":"w","journal":"w","quartile":"q1","year":"w"},"id":1773754078344,"title":"w","type":"articulo"},{"id":1773755705896,"type":"articulo","title":"Generation of Synthetic Labeled Datasets for Anomaly Detection in Heritage Architecture","desc":"","extra":{"authors":"David Jurado-Rodríguez ;Antonio Garrido; Francisco R. Feito; Juan M. Jurado","journal":"Graphical Models, 2026","year":"","doi":"","quartile":"q3"}}],"edits":{"quick-1773755705896":{"id":1774262136954,"type":"articulo","title":"Generation of Synthetic Labeled Datasets for Anomaly Detection in Heritage Architecture","desc":"","extra":{"authors":"David Jurado-Rodríguez ;Antonio Garrido; Francisco R. Feito; Juan M. Jurado","journal":"Graphical Models, 2026","year":"","doi":"","quartile":"q3"}}},"deletes":["quick-1773738325811","quick-1773739056081","quick-1773739029495","quick-1773751770814","quick-1773752004403","quick-1773752865452","quick-1773753728373","quick-1773752948458","quick-1773754078344","quick-1773754573397","quick-1773823345238"]}</script></body></html>
+
+<script id="cv-published-state" type="application/json">{"entries":[{"desc":"","extra":{"authors":"w","doi":"w","journal":"w","quartile":"q1","year":"w"},"id":1773754078344,"title":"w","type":"articulo"},{"id":1773755705896,"type":"articulo","title":"Generation of Synthetic Labeled Datasets for Anomaly Detection in Heritage Architecture","desc":"","extra":{"authors":"David Jurado-Rodríguez ;Antonio Garrido; Francisco R. Feito; Juan M. Jurado","journal":"Graphical Models, 2026","year":"","doi":"https://doi.org/10.1016/j.gmod.2026.101325","quartile":"q3"}}],"edits":{"quick-1773755705896":{"id":1774358030973,"type":"articulo","title":"Generation of Synthetic Labeled Datasets for Anomaly Detection in Heritage Architecture","desc":"","extra":{"authors":"David Jurado-Rodríguez ;Antonio Garrido; Francisco R. Feito; Juan M. Jurado","journal":"Graphical Models, 2026","year":"","doi":"https://doi.org/10.1016/j.gmod.2026.101325","quartile":"q3"}}},"deletes":["quick-1773738325811","quick-1773739056081","quick-1773739029495","quick-1773751770814","quick-1773752004403","quick-1773752865452","quick-1773753728373","quick-1773752948458","quick-1773754078344","quick-1773754573397","quick-1773823345238"]}</script></body></html>
