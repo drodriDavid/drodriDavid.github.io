@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es" suppresshydrationwarning="true" data-lt-installed="true"><head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -2354,12 +2354,12 @@
   <section class="container impact-strip" aria-label="Indicadores de actividad">
     <article class="impact-card reveal-in is-visible">
       <p>Producción</p>
-      <strong id="impact-pub-count" data-count="10">10</strong>
+      <strong id="impact-pub-count" data-count="11">11</strong>
       <span>articulos indexados</span>
     </article>
     <article class="impact-card reveal-in is-visible">
       <p>Difusión</p>
-      <strong id="impact-cong-count" data-count="16">16</strong>
+      <strong id="impact-cong-count" data-count="18">18</strong>
       <span>contribuciones en congresos</span>
     </article>
     <article class="impact-card reveal-in is-visible">
@@ -2509,9 +2509,9 @@
             <button id="pub-q3-btn" class="filter-btn" type="button" data-filter="q3">Q3</button>
           </div>
           <p id="pub-summary-line">
-            <span id="pub-total-count">10</span> artículos en revistas indexadas ·
+            <span id="pub-total-count">11</span> artículos en revistas indexadas ·
             <span class="pill q1">Q1</span> <span id="pub-q1-count">5</span> ·
-            <span class="pill q2">Q2</span> <span id="pub-q2-count">4</span> ·
+            <span class="pill q2">Q2</span> <span id="pub-q2-count">5</span> ·
             <span id="pub-q3-summary" class=""><span class="pill q3">Q3</span> <span id="pub-q3-count">1</span> ·</span>
           </p>
 
@@ -2584,7 +2584,12 @@
             <input type="file" class="inline-proof-input" hidden="" accept=".pdf,application/pdf">
           </div>
           <span class="inline-proof-name">Generation of synthetic labeled datasets for anomaly detection in heritage.pdf</span>
-        </div></article>
+                </div></article>
+          <article class="card has-inline-edit has-inline-proof reveal-in is-visible" style="border-left-color: var(--q2);" data-edit-id="publicaciones-2026-olive" data-pub="q2">
+            <h3>A Multi-Scale Inventory for Sustainable Olive Farming Using Remote Sensing and Data Fusion</h3>
+            <p class="pub-authors">Pablo Latorre-Hortelano; David Jurado-Rodr├¡guez; Antonio Garrido-Almonacid; Manuel Parras-Rosa; Juan M. Jurado</p>
+            <p class="pub-meta"><em>Smart Agricultural Technology</em>, 2026 ┬À vol. 14 ┬À 102230</p>
+          </article>
           <article class="card has-inline-edit has-inline-proof reveal-in is-visible" style="border-left-color: var(--q1);" data-edit-id="publicaciones-5" data-pub="q1">
             <h3>Meshlets based data model for real-time interaction and analysis with hyper-spectral
               vegetation data</h3>
@@ -2923,18 +2928,30 @@
             <button class="filter-btn" type="button" data-filter="nac">Nacionales</button>
             <button class="filter-btn" type="button" data-filter="oth">Otros formatos</button>
           </div>
-          <p id="cong-main-subtitle">5 contribuciones internacionales.</p>
-        <div class="section-export-slot" data-export-key="congresos"><button type="button" class="section-export-btn" data-bound="true">
+          <p id="cong-main-subtitle">18 contribuciones: 7 internacionales ┬À 8 nacionales ┬À 3 invitaciones.</p>
+                <div class="section-export-slot" data-export-key="congresos"><button type="button" class="section-export-btn" data-bound="true">
       <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M12 3v12"></path>
         <path d="m7 10 5 5 5-5"></path>
         <path d="M5 21h14"></path>
       </svg>
     <span>Descargar PDF</span></button></div></div>
-
-        <div class="stack-1">
-
-          <!-- 2025 -->
+        <div class="stack-1"><div class="card has-inline-edit has-inline-proof reveal-in is-visible congress-card" style="border-left-color: var(--pri);" data-edit-id="congresos-2026-tree" data-cong="int">
+          <div class="congress-tags">
+            <span class="tag eu">Internacional</span>
+            <span class="tag acc">Comunicaci├│n</span>
+          </div>
+          <h3>Tree Extraction from UAV LiDAR and Hyperspectral Data</h3>
+          <p class="pub-meta">The Eurographics Association ┬À 2026 ┬À (Internacional)</p>
+        </div>
+          <div class="card has-inline-edit has-inline-proof reveal-in is-visible congress-card" style="border-left-color: var(--pri);" data-edit-id="congresos-2026-dental" data-cong="int">
+          <div class="congress-tags">
+            <span class="tag eu">Internacional</span>
+            <span class="tag acc">Comunicaci├│n</span>
+          </div>
+          <h3>A computational pipeline for geometric reconstruction and scanbody alignment from dental CBCT data</h3>
+          <p class="pub-meta">The Eurographics Association ┬À 2026 ┬À (Internacional)</p>
+        </div>
           <div class="card has-inline-edit has-inline-proof reveal-in is-visible congress-card" style="border-left-color: var(--pri);" data-edit-id="congresos-14" data-cong="int">
           <div class="congress-tags">
             <span class="tag eu">Internacional</span>
@@ -6184,8 +6201,15 @@
       };
     };
 
-    const getCongressCategoryMeta = (value) => {
+    const getCongressFilterKey = (value) => {
       const normalized = String(value || '').trim().toLowerCase();
+      if (normalized === 'int' || normalized.includes('intern')) return 'int';
+      if (normalized === 'nac' || normalized.includes('nacional')) return 'nac';
+      return 'oth';
+    };
+
+    const getCongressCategoryMeta = (value) => {
+      const normalized = getCongressFilterKey(value);
       if (normalized === 'int') return { className: 'eu', label: 'Internacional' };
       if (normalized === 'nac') return { className: 'nat', label: 'Nacional' };
       return { className: 'auto', label: 'Otros formatos' };
@@ -6209,10 +6233,11 @@
         const kindNode = card.querySelector('.pill.acc, .tag.acc');
         if (!titleNode || !metaNode) return;
 
-        const categoryMeta = getCongressCategoryMeta(card.dataset.cong || '');
         const kindLabel = (kindNode?.textContent || 'Ponencia').trim();
         const titleText = titleNode.textContent || '';
         const metaText = metaNode.textContent || '';
+        card.dataset.cong = getCongressFilterKey(card.dataset.cong || metaText);
+        const categoryMeta = getCongressCategoryMeta(card.dataset.cong || '');
 
         card.classList.remove('row');
         card.classList.add('congress-card');
@@ -6356,10 +6381,9 @@
       const card = document.createElement('article');
       card.className = 'card congress-card';
       card.style.borderLeftColor = 'var(--pri)';
-      const categoryMeta = getCongressCategoryMeta(
-        (extra.talkCategory || '').toLowerCase().includes('intern') ? 'int'
-          : ((extra.talkCategory || '').toLowerCase().includes('nac') ? 'nac' : 'oth')
-      );
+      const congressFilter = getCongressFilterKey(extra.talkCategory || '');
+      const categoryMeta = getCongressCategoryMeta(congressFilter);
+      card.dataset.cong = congressFilter;
       card.innerHTML = `
         <div class="congress-tags">
           <span class="tag ${categoryMeta.className}">${categoryMeta.label}</span>
@@ -7637,9 +7661,9 @@
       }
 
       const congCards = Array.from(document.querySelectorAll('#congresos .stack-1 > .card'));
-      const congInt = congCards.filter((item) => (item.textContent || '').toLowerCase().includes('(internacional)')).length;
-      const congNac = congCards.filter((item) => (item.textContent || '').toLowerCase().includes('(nacional)')).length;
-      const congOth = Math.max(0, congCards.length - congInt - congNac);
+      const congInt = congCards.filter((item) => getCongressFilterKey(item.dataset.cong || '') === 'int').length;
+      const congNac = congCards.filter((item) => getCongressFilterKey(item.dataset.cong || '') === 'nac').length;
+      const congOth = congCards.filter((item) => getCongressFilterKey(item.dataset.cong || '') === 'oth').length;
       const congTotalNode = document.getElementById('cong-total-count');
       const congIntNode = document.getElementById('cong-int-count');
       const congNacNode = document.getElementById('cong-nac-count');
@@ -8064,4 +8088,6 @@
 
 
 
-<script id="cv-published-state" type="application/json">{"entries":[{"desc":"","extra":{"authors":"w","doi":"w","journal":"w","quartile":"q1","year":"w"},"id":1773754078344,"title":"w","type":"articulo"},{"id":1773755705896,"type":"articulo","title":"Generation of Synthetic Labeled Datasets for Anomaly Detection in Heritage Architecture","desc":"","extra":{"authors":"David Jurado-Rodríguez ;Antonio Garrido; Francisco R. Feito; Juan M. Jurado","journal":"Graphical Models, 2026","year":"","doi":"https://doi.org/10.1016/j.gmod.2026.101325","quartile":"q3"}}],"edits":{"quick-1773755705896":{"id":1774358030973,"type":"articulo","title":"Generation of Synthetic Labeled Datasets for Anomaly Detection in Heritage Architecture","desc":"","extra":{"authors":"David Jurado-Rodríguez ;Antonio Garrido; Francisco R. Feito; Juan M. Jurado","journal":"Graphical Models, 2026","year":"","doi":"https://doi.org/10.1016/j.gmod.2026.101325","quartile":"q3"}}},"deletes":["quick-1773738325811","quick-1773739056081","quick-1773739029495","quick-1773751770814","quick-1773752004403","quick-1773752865452","quick-1773753728373","quick-1773752948458","quick-1773754078344","quick-1773754573397","quick-1773823345238"]}</script></body></html>
+<script id="cv-published-state" type="application/json">{"entries":[],"edits":{},"deletes":[]}</script></body></html>
+
+
