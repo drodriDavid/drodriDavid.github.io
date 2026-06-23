@@ -877,6 +877,12 @@
       box-shadow: none;
     }
 
+    .filter-btn-sm {
+      font-size: .74rem;
+      font-weight: 600;
+      padding: .1rem 0 .2rem;
+    }
+
     .is-hidden {
       display: none !important;
     }
@@ -4440,17 +4446,19 @@
 
         <div class="title reveal-in is-visible">
           <h2 id="acad-main-title">Dirección de TFG, TFM y Tribunales</h2>
-          <div class="filters" id="acad-filters" aria-label="Filtros de dirección académica">
-            <button class="filter-btn is-active" type="button" data-filter="all">Todos</button>
-            <button class="filter-btn" type="button" data-filter="tfg">TFG</button>
-            <button class="filter-btn" type="button" data-filter="tfm">TFM</button>
-            <button class="filter-btn" type="button" data-filter="tribunales">Tribunales</button>
-          </div>
-          <div class="filters" id="acad-year-filters" aria-label="Filtro por año académico" style="margin-top: 0.4rem;">
-            <button class="filter-btn is-active" type="button" data-filter="all">Todos los años</button>
-            <button class="filter-btn" type="button" data-filter="2023-24">2023-24</button>
-            <button class="filter-btn" type="button" data-filter="2024-25">2024-25</button>
-            <button class="filter-btn" type="button" data-filter="2025-26">2025-26</button>
+          <div style="display:flex; align-items:flex-end; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
+            <div class="filters" id="acad-filters" aria-label="Filtros de dirección académica">
+              <button class="filter-btn is-active" type="button" data-filter="all">Todos</button>
+              <button class="filter-btn" type="button" data-filter="tfg">TFG</button>
+              <button class="filter-btn" type="button" data-filter="tfm">TFM</button>
+              <button class="filter-btn" type="button" data-filter="tribunales">Tribunales</button>
+            </div>
+            <div class="filters" id="acad-year-filters" aria-label="Filtro por año académico">
+              <button class="filter-btn filter-btn-sm is-active" type="button" data-filter="all">Todos los años</button>
+              <button class="filter-btn filter-btn-sm" type="button" data-filter="2023-24">2023-24</button>
+              <button class="filter-btn filter-btn-sm" type="button" data-filter="2024-25">2024-25</button>
+              <button class="filter-btn filter-btn-sm" type="button" data-filter="2025-26">2025-26</button>
+            </div>
           </div>
           <p id="acad-main-subtitle">21 méritos en total (6 TFG, 3 TFM, 12 tribunales).</p>
         <div class="section-export-slot" data-export-key="direccion-academica"><button type="button" class="section-export-btn" data-bound="true">
@@ -7970,14 +7978,45 @@
     if (acadYearFilterWrap) {
       let activeAcadYear = 'all';
       const applyAcadYearFilter = (year) => {
-        ['#tfg-stack .card', '#tfm-stack .card', '#trib-stack .card'].forEach((sel) => {
-          Array.from(document.querySelectorAll(sel)).forEach((card) => {
+        const stacks = {
+          tfg: Array.from(document.querySelectorAll('#tfg-stack .card')),
+          tfm: Array.from(document.querySelectorAll('#tfm-stack .card')),
+          trib: Array.from(document.querySelectorAll('#trib-stack .card')),
+        };
+        let tfgCount = 0, tfmCount = 0, tribCount = 0;
+        Object.entries(stacks).forEach(([kind, cards]) => {
+          cards.forEach((card) => {
             const meta = card.querySelector('.pub-meta')?.textContent || '';
             const match = meta.match(/\b(\d{4}-\d{2})\b/);
             const cardYear = match ? match[1] : null;
-            setFilteredVisibility(card, year === 'all' || cardYear === year);
+            const show = year === 'all' || cardYear === year;
+            setFilteredVisibility(card, show);
+            if (show) {
+              if (kind === 'tfg') tfgCount++;
+              else if (kind === 'tfm') tfmCount++;
+              else tribCount++;
+            }
           });
         });
+        const tfgKpi = document.querySelector('#acad-kpis .mini[data-kind="tfg"] strong');
+        const tfmKpi = document.querySelector('#acad-kpis .mini[data-kind="tfm"] strong');
+        const tribKpi = document.querySelector('#acad-kpis .mini[data-kind="tribunales"] strong');
+        if (tfgKpi) tfgKpi.textContent = tfgCount;
+        if (tfmKpi) tfmKpi.textContent = tfmCount;
+        if (tribKpi) tribKpi.textContent = tribCount;
+        const activeType = document.querySelector('#acad-filters .filter-btn.is-active')?.dataset.filter || 'all';
+        const subtitle = document.getElementById('acad-main-subtitle');
+        if (subtitle) {
+          if (activeType === 'tfg') {
+            subtitle.textContent = `${tfgCount} trabajos de fin de grado dirigidos.`;
+          } else if (activeType === 'tfm') {
+            subtitle.textContent = `${tfmCount} trabajos de fin de máster dirigidos.`;
+          } else if (activeType === 'tribunales') {
+            subtitle.textContent = `${tribCount} participaciones en tribunales registradas.`;
+          } else {
+            subtitle.textContent = `${tfgCount + tfmCount + tribCount} méritos en total (${tfgCount} TFG, ${tfmCount} TFM, ${tribCount} tribunales).`;
+          }
+        }
       };
       const baseAcadFilter = window.__applyAcademicFilter;
       window.__applyAcademicFilter = (filter) => {
