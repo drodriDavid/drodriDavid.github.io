@@ -8081,7 +8081,25 @@
 
 
 
-<script id="cv-published-state" type="application/json">{"entries":[],"edits":{},"deletes":[]}</script></body></html>
+<script id="cv-published-state" type="application/json">{"entries":[],"edits":{},"deletes":[]}</script>
+<style>.subject-course-col{white-space:nowrap;color:var(--muted,#888);font-size:.83em;}</style>
+<script>
+(function(){
+  document.querySelectorAll('.year-card').forEach(function(card){
+    var h4=card.querySelector('h4');
+    if(!h4)return;
+    var m=h4.textContent.trim().match(/(\d{4})-(\d{4})/);
+    if(!m)return;
+    var label=m[1]+'-'+m[2].slice(2);
+    card.querySelectorAll('table.subject-table').forEach(function(tbl){
+      var thead=tbl.querySelector('thead tr');
+      if(thead){var last=thead.querySelector('th:last-child');var th=document.createElement('th');th.textContent='Curso';th.className='subject-course-col';thead.insertBefore(th,last);}
+      tbl.querySelectorAll('tbody tr').forEach(function(row){var last=row.querySelector('td:last-child');var td=document.createElement('td');td.textContent=label;td.className='subject-course-col';row.insertBefore(td,last);});
+    });
+  });
+})();
+</script>
+</body></html>
 
 
 
