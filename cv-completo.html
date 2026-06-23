@@ -4446,6 +4446,12 @@
             <button class="filter-btn" type="button" data-filter="tfm">TFM</button>
             <button class="filter-btn" type="button" data-filter="tribunales">Tribunales</button>
           </div>
+          <div class="filters" id="acad-year-filters" aria-label="Filtro por año académico" style="margin-top: 0.4rem;">
+            <button class="filter-btn is-active" type="button" data-filter="all">Todos los años</button>
+            <button class="filter-btn" type="button" data-filter="2023-24">2023-24</button>
+            <button class="filter-btn" type="button" data-filter="2024-25">2024-25</button>
+            <button class="filter-btn" type="button" data-filter="2025-26">2025-26</button>
+          </div>
           <p id="acad-main-subtitle">21 méritos en total (6 TFG, 3 TFM, 12 tribunales).</p>
         <div class="section-export-slot" data-export-key="direccion-academica"><button type="button" class="section-export-btn" data-bound="true">
       <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -7958,6 +7964,35 @@
       });
 
       applyAcademicFilter('all');
+    }
+
+    const acadYearFilterWrap = document.getElementById('acad-year-filters');
+    if (acadYearFilterWrap) {
+      let activeAcadYear = 'all';
+      const applyAcadYearFilter = (year) => {
+        ['#tfg-stack .card', '#tfm-stack .card', '#trib-stack .card'].forEach((sel) => {
+          Array.from(document.querySelectorAll(sel)).forEach((card) => {
+            const meta = card.querySelector('.pub-meta')?.textContent || '';
+            const match = meta.match(/\b(\d{4}-\d{2})\b/);
+            const cardYear = match ? match[1] : null;
+            setFilteredVisibility(card, year === 'all' || cardYear === year);
+          });
+        });
+      };
+      const baseAcadFilter = window.__applyAcademicFilter;
+      window.__applyAcademicFilter = (filter) => {
+        baseAcadFilter(filter);
+        applyAcadYearFilter(activeAcadYear);
+      };
+      const yearBtns = Array.from(acadYearFilterWrap.querySelectorAll('button[data-filter]'));
+      yearBtns.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          yearBtns.forEach((b) => b.classList.remove('is-active'));
+          btn.classList.add('is-active');
+          activeAcadYear = btn.dataset.filter || 'all';
+          applyAcadYearFilter(activeAcadYear);
+        });
+      });
     }
 
     document.addEventListener('click', (event) => {
