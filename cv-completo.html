@@ -4948,10 +4948,6 @@
         <input id="auth-password" type="password" placeholder="Contraseña" autocomplete="current-password">
         <button type="submit">Entrar</button>
       </form>
-      <label style="display:flex;align-items:center;gap:.45rem;margin-top:.7rem;font-size:.82rem;color:#5a7a9a;cursor:pointer;user-select:none;">
-        <input id="auth-remember" type="checkbox" style="accent-color:#245a89;width:15px;height:15px;" checked>
-        Recordar en este dispositivo
-      </label>
       <p id="auth-error" class="auth-error" aria-live="polite"></p>
     </div>
   </div>
@@ -5395,11 +5391,7 @@
       authForm?.addEventListener('submit', (e) => {
         e.preventDefault();
         if ((authInput?.value || '').trim() === AUTH_PASSWORD) {
-          if (authRemember?.checked) {
-            localStorage.setItem(AUTH_STORAGE_KEY, AUTH_PASSWORD);
-          } else {
-            localStorage.removeItem(AUTH_STORAGE_KEY);
-          }
+          localStorage.setItem(AUTH_STORAGE_KEY, AUTH_PASSWORD);
           unlockSite();
           return;
         }
