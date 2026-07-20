@@ -8161,25 +8161,6 @@
         .filter(Boolean)
     );
 
-    tribCards.forEach((card) => {
-      const title = normalizeTitle(card.querySelector('h3')?.textContent || '');
-      if (!title || !directedTitleSet.has(title)) return;
-      if (card.querySelector('.cross-role-note')) return;
-      const note = document.createElement('p');
-      note.className = 'cross-role-note';
-      note.textContent = 'Tambien en TFG/TFM (direccion o codireccion).';
-      card.appendChild(note);
-    });
-
-    directedCards.forEach((card) => {
-      const title = normalizeTitle(card.querySelector('h3')?.textContent || '');
-      if (!title || !tribunalTitleSet.has(title)) return;
-      if (card.querySelector('.cross-role-note')) return;
-      const note = document.createElement('p');
-      note.className = 'cross-role-note';
-      note.textContent = 'Tambien en tribunales.';
-      card.appendChild(note);
-    });
 
     const revealTargets = document.querySelectorAll('.hero-copy, .hero-media, .impact-card, .title, .card');
     revealTargets.forEach((el) => el.classList.add('reveal-in'));
