@@ -4948,6 +4948,10 @@
         <input id="auth-password" type="password" placeholder="Contraseña" autocomplete="current-password">
         <button type="submit">Entrar</button>
       </form>
+      <label style="display:flex;align-items:center;gap:.45rem;margin-top:.7rem;font-size:.82rem;color:#5a7a9a;cursor:pointer;user-select:none;">
+        <input id="auth-remember" type="checkbox" style="accent-color:#245a89;width:15px;height:15px;" checked>
+        Recordar en este dispositivo
+      </label>
       <p id="auth-error" class="auth-error" aria-live="polite"></p>
     </div>
   </div>
@@ -5368,23 +5372,39 @@
       }
     }
 
+    const AUTH_STORAGE_KEY = 'cvAuthToken';
+    const authRemember = document.getElementById('auth-remember');
+
+    function unlockSite() {
+      document.body.classList.remove('gated');
+      gate?.setAttribute('hidden', '');
+      if (authError) authError.textContent = '';
+    }
+
     if (REQUIRE_PASSWORD) {
-      document.body.classList.add('gated');
-      gate?.removeAttribute('hidden');
-      authInput?.focus();
+      // Comprobar si hay sesión guardada
+      const saved = localStorage.getItem(AUTH_STORAGE_KEY);
+      if (saved === AUTH_PASSWORD) {
+        unlockSite();
+      } else {
+        document.body.classList.add('gated');
+        gate?.removeAttribute('hidden');
+        authInput?.focus();
+      }
+
       authForm?.addEventListener('submit', (e) => {
         e.preventDefault();
         if ((authInput?.value || '').trim() === AUTH_PASSWORD) {
-          if (authError) authError.textContent = '';
-          document.body.classList.remove('gated');
-          gate?.setAttribute('hidden', '');
+          if (authRemember?.checked) {
+            localStorage.setItem(AUTH_STORAGE_KEY, AUTH_PASSWORD);
+          } else {
+            localStorage.removeItem(AUTH_STORAGE_KEY);
+          }
+          unlockSite();
           return;
         }
         if (authError) authError.textContent = 'Contraseña incorrecta.';
-        if (authInput) {
-          authInput.value = '';
-          authInput.focus();
-        }
+        if (authInput) { authInput.value = ''; authInput.focus(); }
       });
     } else {
       gate?.setAttribute('hidden', '');
