@@ -7872,7 +7872,7 @@
       const q1Count = pubCards.filter((card) => getPublicationQuartile(card) === 'q1').length;
       const q2Count = pubCards.filter((card) => getPublicationQuartile(card) === 'q2').length;
       const q3Count = pubCards.filter((card) => getPublicationQuartile(card) === 'q3').length;
-      const pubTotal = pubCards.length;
+      const pubTotal = pubCards.filter((card) => card.dataset.pub !== 'cap').length;
 
       const pubTotalNode = document.getElementById('pub-total-count');
       const pubQ1Node = document.getElementById('pub-q1-count');
