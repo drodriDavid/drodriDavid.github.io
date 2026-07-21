@@ -181,15 +181,14 @@
     .nav-back-btn {
       display: inline-flex;
       align-items: center;
-      gap: .3rem;
+      justify-content: center;
       text-decoration: none;
-      font-size: .78rem;
-      font-weight: 600;
       color: var(--pri);
       background: rgba(16, 74, 110, .07);
       border: 1px solid rgba(16, 74, 110, .18);
-      border-radius: 20px;
-      padding: .28rem .75rem;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
       margin-right: .4rem;
       transition: background .15s, border-color .15s;
       flex-shrink: 0;
@@ -2327,9 +2326,8 @@
   <header>
     <div class="nav-progress" id="nav-progress"></div>
     <nav class="container" aria-label="principal">
-      <a href="index.html" class="nav-back-btn" title="Volver al perfil">
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
-        Perfil
+      <a href="index.html" class="nav-back-btn" title="Volver al perfil" aria-label="Volver al perfil">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
       </a>
       <button class="menu" aria-label="Abrir menú" aria-controls="site-nav" aria-expanded="false">☰</button>
       <ul id="site-nav" class="nav" hidden="">
