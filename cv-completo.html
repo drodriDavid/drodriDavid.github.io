@@ -4,7 +4,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>David Jurado Rodríguez - Perfil Académico Institucional</title>
   <meta name="description" content="Perfil académico institucional de David Jurado Rodríguez (UJA). Investigación en visión por computador, modelado 3D, RA/RV, docencia y transferencia de conocimiento.">
-  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700;800&amp;family=Source+Serif+4:wght@600;700&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;family=Source+Sans+3:wght@400;600;700;800&amp;family=Source+Serif+4:wght@600;700&amp;display=swap" rel="stylesheet">
   <style>
     .tag {
       display: inline-flex;
@@ -51,8 +51,8 @@
       --pri2: #1a72a8;
       --txt: #2d3748;
       --mut: #4a5568;
-      --bg: #fff;
-      --bg2: #f7fafc;
+      --bg: #f4f7fb;
+      --bg2: #edf2f7;
       --acc: #38b2ac;
       --bor: #e2e8f0;
       --q1: #38a169;
@@ -66,9 +66,12 @@
     }
 
     body {
-      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
       color: var(--txt);
-      background: var(--bg);
+      background:
+        radial-gradient(circle at 8% 12%, #e6f0fb 0%, transparent 34%),
+        radial-gradient(circle at 92% 0%, #e8f3ff 0%, transparent 30%),
+        var(--bg);
       line-height: 1.5;
       -webkit-font-smoothing: antialiased;
       text-rendering: optimizeLegibility
@@ -173,6 +176,27 @@
       text-decoration: none;
       flex-shrink: 0;
       margin-right: .6rem;
+    }
+
+    .nav-back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+      text-decoration: none;
+      font-size: .78rem;
+      font-weight: 600;
+      color: var(--pri);
+      background: rgba(16, 74, 110, .07);
+      border: 1px solid rgba(16, 74, 110, .18);
+      border-radius: 20px;
+      padding: .28rem .75rem;
+      margin-right: .4rem;
+      transition: background .15s, border-color .15s;
+      flex-shrink: 0;
+    }
+    .nav-back-btn:hover {
+      background: rgba(16, 74, 110, .13);
+      border-color: rgba(16, 74, 110, .35);
     }
 
     .logo-mark {
@@ -2303,6 +2327,10 @@
   <header>
     <div class="nav-progress" id="nav-progress"></div>
     <nav class="container" aria-label="principal">
+      <a href="index.html" class="nav-back-btn" title="Volver al perfil">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+        Perfil
+      </a>
       <button class="menu" aria-label="Abrir menú" aria-controls="site-nav" aria-expanded="false">☰</button>
       <ul id="site-nav" class="nav" hidden="">
         <li><a href="#sobre-mi">Sobre mí</a></li>
