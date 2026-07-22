@@ -2519,6 +2519,9 @@
             <span class="pill q2">Q2</span> <span id="pub-q2-count">4</span> ·
             <span id="pub-q3-summary" class=""><span class="pill q3">Q3</span> <span id="pub-q3-count">1</span> ·</span>
           </p>
+          <p id="pub-cap-line" style="margin-top:.2rem;font-size:.88rem;color:var(--mut);">
+            <span id="pub-cap-count">2</span> capítulos de libro internacional
+          </p>
 
         <div class="inline-proof-wrap is-group-control has-visible-empty" hidden="" data-bound="true">
         <div class="inline-proof-main no-file">
@@ -7968,6 +7971,9 @@
         node.textContent = String(value);
       };
       setImpact('impact-pub-count', pubTotal);
+      const capCount = pubCards.filter((card) => card.dataset.pub === 'cap').length;
+      const capNode = document.getElementById('pub-cap-count');
+      if (capNode) capNode.textContent = String(capCount);
       setImpact('impact-cong-count', congCards.length);
       setImpact('impact-proj-count', projTotal);
       const docImpactNode = document.getElementById('impact-doc-count');
