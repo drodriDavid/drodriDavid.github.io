@@ -1,4 +1,4 @@
-window.CV_FLAGS = {
+﻿window.CV_FLAGS = {
   readOnly: true,
   disableProofs: true,
   requirePassword: true,
