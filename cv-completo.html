@@ -2530,7 +2530,7 @@
           <input type="file" class="inline-proof-input" hidden="" accept=".pdf,application/pdf">
         </div>
         <span class="inline-proof-name">Titulo Universitario Master Ingeniería Informática.pdf</span>
-      </div></div>             <div class="card has-inline-edit has-inline-proof reveal-in is-visible" data-edit-id="sobre-mi-4">               <h4>Grado en Ingeniería Informática</h4><div class="card-expediente card-expediente--title" data-proof-id="sobre-mi-4-expediente"><p class="card-expediente-label"><small><strong>Expediente académico</strong> · Nota media: 6,81</small></p><div class="inline-proof-wrap has-visible-open"><div class="inline-proof-main has-file"><button type="button" class="inline-proof-btn" title="Subir expediente académico" aria-label="Subir expediente académico"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4"></path><path d="m7 9 5-5 5 5"></path><path d="M20 16v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3"></path></svg><span class="inline-proof-status" aria-hidden="true"></span></button><a class="inline-proof-link" href="/justificantes/formacion-academica/CertificadoAcademico(Grado) David Jurado.pdf" target="_blank" rel="noopener" title="Abrir expediente" aria-label="Abrir expediente"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 21h14"></path></svg></a><button type="button" class="inline-proof-remove" title="Quitar expediente" aria-label="Quitar expediente"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="m19 6-1 14H6L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg></button><input type="file" class="inline-proof-input" hidden accept=".pdf,application/pdf"></div><span class="inline-proof-name">Sin expediente subido</span></div></div>               <p>Universidad de Jaén | 2014–2018</p>             <button type="button" class="inline-edit-btn" title="Editar mérito" aria-label="Editar mérito">Editar</button><button type="button" class="inline-delete-btn">Eliminar</button><div class="inline-proof-wrap has-visible-open">
+      </div></div>             <div class="card has-inline-edit has-inline-proof reveal-in is-visible" data-edit-id="sobre-mi-4">               <h4>Grado en Ingeniería Informática</h4><div class="card-expediente card-expediente--title" data-proof-id="sobre-mi-4-expediente"><p class="card-expediente-label"><small><strong>Expediente + Título</strong> · Nota media: 6,81</small></p><div class="inline-proof-wrap has-visible-open"><div class="inline-proof-main has-file"><button type="button" class="inline-proof-btn" title="Subir expediente académico" aria-label="Subir expediente académico"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4"></path><path d="m7 9 5-5 5 5"></path><path d="M20 16v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3"></path></svg><span class="inline-proof-status" aria-hidden="true"></span></button><a class="inline-proof-link" href="/justificantes/formacion-academica/Grado-Titulo+Expediente David Jurado.pdf" target="_blank" rel="noopener" title="Abrir expediente" aria-label="Abrir expediente"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 21h14"></path></svg></a><button type="button" class="inline-proof-remove" title="Quitar expediente" aria-label="Quitar expediente"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M8 6V4h8v2"></path><path d="m19 6-1 14H6L5 6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg></button><input type="file" class="inline-proof-input" hidden accept=".pdf,application/pdf"></div><span class="inline-proof-name">Sin expediente subido</span></div></div>               <p>Universidad de Jaén | 2014–2018</p>             <button type="button" class="inline-edit-btn" title="Editar mérito" aria-label="Editar mérito">Editar</button><button type="button" class="inline-delete-btn">Eliminar</button><div class="inline-proof-wrap has-visible-open">
         <div class="inline-proof-main has-file">
           <button type="button" class="inline-proof-btn" title="Cambiar justificante" aria-label="Subir justificante">
             <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -7367,7 +7367,9 @@
       const removeBtn = wrap.querySelector('.inline-proof-remove');
       const uploadBtn = wrap.querySelector('.inline-proof-btn');
       const record = await getProofRecord(proofId);
-      if (!record?.stored_path && !record?.url) {
+      const serverHref = openLink?.getAttribute('href');
+      const hasServerFile = serverHref && serverHref !== '#' && !serverHref.startsWith('blob:');
+      if (!record?.stored_path && !record?.url && !hasServerFile) {
         wrap.classList.remove('has-visible-open');
         wrap.classList.add('has-visible-empty');
         main?.classList.remove('has-file');
@@ -7700,6 +7702,9 @@
       if (quickSubjectsBlock && subjectStack && !subjectStack.querySelector('.card')) {
         quickSubjectsBlock.classList.add('is-hidden');
       }
+      // Strip serialized binding flags so event listeners always get attached
+      document.querySelectorAll('[data-proof-bound]').forEach(el => delete el.dataset.proofBound);
+      document.querySelectorAll('[data-bound]').forEach(el => delete el.dataset.bound);
       ensureGroupProofControls();
       syncAcademicProofControls('all');
       ensureExpedienteProofControls();
@@ -8810,11 +8815,165 @@
 }
 @media (prefers-reduced-motion:reduce){
   .hero:before{animation:none;transform:none;}
-}</style>
+}
+    /* === PDF Preview Lightbox === */
+    #pdf-lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(0,0,0,.72);
+      backdrop-filter: blur(4px);
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    #pdf-lightbox.open { display: flex; }
+    #pdf-lightbox-inner {
+      position: relative;
+      width: min(92vw, 900px);
+      height: min(90vh, 1000px);
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 24px 60px rgba(0,0,0,.45);
+      display: flex;
+      flex-direction: column;
+    }
+    #pdf-lightbox-bar {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .5rem .75rem;
+      background: var(--pri, #1a56a0);
+      color: #fff;
+      font-size: .8rem;
+      flex-shrink: 0;
+    }
+    #pdf-lightbox-title {
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-weight: 600;
+    }
+    #pdf-lightbox-open {
+      background: rgba(255,255,255,.18);
+      border: none;
+      color: #fff;
+      border-radius: 6px;
+      padding: .25rem .55rem;
+      cursor: pointer;
+      font-size: .75rem;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: .3rem;
+    }
+    #pdf-lightbox-open:hover { background: rgba(255,255,255,.3); }
+    #pdf-lightbox-close {
+      background: rgba(255,255,255,.18);
+      border: none;
+      color: #fff;
+      border-radius: 6px;
+      width: 28px;
+      height: 28px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
+    #pdf-lightbox-close:hover { background: rgba(255,255,255,.35); }
+    #pdf-lightbox-frame {
+      flex: 1;
+      border: none;
+      width: 100%;
+    }
+    /* Card clickable indicator when has proof */
+    .card[data-proof-url] { cursor: pointer; }
+    .card[data-proof-url]:hover { box-shadow: 0 6px 20px rgba(0,0,0,.12); }
+    .card[data-proof-url]:hover::after {
+      content: '';
+    }
+</style>
 
 
 
 
 
 
-<script id="cv-published-state" type="application/json">{"entries":[],"edits":{"congresos-19":{"id":1784728722961,"type":"ponencia","title":"Portable LiDAR Scanners: Precision Mapping at Your Fingertips","desc":"","extra":{"talkKind":"Oral","event":"WEB3D 2024","location":"Guimarães (PT)","talkDate":"25–27/09/2024 (Internacional)","talkCategory":"Internacional"}},"congresos-21":{"id":1784728804570,"type":"ponencia","title":"3DModeling of rural environments from multiscale aerial imagery","desc":"","extra":{"talkKind":"Oral","event":"CEIG 2024","location":"A Coruña (ES)","talkDate":"17–19/06/2024 (Nacional)","talkCategory":"Internacional"}},"congresos-22":{"id":1784729303565,"type":"ponencia","title":"Routine monitoring of hydraulic infrastructures using the European Ground Motion Service and other satellite radar sensors","desc":"","extra":{"talkKind":"Oral","event":"CENTERIS 2023","location":"Oporto (PT)","talkDate":"08/11/2023 (Internacional)","talkCategory":"Internacional"}},"congresos-23":{"id":1784729360321,"type":"ponencia","title":"GEU-AGRO: Aplicación para la monitorización multisensorial y ayuda a la toma de decisiones en el cultivo del olivar","desc":"","extra":{"talkKind":"Comunicación","event":"Expoliva 2023","location":"Jaén (ES)","talkDate":"11/05/2023 (Nacional)","talkCategory":"Internacional"}}},"deletes":[]}</script></body></html>
+<script id="cv-published-state" type="application/json">{"entries":[],"edits":{"congresos-19":{"id":1784728722961,"type":"ponencia","title":"Portable LiDAR Scanners: Precision Mapping at Your Fingertips","desc":"","extra":{"talkKind":"Oral","event":"WEB3D 2024","location":"Guimarães (PT)","talkDate":"25–27/09/2024 (Internacional)","talkCategory":"Internacional"}},"congresos-21":{"id":1784728804570,"type":"ponencia","title":"3DModeling of rural environments from multiscale aerial imagery","desc":"","extra":{"talkKind":"Oral","event":"CEIG 2024","location":"A Coruña (ES)","talkDate":"17–19/06/2024 (Nacional)","talkCategory":"Internacional"}},"congresos-22":{"id":1784729303565,"type":"ponencia","title":"Routine monitoring of hydraulic infrastructures using the European Ground Motion Service and other satellite radar sensors","desc":"","extra":{"talkKind":"Oral","event":"CENTERIS 2023","location":"Oporto (PT)","talkDate":"08/11/2023 (Internacional)","talkCategory":"Internacional"}},"congresos-23":{"id":1784729360321,"type":"ponencia","title":"GEU-AGRO: Aplicación para la monitorización multisensorial y ayuda a la toma de decisiones en el cultivo del olivar","desc":"","extra":{"talkKind":"Comunicación","event":"Expoliva 2023","location":"Jaén (ES)","talkDate":"11/05/2023 (Nacional)","talkCategory":"Internacional"}}},"deletes":[]}
+</script>
+<script>
+(function() {
+  // Build lightbox DOM
+  var lb = document.createElement('div');
+  lb.id = 'pdf-lightbox';
+  lb.style.cssText = 'display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.72);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:1rem;';
+  lb.innerHTML = '<div id="pdf-lb-inner" style="position:relative;width:min(92vw,900px);height:min(90vh,1000px);background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.45);display:flex;flex-direction:column;">'
+    + '<div id="pdf-lb-bar" style="display:flex;align-items:center;gap:.5rem;padding:.45rem .75rem;background:var(--pri,#1a56a0);color:#fff;font-size:.78rem;flex-shrink:0;">'
+    + '<span id="pdf-lb-title" style="flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600;"></span>'
+    + '<a id="pdf-lb-open" target="_blank" rel="noopener" style="background:rgba(255,255,255,.18);border:none;color:#fff;border-radius:6px;padding:.22rem .5rem;cursor:pointer;font-size:.72rem;text-decoration:none;display:inline-flex;align-items:center;gap:.3rem;">&#8599; Abrir</a>'
+    + '<button id="pdf-lb-close" title="Cerrar" style="background:rgba(255,255,255,.18);border:none;color:#fff;border-radius:6px;width:26px;height:26px;cursor:pointer;font-size:1.1rem;display:flex;align-items:center;justify-content:center;margin-left:.25rem;">&times;</button>'
+    + '</div>'
+    + '<iframe id="pdf-lb-frame" title="Previsualización justificante" style="flex:1;border:none;width:100%;"></iframe>'
+    + '</div>';
+  document.body.appendChild(lb);
+
+  var frame = document.getElementById('pdf-lb-frame');
+  var titleEl = document.getElementById('pdf-lb-title');
+  var openLink = document.getElementById('pdf-lb-open');
+  var closeBtn = document.getElementById('pdf-lb-close');
+
+  function openLightbox(url, name) {
+    titleEl.textContent = name || 'Justificante';
+    openLink.href = url;
+    frame.src = url;
+    lb.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLightbox() {
+    lb.style.display = 'none';
+    frame.src = '';
+    document.body.style.overflow = '';
+  }
+
+  closeBtn.addEventListener('click', closeLightbox);
+  lb.addEventListener('click', function(e) { if (e.target === lb) closeLightbox(); });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeLightbox(); });
+
+  function attachProofUrls() {
+    document.querySelectorAll('.card, .card-expediente').forEach(function(card) {
+      var wrap = card.querySelector('.inline-proof-wrap.has-visible-open');
+      if (!wrap) { delete card.dataset.proofUrl; return; }
+      var link = wrap.querySelector('.inline-proof-link');
+      if (!link) return;
+      var url = link.getAttribute('href');
+      var name = (card.querySelector('.inline-proof-name') || {}).textContent || '';
+      name = name.trim();
+      if (url && url !== '#') {
+        card.dataset.proofUrl = url;
+        card.dataset.proofName = name || 'Justificante';
+        card.style.cursor = 'pointer';
+      }
+    });
+  }
+
+  document.addEventListener('click', function(e) {
+    var card = e.target.closest('.card[data-proof-url], .card-expediente[data-proof-url]');
+    if (!card) return;
+    if (e.target.closest('button, a, input, label')) return;
+    e.preventDefault();
+    openLightbox(card.dataset.proofUrl, card.dataset.proofName);
+  });
+
+  // Run after page is fully initialised
+  setTimeout(attachProofUrls, 800);
+  // Re-run when proof classes change
+  var obs = new MutationObserver(attachProofUrls);
+  obs.observe(document.body, { subtree: true, attributeFilter: ['class'] });
+})();
+</script>
+</body></html>
